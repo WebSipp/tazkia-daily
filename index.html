@@ -1,0 +1,2754 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STMIK TAZKIA DAILY - Jadwal Harian</title>
+    
+    <!-- LOADING ANIMATION INLINE STYLE - HARUS PERTAMA! -->
+    <style>
+        /* ==================== LOADING ANIMATION - INSTANT ==================== */
+        #instant-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #e8e3d6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #instant-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s;
+        }
+        
+        .instant-spinner {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .instant-letter {
+            width: 100%;
+            height: 100%;
+            background-color: #f8f5f0;
+            border-radius: 10px;
+            position: relative;
+            border: 3px solid #8b7355;
+            box-shadow: 
+                0 10px 20px rgba(0,0,0,0.2),
+                inset 0 0 0 2px #8b7355,
+                inset 0 0 20px rgba(139, 115, 85, 0.1);
+            animation: instant-spin 1.2s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .instant-stamp {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #0a2472, #2a6bff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            border: 2px dashed rgba(255, 255, 255, 0.5);
+            box-shadow: 
+                inset 0 0 10px rgba(255, 255, 255, 0.3),
+                0 3px 8px rgba(0, 0, 0, 0.3);
+            animation: pulseStamp 1.5s ease-in-out infinite;
+        }
+        
+        .letter-line {
+            position: absolute;
+            width: 80%;
+            height: 3px;
+            background-color: rgba(139, 115, 85, 0.3);
+            border-radius: 2px;
+        }
+        
+        .letter-line:nth-child(1) { top: 20px; left: 10%; width: 70%; }
+        .letter-line:nth-child(2) { top: 40px; left: 15%; width: 75%; }
+        .letter-line:nth-child(3) { bottom: 40px; left: 10%; width: 80%; }
+        .letter-line:nth-child(4) { bottom: 20px; left: 15%; width: 70%; }
+        
+        @keyframes instant-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.05); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        
+        @keyframes pulseStamp {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .instant-loading-text {
+            font-family: Arial, sans-serif;
+            font-size: 1.3rem;
+            color: #0a2472;
+            text-align: center;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        
+        /* Sembunyikan konten utama sampai siap */
+        body.loading #main-content {
+            opacity: 0;
+        }
+    </style>
+    
+    <!-- Resource eksternal SETELAH loading style -->
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- STYLE UTAMA WEBSITE dengan IMPROVEMENTS -->
+    <style>
+        /* ==================== VARIABEL DAN STYLE DASAR ==================== */
+        :root {
+            --primary-color: #0a2472; /* Biru Navy */
+            --accent-color: #FFD700; /* Kuning */
+            --paper-color: #f8f5f0; /* Warna kertas koran tua */
+            --paper-color-dark: #e8e3d6; /* Warna kertas lebih gelap */
+            --ink-color: #1a1a1a; /* Hitam untuk teks */
+            --border-color: #8b7355; /* Abu-abu kecoklatan untuk garis */
+            --aged-stain: rgba(139, 115, 85, 0.15); /* Efek noda tua */
+            --aged-stain-dark: rgba(101, 67, 33, 0.2); /* Efek noda tua gelap */
+            
+            /* Warna untuk kelompok waktu */
+            --morning-color: #4a8cff;
+            --afternoon-color: #ff9800;
+            --evening-color: #9c27b0;
+            
+            /* Warna untuk jadwal berlangsung */
+            --current-session-color: #fff9c4;
+            --current-session-glow: rgba(255, 235, 59, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e8e3d6;
+            color: var(--ink-color);
+            line-height: 1.6;
+            padding-bottom: 20px;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+            opacity: 1;
+        }
+
+        /* Efek tekstur kertas vintage */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--aged-stain) 1px, transparent 1px),
+                linear-gradient(90deg, var(--aged-stain) 1px, transparent 1px),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+            background-size: 20px 20px, 20px 20px, auto;
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.7;
+        }
+
+        /* Efek halftone printing koran */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 10px 10px, rgba(0,0,0,0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Efek tinta tumpah/bleed */
+        .ink-stain {
+            position: absolute;
+            background: rgba(26, 26, 26, 0.03);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .ink-stain-1 {
+            width: 300px;
+            height: 300px;
+            top: 5%;
+            right: -50px;
+            background: radial-gradient(circle, rgba(10,36,114,0.05) 0%, transparent 70%);
+        }
+
+        .ink-stain-2 {
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            left: -30px;
+            background: radial-gradient(circle, rgba(139,115,85,0.07) 0%, transparent 70%);
+        }
+
+        /* Container utama dengan efek kertas */
+        .container {
+            position: relative;
+            background-color: var(--paper-color);
+            padding: 30px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.2),
+                0 1px 8px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.5),
+                inset 0 0 40px rgba(139, 115, 85, 0.1);
+            border: 1px solid #d4c9b8;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            max-width: 1200px;
+            opacity: 0;
+            animation: slideUp 0.7s ease 0.5s forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Efek robek di bagian atas container */
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            right: 20px;
+            height: 30px;
+            background: var(--paper-color);
+            clip-path: polygon(
+                0% 100%, 2% 90%, 4% 95%, 6% 85%, 8% 92%, 
+                10% 80%, 12% 88%, 14% 75%, 16% 85%, 18% 70%, 
+                20% 82%, 22% 68%, 24% 80%, 26% 65%, 28% 78%, 
+                30% 60%, 32% 75%, 34% 58%, 36% 72%, 38% 55%, 
+                40% 70%, 42% 52%, 44% 68%, 46% 50%, 48% 65%, 
+                50% 48%, 52% 63%, 54% 45%, 56% 60%, 58% 43%, 
+                60% 58%, 62% 40%, 64% 55%, 66% 38%, 68% 52%, 
+                70% 35%, 72% 50%, 74% 33%, 76% 48%, 78% 30%, 
+                80% 45%, 82% 28%, 84% 42%, 86% 25%, 88% 40%, 
+                90% 22%, 92% 38%, 94% 20%, 96% 35%, 98% 18%, 
+                100% 100%
+            );
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        /* Efek robek di bagian bawah container */
+        .container::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 20px;
+            right: 20px;
+            height: 30px;
+            background: var(--paper-color);
+            clip-path: polygon(
+                0% 0%, 2% 10%, 4% 5%, 6% 15%, 8% 8%, 
+                10% 20%, 12% 12%, 14% 25%, 16% 15%, 18% 30%, 
+                20% 18%, 22% 32%, 24% 20%, 26% 35%, 28% 22%, 
+                30% 40%, 32% 25%, 34% 42%, 36% 28%, 38% 45%, 
+                40% 30%, 42% 48%, 44% 32%, 46% 50%, 48% 35%, 
+                50% 52%, 52% 37%, 54% 55%, 56% 40%, 58% 57%, 
+                60% 42%, 62% 60%, 64% 55%, 66% 62%, 68% 48%, 
+                70% 65%, 72% 50%, 74% 67%, 76% 52%, 78% 70%, 
+                80% 55%, 82% 72%, 84% 58%, 86% 75%, 88% 60%, 
+                90% 78%, 92% 62%, 94% 80%, 96% 65%, 98% 82%, 
+                100% 0%
+            );
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+        }
+
+        /* Gaya untuk header koran */
+        .newspaper-header {
+            position: relative;
+            background-color: var(--paper-color);
+            border-bottom: 8px double var(--border-color);
+            padding: 2rem 0 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.1),
+                inset 0 0 30px rgba(139, 115, 85, 0.05);
+            overflow: hidden;
+        }
+
+        /* Ornamen dekoratif di header */
+        .newspaper-header::before,
+        .newspaper-header::after {
+            content: "❖";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 3rem;
+            color: var(--border-color);
+            opacity: 0.5;
+        }
+
+        .newspaper-header::before {
+            left: 20px;
+        }
+
+        .newspaper-header::after {
+            right: 20px;
+        }
+
+        /* Ornamen tambahan di header */
+        .newspaper-header .ornament-left,
+        .newspaper-header .ornament-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 2px;
+            background-color: var(--border-color);
+        }
+
+        .newspaper-header .ornament-left::before,
+        .newspaper-header .ornament-right::before {
+            content: "⚜️";
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            background-color: var(--paper-color);
+            padding: 0 10px;
+        }
+
+        .newspaper-header .ornament-left {
+            left: 120px;
+        }
+
+        .newspaper-header .ornament-left::before {
+            right: -15px;
+        }
+
+        .newspaper-header .ornament-right {
+            right: 120px;
+        }
+
+        .newspaper-header .ornament-right::before {
+            left: -15px;
+        }
+
+        .institution-name {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            text-align: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            padding: 0 30px;
+        }
+
+        /* Efek stempel untuk judul utama */
+        .institution-name::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: calc(100% + 10px);
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .newspaper-subtitle {
+            text-align: center;
+            font-size: 1rem;
+            color: var(--ink-color);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.7rem 0;
+            margin-bottom: 1rem;
+            position: relative;
+            background: linear-gradient(to right, transparent, rgba(139, 115, 85, 0.1), transparent);
+            font-weight: 600;
+        }
+
+        /* Efek gunting untuk pemisah subtitle */
+        .newspaper-subtitle::before {
+            content: "✂";
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--border-color);
+            font-size: 1.2rem;
+            background-color: var(--paper-color);
+            padding: 0 5px;
+        }
+
+        .newspaper-subtitle::after {
+            content: "✂";
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%) rotate(180deg);
+            color: var(--border-color);
+            font-size: 1.2rem;
+            background-color: var(--paper-color);
+            padding: 0 5px;
+        }
+
+        /* HEADER INFO */
+        .header-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 1rem;
+            position: relative;
+            margin-top: 1.5rem;
+            gap: 1.5rem;
+        }
+
+        /* Efek paper clip di header */
+        .header-info::before {
+            content: "📎";
+            position: absolute;
+            left: 50%;
+            top: -15px;
+            transform: translateX(-50%) rotate(-15deg);
+            font-size: 1.5rem;
+            opacity: 0.6;
+            z-index: 2;
+        }
+
+        .logo-placeholder {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            border: 3px solid var(--border-color);
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.2),
+                inset 0 0 10px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efek stempel pada logo */
+        .logo-placeholder::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .date-time {
+            text-align: center;
+            position: relative;
+            padding: 12px 20px;
+            background-color: rgba(248, 245, 240, 0.9);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+            min-width: 300px;
+        }
+
+        /* Efek stempel "HARI INI" */
+        .date-time::before {
+            content: "HARI INI";
+            position: absolute;
+            top: -12px;
+            right: 10px;
+            background-color: var(--accent-color);
+            color: var(--ink-color);
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 3px;
+            border: 1px dashed var(--ink-color);
+            transform: rotate(5deg);
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            z-index: 2;
+        }
+
+        .current-date {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .current-time {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--ink-color);
+            font-family: monospace;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        /* Efek noda tinta di waktu */
+        .current-time::after {
+            content: "";
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--aged-stain-dark);
+            border-radius: 2px;
+        }
+
+        /* Hero section dengan search bar */
+        .hero-section {
+            padding: 2rem 0;
+            margin-bottom: 1rem;
+            border-bottom: 2px dotted var(--border-color);
+            position: relative;
+        }
+
+        /* Ornamen pemisah di hero section */
+        .hero-section::before {
+            content: "~ • ~ • ~ • ~";
+            position: absolute;
+            bottom: -11px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--border-color);
+            background-color: var(--paper-color);
+            padding: 0 15px;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
+        }
+
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 1.2rem 1.5rem;
+            font-size: 1.2rem;
+            border: 2px solid var(--border-color);
+            border-radius: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: white;
+            transition: all 0.3s;
+            box-shadow: 
+                0 4px 8px rgba(0, 0, 0, 0.1),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Efek paper clip di search bar */
+        .search-container::before {
+            content: "📎";
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            opacity: 0.5;
+            transform: rotate(45deg);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 
+                0 0 0 3px rgba(10, 36, 114, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Filter section */
+        .filter-section {
+            padding: 1rem 0 0.5rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* Efek pita di filter section */
+        .filter-section::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 20px;
+            background: linear-gradient(to right, var(--primary-color), var(--accent-color), var(--primary-color));
+            clip-path: polygon(0% 0%, 5% 100%, 95% 100%, 100% 0%);
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        .filter-section::after {
+            content: "PILIH HARI";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 2;
+        }
+
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 1.5rem;
+        }
+
+        .day-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .day-btn {
+            padding: 0.7rem 1.5rem;
+            background-color: var(--paper-color);
+            border: 2px solid var(--border-color);
+            color: var(--ink-color);
+            font-weight: 600;
+            border-radius: 0;
+            transition: all 0.3s;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+            text-align: center;
+        }
+
+        /* Efek kertas melengkung di tombol */
+        .day-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.3) 100%);
+            z-index: -1;
+            transition: all 0.3s;
+        }
+
+        .day-btn:hover, .day-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .day-btn.today {
+            background-color: var(--accent-color);
+            color: var(--ink-color);
+            border-color: var(--accent-color);
+            position: relative;
+            overflow: visible;
+        }
+
+        /* Efek pushpin untuk tombol hari ini */
+        .day-btn.today::after {
+            content: "📌";
+            position: absolute;
+            top: -10px;
+            right: -5px;
+            font-size: 1rem;
+            transform: rotate(30deg);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            animation: pinWobble 3s infinite ease-in-out;
+        }
+
+        /* Efek stempel untuk tombol kemarin */
+        .day-btn.yesterday::after {
+            content: "KEMARIN";
+            position: absolute;
+            top: -8px;
+            right: -15px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            background-color: #8b7355;
+            color: white;
+            padding: 1px 5px;
+            border-radius: 2px;
+            transform: rotate(15deg);
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Efek stempel untuk tombol besok */
+        .day-btn.tomorrow::after {
+            content: "BESOK";
+            position: absolute;
+            top: -8px;
+            left: -15px;
+            font-size: 0.6rem;
+            font-weight: bold;
+            background-color: #0a2472;
+            color: white;
+            padding: 1px 5px;
+            border-radius: 2px;
+            transform: rotate(-15deg);
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        @keyframes pinWobble {
+            0%, 100% { transform: rotate(30deg); }
+            50% { transform: rotate(35deg); }
+        }
+
+        .day-btn.today:hover {
+            background-color: #e6c200;
+            border-color: #e6c200;
+        }
+
+        /* Main content area */
+        .main-content {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        /* Ornamen sudut di main content */
+        .main-content::before,
+        .main-content::after {
+            content: "❧";
+            position: absolute;
+            font-size: 2rem;
+            color: var(--border-color);
+            opacity: 0.3;
+        }
+
+        .main-content::before {
+            top: 0;
+            left: 0;
+        }
+
+        .main-content::after {
+            bottom: 0;
+            right: 0;
+        }
+
+        .schedule-container {
+            background-color: var(--paper-color);
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 
+                inset 0 0 20px rgba(139, 115, 85, 0.1),
+                0 5px 15px rgba(0, 0, 0, 0.1);
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Efek paper clip di schedule container */
+        .schedule-container::before {
+            content: "";
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 20px;
+            height: 40px;
+            background-color: silver;
+            clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%);
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        .container-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 5px double var(--border-color);
+            position: relative;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Ornamen dekoratif di judul */
+        .container-title::before,
+        .container-title::after {
+            content: "✦";
+            position: absolute;
+            bottom: -12px;
+            font-size: 1.5rem;
+            color: var(--accent-color);
+        }
+
+        .container-title::before {
+            left: calc(50% - 100px);
+        }
+
+        .container-title::after {
+            right: calc(50% - 100px);
+        }
+
+        .container-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 5px;
+            background-color: var(--accent-color);
+            opacity: 0.7;
+        }
+
+        /* Badge untuk hari yang dipilih */
+        #selectedDayBadge {
+            position: relative;
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 1px dashed var(--ink-color);
+            transform: rotate(-2deg);
+            box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Container untuk kelompok waktu */
+        .time-group-container {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        /* Header kelompok waktu */
+        .time-group-header {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-right: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
+        }
+
+        /* Efek stempel di header kelompok waktu */
+        .time-group-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 100%);
+            z-index: 0;
+        }
+
+        .time-group-header.morning {
+            border-left-color: var(--morning-color);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%), 
+                        linear-gradient(90deg, var(--morning-color) 5px, transparent 5px);
+        }
+
+        .time-group-header.afternoon {
+            border-left-color: var(--afternoon-color);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%), 
+                        linear-gradient(90deg, var(--afternoon-color) 5px, transparent 5px);
+        }
+
+        .time-group-header.evening {
+            border-left-color: var(--evening-color);
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%), 
+                        linear-gradient(90deg, var(--evening-color) 5px, transparent 5px);
+        }
+
+        .time-group-icon {
+            font-size: 1.8rem;
+            margin-right: 1rem;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .time-group-icon.morning {
+            background: linear-gradient(135deg, var(--morning-color), #2a6bff);
+        }
+
+        .time-group-icon.afternoon {
+            background: linear-gradient(135deg, var(--afternoon-color), #ff7b00);
+        }
+
+        .time-group-icon.evening {
+            background: linear-gradient(135deg, var(--evening-color), #7b1fa2);
+        }
+
+        /* Efek stempel di ikon */
+        .time-group-icon::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .time-group-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+            color: var(--ink-color);
+            position: relative;
+            z-index: 1;
+        }
+
+        .time-group-period {
+            font-size: 1rem;
+            color: #666;
+            margin-left: 0.5rem;
+            font-weight: 400;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Grid untuk schedule items dalam kelompok waktu */
+        .time-group-schedule {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+        }
+
+        /* ================================================================
+           IMPROVEMENT #1: EFEK KERTAS VINTAGE YANG LEBIH AUTENTIK
+           ================================================================ */
+        /* Random rotation untuk setiap schedule-item */
+        .schedule-item:nth-child(1) { transform: rotate(-0.8deg); }
+        .schedule-item:nth-child(2) { transform: rotate(1.2deg); }
+        .schedule-item:nth-child(3) { transform: rotate(-1.5deg); }
+        .schedule-item:nth-child(4) { transform: rotate(0.7deg); }
+        .schedule-item:nth-child(5) { transform: rotate(-1.1deg); }
+        .schedule-item:nth-child(6) { transform: rotate(1.8deg); }
+        .schedule-item:nth-child(7) { transform: rotate(-0.5deg); }
+        .schedule-item:nth-child(8) { transform: rotate(1.4deg); }
+        .schedule-item:nth-child(9) { transform: rotate(-1.9deg); }
+        .schedule-item:nth-child(10) { transform: rotate(0.9deg); }
+        
+        /* Jadwal items dengan efek vintage yang ditingkatkan */
+        .schedule-item {
+            padding: 1.2rem;
+            margin-bottom: 0;
+            border-left: 5px solid var(--primary-color);
+            background-color: rgba(248, 245, 240, 0.9);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            
+            /* ================================================================
+               IMPROVEMENT #2: SHADOW LEBIH DRAMATIC
+               ================================================================ */
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.15),
+                0 8px 25px rgba(0, 0, 0, 0.1),
+                0 15px 35px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+                inset 0 0 20px rgba(139, 115, 85, 0.05);
+            
+            border-top: 1px solid rgba(139, 115, 85, 0.2);
+            border-right: 1px solid rgba(139, 115, 85, 0.2);
+            border-bottom: 1px solid rgba(139, 115, 85, 0.2);
+            
+            /* ================================================================
+               IMPROVEMENT #3: BORDER TIDAK RATA (TORN PAPER EFFECT)
+               ================================================================ */
+            clip-path: polygon(
+                0% 10px, 10px 0%, 
+                calc(100% - 10px) 0%, 100% 10px,
+                100% calc(100% - 10px), calc(100% - 10px) 100%,
+                10px 100%, 0% calc(100% - 10px)
+            );
+            
+            /* ================================================================
+               IMPROVEMENT #6: POLISH ANIMASI
+               ================================================================ */
+            animation: fadeInUp 0.6s ease-out forwards;
+            transform-origin: center;
+        }
+
+        /* Efek noda tinta di jadwal item */
+        .schedule-item::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, var(--aged-stain) 0%, transparent 70%);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ornamen sudut di jadwal item */
+        .schedule-item::after {
+            content: "";
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            width: 15px;
+            height: 15px;
+            border-bottom: 2px solid var(--border-color);
+            border-left: 2px solid var(--border-color);
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        /* Efek sobek kertas di pojok kanan atas */
+        .schedule-item .torn-corner {
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            width: 30px;
+            height: 30px;
+            background: var(--paper-color);
+            clip-path: polygon(100% 0%, 100% 30%, 70% 0%);
+            border-bottom: 1px solid rgba(139, 115, 85, 0.3);
+            border-left: 1px solid rgba(139, 115, 85, 0.3);
+        }
+
+        /* Efek paper clip di jadwal item */
+        .schedule-item .paper-clip {
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 25px;
+            height: 12px;
+            background-color: silver;
+            clip-path: polygon(0% 0%, 100% 0%, 70% 100%, 30% 100%);
+            opacity: 0.7;
+            z-index: 2;
+            transition: transform 0.3s ease;
+        }
+
+        /* ================================================================
+           IMPROVEMENT #6: POLISH ANIMASI - Hover Effect
+           ================================================================ */
+        .schedule-item:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            z-index: 10;
+            box-shadow: 
+                0 12px 30px rgba(0, 0, 0, 0.2),
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 30px 50px rgba(0, 0, 0, 0.05),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+                0 0 20px rgba(10, 36, 114, 0.1);
+            border-left-color: var(--accent-color);
+            border-left-width: 6px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        
+        .schedule-item:hover .paper-clip {
+            transform: translateX(-50%) rotate(45deg) translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* ================================================================
+           IMPROVEMENT #5: HIGHLIGHT JADWAL YANG SEDANG BERLANGSUNG
+           ================================================================ */
+        .schedule-item.current-session {
+            background: linear-gradient(135deg, var(--current-session-color), #fff8e1);
+            border-left: 6px solid #ff5722;
+            animation: pulseGlow 2s infinite alternate;
+            z-index: 5;
+            position: relative;
+        }
+        
+        .schedule-item.current-session::before {
+            background: radial-gradient(circle, rgba(255, 87, 34, 0.1) 0%, transparent 70%);
+            opacity: 0.5;
+        }
+        
+        .current-session-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(135deg, #ff5722, #ff8a65);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: 0 3px 6px rgba(255, 87, 34, 0.3);
+            z-index: 3;
+            transform: rotate(5deg);
+            animation: badgePulse 1.5s infinite alternate;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            letter-spacing: 0.5px;
+        }
+        
+        .current-session-badge::before {
+            content: "🔴 ";
+            font-size: 0.6rem;
+        }
+        
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 
+                    0 5px 15px rgba(0, 0, 0, 0.15),
+                    0 8px 25px rgba(0, 0, 0, 0.1),
+                    0 15px 35px rgba(0, 0, 0, 0.05),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+                    inset 0 0 20px rgba(139, 115, 85, 0.05),
+                    0 0 10px var(--current-session-glow);
+            }
+            100% {
+                box-shadow: 
+                    0 5px 15px rgba(0, 0, 0, 0.15),
+                    0 8px 25px rgba(0, 0, 0, 0.1),
+                    0 15px 35px rgba(0, 0, 0, 0.05),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+                    inset 0 0 20px rgba(139, 115, 85, 0.05),
+                    0 0 20px var(--current-session-glow);
+            }
+        }
+        
+        @keyframes badgePulse {
+            0% {
+                transform: rotate(5deg) scale(1);
+                box-shadow: 0 3px 6px rgba(255, 87, 34, 0.3);
+            }
+            100% {
+                transform: rotate(5deg) scale(1.05);
+                box-shadow: 0 5px 12px rgba(255, 87, 34, 0.5);
+            }
+        }
+
+        /* Animasi subtle untuk item jadwal */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px) rotate(0deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) rotate(var(--item-rotation, 0deg));
+            }
+        }
+
+        /* Waktu dan foto dosen */
+        .schedule-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 2px dotted var(--border-color);
+            position: relative;
+            z-index: 2;
+        }
+
+        .lecturer-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), #2a6bff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.8rem;
+            border: 3px solid var(--border-color);
+            box-shadow: 
+                0 3px 6px rgba(0, 0, 0, 0.2),
+                inset 0 0 10px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+            background-size: cover;
+            background-position: center;
+            z-index: 2;
+        }
+
+        /* Efek stempel di foto dosen */
+        .lecturer-photo::after {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 1px dashed rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Efek foto vintage */
+        .lecturer-photo::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .lecturer-info {
+            flex: 1;
+            min-width: 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .schedule-time {
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            display: inline-block;
+            padding-left: 22px;
+        }
+
+        /* Ikon jam dengan efek vintage */
+        .schedule-time i {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--border-color);
+            font-size: 1.1rem;
+        }
+
+        /* Headline dosen */
+        .lecturer-name {
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+            color: var(--ink-color);
+            font-family: 'Playfair Display', serif;
+            line-height: 1.3;
+            position: relative;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Drop cap untuk nama dosen */
+        .lecturer-name::first-letter {
+            font-size: 2.2rem;
+            float: left;
+            line-height: 1;
+            margin-right: 6px;
+            margin-top: 3px;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .lecturer-title {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 0.5rem;
+            padding-left: 2rem;
+            word-wrap: break-word;
+        }
+
+        /* Mata kuliah */
+        .course-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: 0.8rem 0 0.5rem 0;
+            color: var(--primary-color);
+            border-left: 3px solid var(--accent-color);
+            padding-left: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            position: relative;
+            z-index: 2;
+        }
+
+        .course-title i {
+            color: var(--border-color);
+            margin-right: 8px;
+        }
+
+        .schedule-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
+            color: #666;
+            position: relative;
+            z-index: 2;
+        }
+
+        .schedule-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background-color: rgba(139, 115, 85, 0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 2px;
+            border: 1px solid rgba(139, 115, 85, 0.2);
+        }
+
+        /* ================================================================
+           IMPROVEMENT #4: EMPTY STATE LEBIH MENARIK
+           ================================================================ */
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #777;
+            font-style: italic;
+            position: relative;
+            grid-column: 1 / -1;
+            animation: fadeIn 0.8s ease-out;
+            background: linear-gradient(135deg, rgba(248, 245, 240, 0.9), rgba(232, 227, 214, 0.9));
+            border-radius: 10px;
+            border: 2px dashed var(--border-color);
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+        
+        /* Efek kertas berkerut di empty state */
+        .no-results::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 20px,
+                    rgba(139, 115, 85, 0.05) 20px,
+                    rgba(139, 115, 85, 0.05) 21px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Efek stempel "TIDAK DITEMUKAN" yang lebih vintage */
+        .no-results::after {
+            content: "TIDAK DITEMUKAN";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-10deg);
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: rgba(139, 115, 85, 0.08);
+            letter-spacing: 8px;
+            white-space: nowrap;
+            z-index: 0;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .no-results i {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            color: var(--border-color);
+            position: relative;
+            z-index: 1;
+            animation: bounceIcon 2s infinite ease-in-out;
+            filter: sepia(0.5) brightness(0.9);
+        }
+        
+        .no-results .empty-icon-container {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .no-results .empty-icon {
+            font-size: 5rem;
+            color: var(--border-color);
+            animation: floatIcon 3s infinite ease-in-out;
+            filter: sepia(0.6);
+            position: relative;
+        }
+        
+        .no-results .empty-icon::before {
+            content: "📰";
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            font-size: 2rem;
+            opacity: 0.7;
+            transform: rotate(-20deg);
+            animation: floatSubIcon 3s infinite ease-in-out alternate;
+        }
+
+        .no-results h3 {
+            position: relative;
+            z-index: 1;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .no-results p {
+            position: relative;
+            z-index: 1;
+            max-width: 500px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #5a5347;
+        }
+        
+        .no-results .vintage-note {
+            background: rgba(139, 115, 85, 0.1);
+            border: 1px solid rgba(139, 115, 85, 0.3);
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-style: normal;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .no-results .vintage-note::before {
+            content: "💡";
+            position: absolute;
+            left: 10px;
+            top: -10px;
+            background: var(--paper-color);
+            padding: 0 5px;
+            font-size: 1.2rem;
+        }
+        
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-15px) rotate(-3deg); }
+            66% { transform: translateY(5px) rotate(3deg); }
+        }
+        
+        @keyframes floatSubIcon {
+            0%, 100% { transform: translate(0, 0) rotate(-20deg); }
+            50% { transform: translate(5px, 5px) rotate(-15deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== FOOTER ==================== */
+        .newspaper-footer {
+            text-align: center;
+            padding: 2.5rem 0 1.5rem 0;
+            border-top: 8px double var(--border-color);
+            margin-top: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+            position: relative;
+            background-color: var(--paper-color);
+            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        /* Efek robek di footer */
+        .newspaper-footer::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            right: 20px;
+            height: 30px;
+            background: var(--paper-color);
+            clip-path: polygon(
+                0% 100%, 2% 90%, 4% 95%, 6% 85%, 8% 92%, 
+                10% 80%, 12% 88%, 14% 75%, 16% 85%, 18% 70%, 
+                20% 82%, 22% 68%, 24% 80%, 26% 65%, 28% 78%, 
+                30% 60%, 32% 75%, 34% 58%, 36% 72%, 38% 55%, 
+                40% 70%, 42% 52%, 44% 68%, 46% 50%, 48% 65%, 
+                50% 48%, 52% 63%, 54% 45%, 56% 60%, 58% 43%, 
+                60% 58%, 62% 40%, 64% 55%, 66% 38%, 68% 52%, 
+                70% 35%, 72% 50%, 74% 33%, 76% 48%, 78% 30%, 
+                80% 45%, 82% 28%, 84% 42%, 86% 25%, 88% 40%, 
+                90% 22%, 92% 38%, 94% 20%, 96% 35%, 98% 18%, 
+                100% 100%
+            );
+        }
+
+        .newspaper-footer .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            background: none;
+            box-shadow: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            gap: 1rem;
+        }
+
+        .newspaper-footer .container::before,
+        .newspaper-footer .container::after {
+            display: none;
+        }
+
+        .footer-credit {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Ornamen di footer credit */
+        .footer-credit::after {
+            content: "~ ~ ~";
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--border-color);
+            letter-spacing: 5px;
+        }
+
+        .footer-note {
+            line-height: 1.6;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 3px;
+            border: 1px dashed var(--border-color);
+        }
+
+        /* Efek watermark di latar belakang */
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 15rem;
+            color: rgba(139, 115, 85, 0.03);
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* RESPONSIVE BREAKPOINTS */
+        @media (min-width: 768px) {
+            /* Desktop adjustments */
+            .header-info {
+                gap: 1.8rem;
+            }
+            
+            .logo-placeholder {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .date-time {
+                padding: 15px 25px;
+                min-width: 350px;
+            }
+            
+            .current-date {
+                font-size: 1.3rem;
+            }
+            
+            .current-time {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .institution-name {
+                font-size: 2.8rem;
+            }
+            
+            .time-group-schedule {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .institution-name {
+                font-size: 2.2rem;
+            }
+            
+            .newspaper-header::before,
+            .newspaper-header::after {
+                display: none;
+            }
+            
+            .header-info {
+                gap: 1.5rem;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .day-selector {
+                justify-content: center;
+            }
+            
+            .schedule-container {
+                padding: 1.5rem;
+            }
+            
+            .container-title {
+                font-size: 1.8rem;
+            }
+            
+            .watermark {
+                font-size: 8rem;
+            }
+            
+            .time-group-header {
+                padding: 1rem;
+            }
+            
+            .time-group-title {
+                font-size: 1.5rem;
+            }
+            
+            .time-group-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+                margin-right: 0.8rem;
+            }
+            
+            /* MOBILE: Pastikan nama dosen dan foto sejajar */
+            .schedule-header {
+                flex-direction: row;
+                align-items: flex-start;
+                gap: 0.8rem;
+            }
+            
+            .lecturer-photo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+                flex-shrink: 0;
+            }
+            
+            .lecturer-info {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .lecturer-name {
+                font-size: 1.2rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .lecturer-title {
+                font-size: 0.85rem;
+                padding-left: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .schedule-time {
+                font-size: 1rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .course-title {
+                font-size: 1rem;
+                margin: 0.6rem 0 0.4rem 0;
+            }
+            
+            /* Responsive untuk efek rotasi */
+            .schedule-item:nth-child(n) {
+                transform: none !important;
+            }
+            
+            .schedule-item:hover {
+                transform: translateY(-5px) scale(1.01) !important;
+            }
+            
+            /* Responsive untuk empty state */
+            .no-results::after {
+                font-size: 2rem;
+                letter-spacing: 3px;
+            }
+            
+            .no-results .empty-icon {
+                font-size: 3.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .day-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+                min-width: 100px;
+            }
+            
+            .day-selector {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .day-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .schedule-item {
+                padding: 1rem;
+            }
+            
+            .course-title {
+                font-size: 0.95rem;
+            }
+            
+            .schedule-time {
+                font-size: 0.95rem;
+            }
+            
+            .schedule-meta {
+                font-size: 0.8rem;
+                gap: 6px;
+            }
+            
+            .header-info {
+                gap: 1.2rem;
+            }
+            
+            .logo-placeholder {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+            
+            .date-time {
+                padding: 10px 15px;
+                min-width: 250px;
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .current-date {
+                font-size: 1rem;
+            }
+            
+            .current-time {
+                font-size: 1.6rem;
+            }
+            
+            .time-group-schedule {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .time-group-header {
+                flex-direction: row;
+                align-items: center;
+                padding: 0.8rem;
+            }
+            
+            .time-group-icon {
+                margin-right: 0.8rem;
+                margin-bottom: 0;
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+            
+            .time-group-title {
+                font-size: 1.2rem;
+            }
+            
+            .time-group-period {
+                font-size: 0.85rem;
+                display: block;
+                margin-left: 0;
+                margin-top: 0.2rem;
+            }
+            
+            .lecturer-photo {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .lecturer-name {
+                font-size: 1.1rem;
+                line-height: 1.2;
+            }
+            
+            .lecturer-title {
+                font-size: 0.8rem;
+                padding-left: 1.2rem;
+                line-height: 1.3;
+            }
+            
+            .schedule-header {
+                gap: 0.6rem;
+                margin-bottom: 0.8rem;
+                padding-bottom: 0.6rem;
+            }
+            
+            /* Untuk nama yang sangat panjang di mobile */
+            .lecturer-name::first-letter {
+                font-size: 1.8rem;
+                margin-right: 4px;
+                margin-top: 2px;
+            }
+        }
+
+        /* Untuk layar sangat kecil */
+        @media (max-width: 380px) {
+            .schedule-header {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+            
+            .lecturer-photo {
+                width: 45px;
+                height: 45px;
+                font-size: 1rem;
+            }
+            
+            .lecturer-name {
+                font-size: 1rem;
+            }
+            
+            .lecturer-title {
+                font-size: 0.75rem;
+                padding-left: 1rem;
+            }
+            
+            .course-title {
+                font-size: 0.9rem;
+            }
+            
+            .schedule-meta span {
+                padding: 0.15rem 0.4rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOADING ANIMATION - INSTANT APPEAR -->
+    <div id="instant-loader">
+        <div class="instant-spinner">
+            <div class="instant-letter">
+                <!-- Stempel di tengah -->
+                <div class="instant-stamp">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                
+                <!-- Garis-garis pada surat -->
+                <div class="letter-line"></div>
+                <div class="letter-line"></div>
+                <div class="letter-line"></div>
+                <div class="letter-line"></div>
+            </div>
+        </div>
+        <div class="instant-loading-text">MEMUAT JADWAL...</div>
+    </div>
+
+    <!-- Efek tinta tumpah -->
+    <div class="ink-stain ink-stain-1"></div>
+    <div class="ink-stain ink-stain-2"></div>
+    
+    <!-- Efek watermark -->
+    <div class="watermark">STMIK TAZKIA</div>
+
+    <!-- Container utama -->
+    <div class="container">
+        <!-- Header Koran -->
+        <header class="newspaper-header">
+            <div class="ornament-left"></div>
+            <div class="ornament-right"></div>
+            <div class="institution-name">STMIK TAZKIA DAILY</div>
+            <div class="newspaper-subtitle">Jadwal Harian Civitas Akademika</div>
+            
+            <div class="header-info">
+                <div class="logo-placeholder">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                
+                <div class="date-time">
+                    <div class="current-date" id="currentDate">Senin, 1 Januari 2024</div>
+                    <div class="current-time" id="currentTime">00:00:00</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section dengan Search Bar -->
+        <section class="hero-section">
+            <div class="search-container">
+                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Dosen, Mata Kuliah, atau Kelompok...">
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="container">
+                <div class="filter-controls">
+                    <div class="day-selector">
+                        <button class="day-btn yesterday" data-day="yesterday">KEMARIN</button>
+                        <button class="day-btn today active" data-day="today">HARI INI</button>
+                        <button class="day-btn tomorrow" data-day="tomorrow">BESOK</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="container main-content">
+            <div class="schedule-container">
+                <h2 class="container-title">
+                    <span id="scheduleTitle">JADWAL HARI INI</span>
+                    <span id="selectedDayBadge" class="badge bg-warning text-dark ms-2"></span>
+                </h2>
+                <div id="scheduleResults">
+                    <!-- Jadwal akan dimuat di sini -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Koran -->
+        <footer class="newspaper-footer">
+            <div class="container">
+                <div class="footer-credit">Powered by WebSipp</div>
+                <div class="footer-note">
+                    Sistem Informasi Penjadwalan Perkuliahan STMIK Tazkia. 
+                    Data diperbarui secara real-time. Jadwal dapat berubah sewaktu-waktu.
+                    Edisi Cetak: 2025
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ==================== LOADING LOGIC ====================
+        // Langsung jalankan saat halaman mulai load
+        (function() {
+            console.log("Loading animation langsung muncul!");
+            
+            // Tunggu 1.5 detik untuk loading effect
+            setTimeout(function() {
+                // Sembunyikan loader
+                const loader = document.getElementById('instant-loader');
+                if (loader) {
+                    loader.classList.add('hidden');
+                }
+                
+                console.log("Loading selesai, tampilkan konten utama");
+                
+            }, 1500); // 1.5 detik loading time
+            
+        })();
+        
+        // Data jadwal perkuliahan (sama seperti sebelumnya)
+        const scheduleData = [
+            // =================== SISTEM INFORMASI 2025 ===================
+            // Senin
+            {
+                id: 1,
+                day: "Senin",
+                time: "07:50 - 09:30",
+                course: "Ketazkiaan",
+                lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd",
+                class: "SI 2025",
+                room: "Ibnu Khaldun 1"
+            },
+            {
+                id: 2,
+                day: "Senin",
+                time: "13:00 - 15:30",
+                course: "Kewirausahaan",
+                lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)",
+                class: "SI 2025",
+                room: "Abu Yusuf 1"
+            },
+            // Selasa
+            {
+                id: 3,
+                day: "Selasa",
+                time: "09:31 - 12:00",
+                course: "Algoritma dan Pemrograman Dasar",
+                lecturer: "Arif Surachman, S.Si., M.Si",
+                class: "SI 2025",
+                room: "Laboratorium 2"
+            },
+            // Kamis
+            {
+                id: 4,
+                day: "Kamis",
+                time: "09:31 - 12:00",
+                course: "Matematika Diskrit",
+                lecturer: "Hairul Umam, S.Si., M.Si",
+                class: "SI 2025",
+                room: "Ibnu Khaldun 1"
+            },
+            {
+                id: 5,
+                day: "Kamis",
+                time: "15:31 - 17:10",
+                course: "Matematika Dasar Teknik",
+                lecturer: "Hairul Umam, S.Si., M.Si",
+                class: "SI 2025",
+                room: "Abu Yusuf 1"
+            },
+            // Jumat
+            {
+                id: 6,
+                day: "Jumat",
+                time: "13:00 - 14:40",
+                course: "Pengantar Teknologi Informasi",
+                lecturer: "Galih Kurniawan Sidik, M.Kom",
+                class: "SI 2025",
+                room: "Laboratorium 1"
+            },
+            // Sabtu
+            {
+                id: 7,
+                day: "Sabtu",
+                time: "07:00 - 09:30",
+                course: "Arsitektur dan Organisasi Komputer",
+                lecturer: "Q Fadlan, M.Kom., S.ST",
+                class: "SI 2025",
+                room: "Laboratorium 1"
+            },
+            {
+                id: 8,
+                day: "Sabtu",
+                time: "13:00 - 14:40",
+                course: "Bahasa Indonesia",
+                lecturer: "Muhammad Ichsan, M.Pd.",
+                class: "SI 2025",
+                room: "Ibnu Khaldun 2 & 3 (Aula)"
+            },
+
+            // =================== SISTEM INFORMASI 2024 ===================
+            // Senin - Pagi
+            {
+                id: 9,
+                day: "Senin",
+                time: "07:00 - 09:30",
+                course: "Machine Learning",
+                lecturer: "Hendri Karisma, S.Kom., M.T",
+                class: "SI 2024",
+                room: "Laboratorium 1"
+            },
+            {
+                id: 10,
+                day: "Senin",
+                time: "07:00 - 09:30",
+                course: "Fundamental Ekonomi Islam",
+                lecturer: "Ayu Solihah Sadariyah, S.E.I., M.E",
+                class: "SI 2024",
+                room: "Abu Yusuf 1"
+            },
+            // Senin - Siang
+            {
+                id: 11,
+                day: "Senin",
+                time: "13:00 - 16:20",
+                course: "Manajemen Proyek",
+                lecturer: "Muhammad Singgih Zulfikar Ansori, S.Pd., M.T.I",
+                class: "SI 2024",
+                room: "Laboratorium 1"
+            },
+            // Selasa - Pagi
+            {
+                id: 12,
+                day: "Selasa",
+                time: "07:00 - 09:30",
+                course: "Jaringan Komputer dan Komputasi Awan",
+                lecturer: "Arif Surachman, S.Si., M.Si",
+                class: "SI 2024",
+                room: "Laboratorium 2"
+            },
+            // Rabu - Pagi
+            {
+                id: 13,
+                day: "Rabu",
+                time: "07:00 - 10:20",
+                course: "Analisis dan Perancangan Sistem",
+                lecturer: "Endy Muhardin, S.T., M.E.",
+                class: "SI 2024",
+                room: "Ibnu Khaldun 1"
+            },
+            // Rabu - Siang
+            {
+                id: 14,
+                day: "Rabu",
+                time: "09:31 - 12:00",
+                course: "Pengembangan Aplikasi Web",
+                lecturer: "Kus Andriadi, S.Kom., M.T.I.",
+                class: "SI 2024",
+                room: "Ibnu Khaldun 2"
+            },
+            {
+                id: 15,
+                day: "Rabu",
+                time: "13:00 - 15:30",
+                course: "Sistem Basis Data",
+                lecturer: "Galih Kurniawan Sidik, M.Kom",
+                class: "SI 2024",
+                room: "Laboratorium 1"
+            },
+
+            // =================== TEKNIK INFORMATIKA 2024 ===================
+            // Senin - Pagi
+            {
+                id: 16,
+                day: "Senin",
+                time: "07:00 - 09:30",
+                course: "Machine Learning",
+                lecturer: "Hendri Karisma, S.Kom., M.T",
+                class: "TI 2024",
+                room: "Laboratorium 1"
+            },
+            {
+                id: 17,
+                day: "Senin",
+                time: "09:31 - 12:00",
+                course: "Fundamental Ekonomi Islam",
+                lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)",
+                class: "TI 2024",
+                room: "Ibnu Khaldun 4"
+            },
+            // Senin - Siang
+            {
+                id: 18,
+                day: "Senin",
+                time: "13:00 - 15:30",
+                course: "Kewirausahaan",
+                lecturer: "Ir. Teti Haryati, M.Si",
+                class: "TI 2024",
+                room: "Ibnu Khaldun 1"
+            },
+            // Selasa - Pagi
+            {
+                id: 19,
+                day: "Selasa",
+                time: "07:00 - 09:30",
+                course: "Konstruksi dan Rekayasa Perangkat Lunak",
+                lecturer: "Agus Sulaiman, S.Kom., M.T",
+                class: "TI 2024",
+                room: "Laboratorium 1"
+            },
+            // Rabu - Pagi
+            {
+                id: 20,
+                day: "Rabu",
+                time: "09:31 - 12:00",
+                course: "Analisis dan Perancangan Sistem",
+                lecturer: "Endy Setiadi, S.Kom., M.Kom",
+                class: "TI 2024",
+                room: "Laboratorium 1"
+            },
+            // Rabu - Siang
+            {
+                id: 21,
+                day: "Rabu",
+                time: "13:00 - 15:30",
+                course: "Pengantar Kriptografi dan Teori Bilangan",
+                lecturer: "Hairul Umam, S.S., M.Si",
+                class: "TI 2024",
+                room: "Abu Yusuf 1"
+            },
+            {
+                id: 22,
+                day: "Rabu",
+                time: "13:00 - 15:30",
+                course: "Sistem Basis Data",
+                lecturer: "Hairul Umam, S.S., M.Si",
+                class: "TI 2024",
+                room: "Laboratorium 2"
+            },
+            // Jumat - Malam
+            {
+                id: 23,
+                day: "Jumat",
+                time: "20:15 - 21:45",
+                course: "Keamanan Sistem Informasi",
+                lecturer: "D Fadlan, M.Kom., S.ST",
+                class: "TI 2024",
+                room: "Abu Yusuf 1"
+            },
+
+            // =================== TEKNIK INFORMATIKA 2025 ===================
+            // Senin
+            {
+                id: 24,
+                day: "Senin",
+                time: "09:31 - 11:10",
+                course: "Ketazkiaan",
+                lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd",
+                class: "TI 2025",
+                room: "Ibnu Khaldun 1"
+            },
+            // Rabu
+            {
+                id: 25,
+                day: "Rabu",
+                time: "13:00 - 15:30",
+                course: "Kewirausahaan",
+                lecturer: "Dr. Sugiyarti Fatma Laela, M.Buss, Acc, CMA, CIBA",
+                class: "TI 2025",
+                room: "Ibnu Khaldun 1"
+            },
+            {
+                id: 26,
+                day: "Rabu",
+                time: "15:31 - 17:10",
+                course: "Matematika Dasar Teknik",
+                lecturer: "Hairul Umam, S.Si., M.Si",
+                class: "TI 2025",
+                room: "Abu Yusuf 1"
+            },
+            // Kamis
+            {
+                id: 27,
+                day: "Kamis",
+                time: "07:00 - 09:30",
+                course: "Matematika Diskrit",
+                lecturer: "Hendri Karisma, S.Kom., M.T",
+                class: "TI 2025",
+                room: "Laboratorium 1"
+            },
+            {
+                id: 28,
+                day: "Kamis",
+                time: "13:00 - 15:30",
+                course: "Algoritma dan Pemrograman Dasar",
+                lecturer: "Ricky Setiadi, S.Kom., M.Kom",
+                class: "TI 2025",
+                room: "Laboratorium 1"
+            },
+            // Sabtu
+            {
+                id: 29,
+                day: "Sabtu",
+                time: "07:00 - 09:30",
+                course: "Arsitektur dan Organisasi Komputer",
+                lecturer: "Q Fadlan, M.Kom., S.ST",
+                class: "TI 2025",
+                room: "Laboratorium 1"
+            },
+            {
+                id: 30,
+                day: "Sabtu",
+                time: "10:30 - 12:00",
+                course: "Pengantar Teknologi Informasi",
+                lecturer: "Agus Sulaiman, S.Kom., M.T",
+                class: "TI 2025",
+                room: "Laboratorium 1"
+            },
+            {
+                id: 31,
+                day: "Sabtu",
+                time: "13:00 - 14:40",
+                course: "Bahasa Indonesia",
+                lecturer: "Muhammad Ichsan, M.Pd.",
+                class: "TI 2025",
+                room: "Ibnu Khaldun 2 & 3 (Aula)"
+            }
+        ];
+
+        // Daftar hari dalam bahasa Indonesia
+        const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+        const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+        // Variabel untuk menyimpan state filter
+        let currentDay = "today"; // "today", "yesterday", "tomorrow"
+        let currentSearch = "";
+        let currentSessions = []; // Untuk menyimpan jadwal yang sedang berlangsung
+
+        // Fungsi untuk mendapatkan inisial dari nama
+        function getInitials(name) {
+            // Hapus gelar
+            let cleanName = name.split(',')[0];
+            // Ambil inisial dari setiap kata
+            return cleanName.split(' ')
+                .filter(word => word.length > 0)
+                .map(word => word[0])
+                .join('')
+                .toUpperCase();
+        }
+
+        // Fungsi untuk mengupdate tanggal dan waktu
+        function updateDateTime() {
+            const now = new Date();
+            
+            // Format tanggal
+            const dayName = days[now.getDay()];
+            const date = now.getDate();
+            const monthName = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            document.getElementById('currentDate').textContent = `${dayName}, ${date} ${monthName} ${year}`;
+            
+            // Format waktu
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        // Fungsi untuk mendapatkan nama hari berdasarkan offset
+        function getDayByOffset(offset) {
+            const now = new Date();
+            const targetDate = new Date(now);
+            targetDate.setDate(now.getDate() + offset);
+            return days[targetDate.getDay()];
+        }
+
+        // Fungsi untuk mendapatkan nama hari ini
+        function getToday() {
+            const now = new Date();
+            return days[now.getDay()];
+        }
+
+        // Fungsi untuk menentukan kelompok waktu berdasarkan jam mulai
+        function getTimeGroup(startTime) {
+            // Ambil jam dari format "HH:MM - HH:MM"
+            const hour = parseInt(startTime.split(':')[0]);
+            
+            if (hour >= 7 && hour < 12) {
+                return "morning";
+            } else if (hour >= 13 && hour < 15) {
+                return "afternoon";
+            } else if (hour >= 15 && hour < 18) {
+                return "evening";
+            } else {
+                return "other"; // Untuk waktu di luar range
+            }
+        }
+
+        // Fungsi untuk mendapatkan nama kelompok waktu
+        function getTimeGroupName(group) {
+            switch(group) {
+                case "morning": return "PAGI";
+                case "afternoon": return "SIANG";
+                case "evening": return "SORE";
+                default: return "LAINNYA";
+            }
+        }
+
+        // Fungsi untuk mendapatkan ikon kelompok waktu
+        function getTimeGroupIcon(group) {
+            switch(group) {
+                case "morning": return '<i class="fas fa-sun"></i>';
+                case "afternoon": return '<i class="fas fa-cloud-sun"></i>';
+                case "evening": return '<i class="fas fa-moon"></i>';
+                default: return '<i class="fas fa-clock"></i>';
+            }
+        }
+
+        // Fungsi untuk mendapatkan periode waktu
+        function getTimeGroupPeriod(group) {
+            switch(group) {
+                case "morning": return "(07:00 - 12:00)";
+                case "afternoon": return "(13:00 - 15:00)";
+                case "evening": return "(15:00 - 18:00)";
+                default: return "";
+            }
+        }
+
+        // ================================================================
+        // IMPROVEMENT #5: HIGHLIGHT JADWAL YANG SEDANG BERLANGSUNG
+        // ================================================================
+        // Fungsi untuk memeriksa apakah suatu jadwal sedang berlangsung
+        function isSessionCurrent(scheduleItem) {
+            const now = new Date();
+            const currentTime = now.getHours() * 60 + now.getMinutes(); // Konversi ke menit
+            
+            // Parse waktu dari string format "HH:MM - HH:MM"
+            const [startStr, endStr] = scheduleItem.time.split(' - ');
+            const [startHour, startMinute] = startStr.split(':').map(Number);
+            const [endHour, endMinute] = endStr.split(':').map(Number);
+            
+            const startTime = startHour * 60 + startMinute;
+            const endTime = endHour * 60 + endMinute;
+            
+            // Periksa apakah waktu sekarang berada dalam rentang jadwal
+            return currentTime >= startTime && currentTime <= endTime;
+        }
+
+        // Fungsi untuk mendeteksi jadwal yang sedang berlangsung
+        function detectCurrentSessions(scheduleData, targetDay) {
+            const now = new Date();
+            const today = days[now.getDay()];
+            
+            // Hanya cek jadwal berlangsung jika melihat jadwal hari ini
+            if (targetDay !== today) {
+                return [];
+            }
+            
+            return scheduleData.filter(item => {
+                // Cek apakah hari sama dengan hari ini
+                if (item.day !== today) return false;
+                
+                // Cek apakah jadwal sedang berlangsung
+                return isSessionCurrent(item);
+            });
+        }
+
+        // Fungsi untuk merender jadwal perkuliahan
+        function renderSchedule() {
+            const scheduleResults = document.getElementById('scheduleResults');
+            const scheduleTitle = document.getElementById('scheduleTitle');
+            const dayBadge = document.getElementById('selectedDayBadge');
+            
+            // Tentukan hari yang akan ditampilkan
+            let targetDayName;
+            let dayLabel;
+            
+            if (currentDay === "today") {
+                targetDayName = getToday();
+                dayLabel = "HARI INI";
+                dayBadge.textContent = targetDayName;
+                dayBadge.classList.add("bg-warning");
+                dayBadge.classList.remove("bg-secondary", "bg-info");
+            } else if (currentDay === "yesterday") {
+                targetDayName = getDayByOffset(-1);
+                dayLabel = "KEMARIN";
+                dayBadge.textContent = targetDayName;
+                dayBadge.classList.remove("bg-warning", "bg-info");
+                dayBadge.classList.add("bg-secondary");
+            } else if (currentDay === "tomorrow") {
+                targetDayName = getDayByOffset(1);
+                dayLabel = "BESOK";
+                dayBadge.textContent = targetDayName;
+                dayBadge.classList.remove("bg-warning", "bg-secondary");
+                dayBadge.classList.add("bg-info");
+            }
+            
+            // Update judul
+            scheduleTitle.textContent = `JADWAL ${dayLabel}`;
+            
+            // Filter data berdasarkan kriteria
+            let filteredData = scheduleData.filter(item => {
+                // Filter berdasarkan hari
+                let passesDay = item.day === targetDayName;
+                
+                // Filter berdasarkan pencarian
+                let passesSearch = true;
+                if (currentSearch) {
+                    const term = currentSearch.toLowerCase();
+                    passesSearch = 
+                        item.course.toLowerCase().includes(term) ||
+                        item.lecturer.toLowerCase().includes(term) ||
+                        item.class.toLowerCase().includes(term) ||
+                        item.room.toLowerCase().includes(term);
+                }
+                
+                return passesDay && passesSearch;
+            });
+            
+            // Deteksi jadwal yang sedang berlangsung
+            currentSessions = detectCurrentSessions(filteredData, targetDayName);
+            
+            // Render jadwal
+            if (filteredData.length > 0) {
+                // Urutkan berdasarkan waktu
+                filteredData.sort((a, b) => {
+                    return a.time.localeCompare(b.time);
+                });
+                
+                // Kelompokkan berdasarkan waktu
+                const groupedData = {
+                    morning: [],
+                    afternoon: [],
+                    evening: [],
+                    other: []
+                };
+                
+                filteredData.forEach(item => {
+                    const startTime = item.time.split(' - ')[0];
+                    const group = getTimeGroup(startTime);
+                    groupedData[group].push(item);
+                });
+                
+                // Buat HTML untuk setiap kelompok waktu
+                let scheduleHTML = '';
+                
+                // Urutan tampilan: Pagi → Siang → Sore → Lainnya
+                const displayOrder = ['morning', 'afternoon', 'evening', 'other'];
+                
+                displayOrder.forEach(group => {
+                    if (groupedData[group].length > 0) {
+                        scheduleHTML += createTimeGroupHTML(group, groupedData[group]);
+                    }
+                });
+                
+                scheduleResults.innerHTML = scheduleHTML;
+                
+            } else {
+                // ================================================================
+                // IMPROVEMENT #4: EMPTY STATE LEBIH MENARIK
+                // ================================================================
+                scheduleResults.innerHTML = `
+                    <div class="no-results">
+                        <div class="empty-icon-container">
+                            <div class="empty-icon">📰</div>
+                        </div>
+                        <h3>Tidak Ada Jadwal Ditemukan</h3>
+                        <p>Sepertinya tidak ada jadwal perkuliahan untuk kriteria yang Anda pilih.</p>
+                        <div class="vintage-note">
+                            <strong>Tips:</strong> Coba gunakan kata kunci lain, pilih hari yang berbeda, atau pastikan filter pencarian tidak terlalu spesifik.
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Fungsi untuk membuat HTML kelompok waktu
+        function createTimeGroupHTML(group, items) {
+            return `
+                <div class="time-group-container">
+                    <div class="time-group-header ${group} d-flex align-items-center">
+                        <div class="time-group-icon ${group}">
+                            ${getTimeGroupIcon(group)}
+                        </div>
+                        <div>
+                            <h3 class="time-group-title">
+                                ${getTimeGroupName(group)}
+                                <span class="time-group-period">${getTimeGroupPeriod(group)}</span>
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="time-group-schedule">
+                        ${items.map(item => createScheduleItemHTML(item)).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fungsi untuk membuat HTML item jadwal
+        function createScheduleItemHTML(item) {
+            const initials = getInitials(item.lecturer);
+            const isCurrentSession = currentSessions.some(session => session.id === item.id);
+            
+            // Tentukan class tambahan berdasarkan apakah jadwal sedang berlangsung
+            const additionalClass = isCurrentSession ? 'current-session' : '';
+            
+            return `
+                <div class="schedule-item ${additionalClass}" data-id="${item.id}">
+                    <div class="torn-corner"></div>
+                    <div class="paper-clip"></div>
+                    ${isCurrentSession ? '<div class="current-session-badge">SEDANG BERLANGSUNG</div>' : ''}
+                    <div class="schedule-header">
+                        <div class="lecturer-photo">
+                            ${initials}
+                        </div>
+                        <div class="lecturer-info">
+                            <div class="schedule-time">
+                                <i class="far fa-clock"></i> ${item.time}
+                            </div>
+                            <h3 class="lecturer-name">${item.lecturer.split(',')[0]}</h3>
+                            <div class="lecturer-title">${item.lecturer.split(',').slice(1).join(',').trim() || 'Dosen STMIK Tazkia'}</div>
+                        </div>
+                    </div>
+                    <div class="course-title">
+                        <i class="fas fa-book"></i> ${item.course}
+                    </div>
+                    <div class="schedule-meta">
+                        <span><i class="fas fa-users"></i> ${item.class}</span>
+                        <span><i class="fas fa-map-marker-alt"></i> ${item.room}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Fungsi untuk update jadwal berlangsung secara real-time
+        function updateCurrentSessions() {
+            const now = new Date();
+            const today = days[now.getDay()];
+            
+            // Hanya update jika melihat jadwal hari ini
+            if (currentDay === "today") {
+                const scheduleItems = document.querySelectorAll('.schedule-item');
+                
+                scheduleItems.forEach(item => {
+                    const itemId = parseInt(item.getAttribute('data-id'));
+                    const scheduleItem = scheduleData.find(s => s.id === itemId);
+                    
+                    if (scheduleItem && scheduleItem.day === today) {
+                        const isCurrent = isSessionCurrent(scheduleItem);
+                        
+                        if (isCurrent && !item.classList.contains('current-session')) {
+                            item.classList.add('current-session');
+                            // Tambahkan badge jika belum ada
+                            if (!item.querySelector('.current-session-badge')) {
+                                item.innerHTML += '<div class="current-session-badge">SEDANG BERLANGSUNG</div>';
+                            }
+                        } else if (!isCurrent && item.classList.contains('current-session')) {
+                            item.classList.remove('current-session');
+                            // Hapus badge
+                            const badge = item.querySelector('.current-session-badge');
+                            if (badge) {
+                                badge.remove();
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Inisialisasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update waktu real-time
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+            
+            // Update jadwal berlangsung setiap menit
+            setInterval(updateCurrentSessions, 60000); // 1 menit
+            
+            // Render jadwal awal (hari ini)
+            renderSchedule();
+            
+            // Setup day buttons
+            const dayButtons = document.querySelectorAll('.day-btn');
+            dayButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Hapus class active dari semua day button
+                    dayButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Tambah class active ke button yang diklik
+                    this.classList.add('active');
+                    
+                    // Dapatkan day value
+                    currentDay = this.getAttribute('data-day');
+                    
+                    // Render jadwal dengan filter baru
+                    renderSchedule();
+                });
+            });
+            
+            // Setup search input
+            const searchInput = document.getElementById('searchInput');
+            let searchTimeout;
+            
+            searchInput.addEventListener('input', function() {
+                // Clear timeout sebelumnya
+                clearTimeout(searchTimeout);
+                
+                // Set timeout baru untuk menghindari terlalu banyak render
+                searchTimeout = setTimeout(() => {
+                    currentSearch = this.value;
+                    renderSchedule();
+                }, 300);
+            });
+            
+            // Tambahkan placeholder animation untuk search bar
+            searchInput.addEventListener('focus', function() {
+                this.style.borderColor = 'var(--primary-color)';
+            });
+            
+            searchInput.addEventListener('blur', function() {
+                this.style.borderColor = 'var(--border-color)';
+            });
+        });
+    </script>
+</body>
+</html>
