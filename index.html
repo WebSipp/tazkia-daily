@@ -304,7 +304,7 @@
             z-index: 1;
         }
 
-        /* Gaya untuk header koran */
+        /* ==================== REVISI HEADER KORAN ==================== */
         .newspaper-header {
             position: relative;
             background-color: var(--paper-color);
@@ -316,64 +316,6 @@
                 inset 0 0 30px rgba(139, 115, 85, 0.05);
             overflow: hidden;
             width: 100%;
-        }
-
-        /* Ornamen dekoratif di header */
-        .newspaper-header::before,
-        .newspaper-header::after {
-            content: "❖";
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3rem;
-            color: var(--border-color);
-            opacity: 0.5;
-        }
-
-        .newspaper-header::before {
-            left: 20px;
-        }
-
-        .newspaper-header::after {
-            right: 20px;
-        }
-
-        /* Ornamen tambahan di header */
-        .newspaper-header .ornament-left,
-        .newspaper-header .ornament-right {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100px;
-            height: 2px;
-            background-color: var(--border-color);
-        }
-
-        .newspaper-header .ornament-left::before,
-        .newspaper-header .ornament-right::before {
-            content: "⚜️";
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 1.5rem;
-            background-color: var(--paper-color);
-            padding: 0 10px;
-        }
-
-        .newspaper-header .ornament-left {
-            left: 120px;
-        }
-
-        .newspaper-header .ornament-left::before {
-            right: -15px;
-        }
-
-        .newspaper-header .ornament-right {
-            right: 120px;
-        }
-
-        .newspaper-header .ornament-right::before {
-            left: -15px;
         }
 
         .institution-name {
@@ -451,10 +393,10 @@
             padding: 0 5px;
         }
 
-        /* HEADER INFO */
+        /* HEADER INFO dengan layout VERTIKAL - REVISI */
         .header-info {
             display: flex;
-            flex-direction: column;
+            flex-direction: column !important;
             justify-content: center;
             align-items: center;
             padding: 0 1rem;
@@ -464,20 +406,160 @@
             width: 100%;
         }
 
-        /* Efek paper clip di header */
-        .header-info::before {
-            content: "📎";
+        /* ==================== DEKORASI SURAT JAMAN DULU - MINIMALIS ==================== */
+        .letter-decoration {
             position: absolute;
-            left: 50%;
-            top: -15px;
-            transform: translateX(-50%) rotate(-15deg);
-            font-size: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1;
+            pointer-events: none;
             opacity: 0.6;
-            z-index: 2;
         }
 
-        /* LOGO NYATU DENGAN BINGKAI BULAT */
+        .letter-decoration-left {
+            left: calc(50% - 170px);
+        }
+
+        .letter-decoration-right {
+            right: calc(50% - 170px);
+        }
+
+        /* Stempel surat kiri */
+        .letter-stamp-left {
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(135deg, #f8f5f0, #e8e3d6);
+            border: 2px solid var(--border-color);
+            border-radius: 3px;
+            position: relative;
+            transform: rotate(-5deg);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .letter-stamp-left::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px dashed var(--border-color);
+            border-radius: 1px;
+            opacity: 0.5;
+        }
+
+        .letter-stamp-left::after {
+            content: "T";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        /* Garis tanda tangan */
+        .signature-line {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background-color: var(--ink-color);
+            opacity: 0.4;
+        }
+
+        .signature-line::before {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--ink-color);
+            opacity: 0.2;
+        }
+
+        /* Stempel surat kanan */
+        .letter-stamp-right {
+            width: 50px;
+            height: 70px;
+            background: linear-gradient(135deg, #e8e3d6, #f8f5f0);
+            border: 2px solid var(--border-color);
+            border-radius: 3px;
+            position: relative;
+            transform: rotate(5deg);
+            box-shadow: -2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .letter-stamp-right::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px dashed var(--border-color);
+            border-radius: 1px;
+            opacity: 0.5;
+        }
+
+        .letter-stamp-right::after {
+            content: "✉";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            color: var(--primary-color);
+            opacity: 0.7;
+        }
+
+        /* Garis sobek di dekorasi */
+        .torn-line {
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 1px;
+            background-color: var(--border-color);
+            opacity: 0.3;
+        }
+
+        .letter-decoration-left .torn-line {
+            right: -25px;
+        }
+
+        .letter-decoration-right .torn-line {
+            left: -25px;
+        }
+
+        /* Efek noda tinta kecil */
+        .ink-blot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--ink-color);
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .letter-stamp-left .ink-blot {
+            top: 5px;
+            right: 5px;
+        }
+
+        .letter-stamp-right .ink-blot {
+            bottom: 5px;
+            left: 5px;
+        }
+
+        /* LOGO di ATAS */
         .logo-real {
+            order: 1;
             width: 140px;
             height: 140px;
             border-radius: 50%;
@@ -492,6 +574,8 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            margin-bottom: 0 !important;
+            z-index: 2;
         }
 
         .logo-real img {
@@ -530,7 +614,9 @@
             z-index: 1;
         }
 
+        /* DATE-TIME di BAWAH LOGO */
         .date-time {
+            order: 2;
             text-align: center;
             position: relative;
             padding: 12px 20px;
@@ -541,6 +627,8 @@
             min-width: 300px;
             max-width: 100%;
             box-sizing: border-box;
+            margin-top: 0 !important;
+            z-index: 2;
         }
 
         /* Efek stempel "HARI INI" */
@@ -591,6 +679,104 @@
             border-radius: 2px;
         }
 
+        /* ==================== DESKTOP LAYOUT ==================== */
+        @media (min-width: 768px) {
+            .header-info {
+                flex-direction: column !important;
+                gap: 1.5rem;
+            }
+            
+            .logo-real {
+                order: 1;
+                width: 160px !important;
+                height: 160px !important;
+                margin-bottom: 0;
+            }
+            
+            .date-time {
+                order: 2;
+                min-width: 350px !important;
+                padding: 15px 25px !important;
+            }
+            
+            .current-date {
+                font-size: 1.3rem !important;
+            }
+            
+            .current-time {
+                font-size: 2rem !important;
+            }
+            
+            /* Subtitle untuk desktop - tanpa tumpang tindih */
+            .newspaper-subtitle {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 800px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            /* Dekorasi untuk desktop */
+            .letter-decoration-left {
+                left: calc(50% - 190px);
+            }
+            
+            .letter-decoration-right {
+                right: calc(50% - 190px);
+            }
+            
+            .letter-stamp-left,
+            .letter-stamp-right {
+                width: 60px;
+                height: 80px;
+            }
+            
+            .letter-stamp-left::after {
+                font-size: 28px;
+            }
+            
+            .letter-stamp-right::after {
+                font-size: 24px;
+            }
+        }
+
+        /* Desktop besar */
+        @media (min-width: 992px) {
+            .logo-real {
+                width: 180px !important;
+                height: 180px !important;
+            }
+            
+            .date-time {
+                min-width: 380px !important;
+                padding: 18px 28px !important;
+            }
+            
+            .current-date {
+                font-size: 1.4rem !important;
+            }
+            
+            .current-time {
+                font-size: 2.3rem !important;
+            }
+            
+            /* Dekorasi untuk desktop besar */
+            .letter-decoration-left {
+                left: calc(50% - 210px);
+            }
+            
+            .letter-decoration-right {
+                right: calc(50% - 210px);
+            }
+            
+            .letter-stamp-left,
+            .letter-stamp-right {
+                width: 65px;
+                height: 85px;
+            }
+        }
+
         /* Hero section dengan search bar */
         .hero-section {
             padding: 2rem 0;
@@ -623,6 +809,7 @@
             box-sizing: border-box;
         }
 
+        /* REVISI 1: Ubah teks placeholder pencarian */
         .search-bar {
             width: 100%;
             padding: 1.2rem 1.5rem;
@@ -1683,6 +1870,29 @@
                 font-size: 1.9rem;
             }
             
+            /* Dekorasi untuk tablet */
+            .letter-decoration-left {
+                left: calc(50% - 160px);
+            }
+            
+            .letter-decoration-right {
+                right: calc(50% - 160px);
+            }
+            
+            .letter-stamp-left,
+            .letter-stamp-right {
+                width: 50px;
+                height: 70px;
+            }
+            
+            .letter-stamp-left::after {
+                font-size: 22px;
+            }
+            
+            .letter-stamp-right::after {
+                font-size: 18px;
+            }
+            
             .time-group-header {
                 padding: 0.9rem 1.2rem;
             }
@@ -1795,10 +2005,6 @@
                 padding: 0 10px;
             }
             
-            .header-info::before {
-                display: none;
-            }
-            
             /* FIX: Logo */
             .logo-real {
                 width: 100px !important;
@@ -1827,6 +2033,11 @@
             
             .current-time {
                 font-size: 1.5rem !important;
+            }
+            
+            /* FIX: Dekorasi untuk mobile - tetap tampil tapi lebih kecil */
+            .letter-decoration {
+                display: none; /* Sembunyikan di mobile untuk ruang yang lebih luas */
             }
             
             /* FIX: Hero section */
@@ -2280,6 +2491,15 @@
                 max-width: 1200px;
                 margin: 20px auto 40px;
             }
+            
+            /* Dekorasi untuk desktop besar */
+            .letter-decoration-left {
+                left: calc(50% - 220px);
+            }
+            
+            .letter-decoration-right {
+                right: calc(50% - 220px);
+            }
         }
 
         /* Landscape Mobile */
@@ -2300,6 +2520,33 @@
             
             .time-group-schedule {
                 grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            /* Tampilkan dekorasi di landscape mobile */
+            .letter-decoration {
+                display: block;
+            }
+            
+            .letter-decoration-left {
+                left: calc(50% - 130px);
+            }
+            
+            .letter-decoration-right {
+                right: calc(50% - 130px);
+            }
+            
+            .letter-stamp-left,
+            .letter-stamp-right {
+                width: 40px;
+                height: 60px;
+            }
+            
+            .letter-stamp-left::after {
+                font-size: 18px;
+            }
+            
+            .letter-stamp-right::after {
+                font-size: 16px;
             }
         }
 
@@ -2323,7 +2570,8 @@
             .watermark,
             .ink-stain,
             .search-container::before,
-            .schedule-container::before {
+            .schedule-container::before,
+            .letter-decoration {
                 display: none;
             }
             
@@ -2404,8 +2652,23 @@
     <div class="container">
         <!-- Header Koran -->
         <header class="newspaper-header">
-            <div class="ornament-left"></div>
-            <div class="ornament-right"></div>
+            <!-- DEKORASI SURAT JAMAN DULU - MINIMALIS DAN TEPAT DI SAMPING LOGO -->
+            <div class="letter-decoration letter-decoration-left">
+                <div class="letter-stamp-left">
+                    <div class="ink-blot"></div>
+                </div>
+                <div class="signature-line"></div>
+                <div class="torn-line"></div>
+            </div>
+            
+            <div class="letter-decoration letter-decoration-right">
+                <div class="letter-stamp-right">
+                    <div class="ink-blot"></div>
+                </div>
+                <div class="signature-line"></div>
+                <div class="torn-line"></div>
+            </div>
+            
             <div class="institution-name">STMIK TAZKIA DAILY</div>
             <div class="newspaper-subtitle">Jadwal Harian Civitas Akademika</div>
             
@@ -2427,7 +2690,8 @@
         <!-- Hero Section dengan Search Bar -->
         <section class="hero-section">
             <div class="search-container">
-                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Dosen, Mata Kuliah, atau Kelompok...">
+                <!-- REVISI 1: Teks placeholder diubah -->
+                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Jadwal Anda...">
             </div>
         </section>
 
