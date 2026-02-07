@@ -307,7 +307,10 @@
             max-width: 100%;
         }
 
-        /* Ornamen dekoratif di header */
+        /* ================================================================
+           FIX #1: ORNAMEN DEKORATIF DI HEADER - POSISI LEBIH BAIK
+           ================================================================ */
+        /* Ornamen dekoratif di header - HANYA TAMPIL DI DESKTOP */
         .newspaper-header::before,
         .newspaper-header::after {
             content: "❖";
@@ -317,6 +320,7 @@
             font-size: clamp(2rem, 4vw, 3rem);
             color: var(--border-color);
             opacity: 0.5;
+            z-index: 1; /* Pastikan di atas background */
         }
 
         .newspaper-header::before {
@@ -327,7 +331,7 @@
             right: max(10px, 2vw);
         }
 
-        /* Ornamen tambahan di header */
+        /* Ornamen tambahan di header - HANYA TAMPIL DI DESKTOP */
         .newspaper-header .ornament-left,
         .newspaper-header .ornament-right {
             position: absolute;
@@ -336,6 +340,7 @@
             width: min(100px, 20vw);
             height: 2px;
             background-color: var(--border-color);
+            z-index: 1; /* Pastikan di atas background */
         }
 
         .newspaper-header .ornament-left::before,
@@ -347,10 +352,11 @@
             font-size: clamp(1rem, 2vw, 1.5rem);
             background-color: var(--paper-color);
             padding: 0 10px;
+            z-index: 2; /* Lebih tinggi dari garis */
         }
 
         .newspaper-header .ornament-left {
-            left: clamp(60px, 15vw, 120px);
+            left: clamp(80px, 20vw, 150px); /* POSISI LEBIH JAUH DARI LOGO */
         }
 
         .newspaper-header .ornament-left::before {
@@ -358,7 +364,7 @@
         }
 
         .newspaper-header .ornament-right {
-            right: clamp(60px, 15vw, 120px);
+            right: clamp(80px, 20vw, 150px); /* POSISI LEBIH JAUH DARI LOGO */
         }
 
         .newspaper-header .ornament-right::before {
@@ -398,48 +404,52 @@
             pointer-events: none;
         }
 
+        /* ================================================================
+           FIX #2: SUBTITLE TIDAK KEPOTONG DI MOBILE
+           ================================================================ */
         .newspaper-subtitle {
             text-align: center;
-            font-size: clamp(0.8rem, 2vw, 1rem);
+            font-size: clamp(0.75rem, 2vw, 0.9rem); /* LEBIH KECIL DI MOBILE */
             color: var(--ink-color);
-            letter-spacing: clamp(2px, 1vw, 4px);
+            letter-spacing: clamp(1px, 1vw, 3px);
             text-transform: uppercase;
             border-top: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
-            padding: clamp(0.5rem, 1.5vw, 0.7rem) 0;
-            margin-bottom: clamp(0.5rem, 2vw, 1rem);
+            padding: clamp(0.4rem, 1.2vw, 0.6rem) 0;
+            margin: 0 auto clamp(0.5rem, 2vw, 1rem) auto;
             position: relative;
             background: linear-gradient(to right, transparent, rgba(139, 115, 85, 0.1), transparent);
             font-weight: 600;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            margin: 0 clamp(10px, 5vw, 50px);
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal; /* DIUBAH DARI nowrap KE normal */
+            max-width: min(600px, 85vw); /* BATASI LEBAR MAKSIMAL */
+            line-height: 1.4;
         }
 
         /* Efek gunting untuk pemisah subtitle */
         .newspaper-subtitle::before {
             content: "✂";
             position: absolute;
-            left: max(10px, 2vw);
+            left: max(5px, 1vw);
             top: 50%;
             transform: translateY(-50%);
             color: var(--border-color);
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-size: clamp(0.8rem, 1.8vw, 1.1rem);
             background-color: var(--paper-color);
-            padding: 0 5px;
+            padding: 0 3px;
         }
 
         .newspaper-subtitle::after {
             content: "✂";
             position: absolute;
-            right: max(10px, 2vw);
+            right: max(5px, 1vw);
             top: 50%;
             transform: translateY(-50%) rotate(180deg);
             color: var(--border-color);
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            font-size: clamp(0.8rem, 1.8vw, 1.1rem);
             background-color: var(--paper-color);
-            padding: 0 5px;
+            padding: 0 3px;
         }
 
         /* HEADER INFO */
@@ -452,6 +462,7 @@
             position: relative;
             margin-top: clamp(1rem, 2vw, 1.5rem);
             gap: clamp(1rem, 2vw, 1.5rem);
+            z-index: 2; /* DI ATAS ORNAMEN */
         }
 
         /* Efek paper clip di header */
@@ -463,13 +474,13 @@
             transform: translateX(-50%) rotate(-15deg);
             font-size: clamp(1rem, 2vw, 1.5rem);
             opacity: 0.6;
-            z-index: 2;
+            z-index: 3; /* DI ATAS SEMUA */
         }
 
         /* LOGO dengan bingkai bulat */
         .logo-real {
-            width: clamp(100px, 25vw, 160px);
-            height: clamp(100px, 25vw, 160px);
+            width: clamp(90px, 22vw, 150px);
+            height: clamp(90px, 22vw, 150px);
             min-width: 80px;
             min-height: 80px;
             border-radius: 50%;
@@ -484,6 +495,7 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            z-index: 3; /* DI ATAS ORNAMEN */
         }
 
         .logo-real img {
@@ -530,10 +542,11 @@
             border: 1px solid var(--border-color);
             border-radius: 3px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            min-width: min(300px, 80vw);
-            max-width: 90vw;
+            min-width: min(280px, 75vw);
+            max-width: 85vw;
             box-sizing: border-box;
             width: auto;
+            z-index: 3; /* DI ATAS ORNAMEN */
         }
 
         /* Efek stempel "HARI INI" */
@@ -551,11 +564,11 @@
             border: 1px dashed var(--ink-color);
             transform: rotate(5deg);
             box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            z-index: 2;
+            z-index: 4;
         }
 
         .current-date {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
             font-weight: 600;
             color: var(--primary-color);
             font-family: 'Playfair Display', Georgia, serif;
@@ -565,7 +578,7 @@
         }
 
         .current-time {
-            font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
             font-weight: 700;
             color: var(--ink-color);
             font-family: 'Courier New', monospace;
@@ -606,6 +619,7 @@
             padding: 0 15px;
             font-size: clamp(0.9rem, 2vw, 1.2rem);
             letter-spacing: clamp(3px, 1vw, 5px);
+            z-index: 2;
         }
 
         .search-container {
@@ -657,7 +671,9 @@
                 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* Filter section */
+        /* ================================================================
+           FIX #3: PITA "PILIH HARI" TIDAK TERTINDIH
+           ================================================================ */
         .filter-section {
             padding: clamp(0.5rem, 1.5vw, 1rem) 0 clamp(0.3rem, 1vw, 0.5rem) 0;
             margin-bottom: clamp(1rem, 3vw, 2rem);
@@ -665,7 +681,7 @@
             position: relative;
         }
 
-        /* Efek pita di filter section */
+        /* Efek pita di filter section - POSISI Z-INDEX DIPERBAIKI */
         .filter-section::before {
             content: "";
             position: absolute;
@@ -677,7 +693,7 @@
             background: linear-gradient(to right, var(--primary-color), var(--accent-color), var(--primary-color));
             clip-path: polygon(0% 0%, 5% 100%, 95% 100%, 100% 0%);
             opacity: 0.8;
-            z-index: 1;
+            z-index: 1; /* DI BAWAH TEXT */
         }
 
         .filter-section::after {
@@ -690,7 +706,9 @@
             font-size: clamp(0.7rem, 1.5vw, 0.8rem);
             font-weight: bold;
             letter-spacing: 1px;
-            z-index: 2;
+            z-index: 2; /* DI ATAS PITA */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            white-space: nowrap;
         }
 
         .filter-controls {
@@ -700,6 +718,8 @@
             align-items: center;
             gap: clamp(10px, 2vw, 15px);
             margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            position: relative;
+            z-index: 3; /* DI ATAS SEMUA */
         }
 
         .day-selector {
@@ -709,6 +729,8 @@
             align-items: center;
             justify-content: center;
             width: 100%;
+            position: relative;
+            z-index: 3;
         }
 
         .day-btn {
@@ -722,7 +744,7 @@
             font-size: clamp(0.9rem, 1.5vw, 1rem);
             position: relative;
             overflow: visible;
-            z-index: 1;
+            z-index: 4; /* DI ATAS SEMUA */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             min-width: min(120px, 25vw);
             text-align: center;
@@ -772,7 +794,7 @@
             transform: rotate(30deg);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
             animation: pinWobble 3s infinite ease-in-out;
-            z-index: 2;
+            z-index: 5;
         }
 
         @keyframes pinWobble {
@@ -801,6 +823,7 @@
             font-size: clamp(1.5rem, 3vw, 2rem);
             color: var(--border-color);
             opacity: 0.3;
+            z-index: 1;
         }
 
         .main-content::before {
@@ -841,9 +864,12 @@
             z-index: 1;
         }
 
+        /* ================================================================
+           FIX #4: TRAPESIUM DI JUDUL "JADWAL HARI INI" TIDAK NABRAK
+           ================================================================ */
         .container-title {
             font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-size: clamp(1.4rem, 3.5vw, 2rem); /* LEBIH KECIL */
             color: var(--primary-color);
             margin-bottom: clamp(1rem, 3vw, 2rem);
             padding-bottom: clamp(0.5rem, 2vw, 1rem);
@@ -855,24 +881,26 @@
             overflow-wrap: break-word;
             hyphens: auto;
             line-height: 1.3;
+            padding: 0 10px; /* TAMBAH PADDING SAMPING */
         }
 
-        /* Ornamen dekoratif di judul */
+        /* Ornamen dekoratif di judul - POSISI LEBIH JAUH */
         .container-title::before,
         .container-title::after {
             content: "✦";
             position: absolute;
             bottom: -12px;
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            font-size: clamp(0.9rem, 2vw, 1.3rem);
             color: var(--accent-color);
+            z-index: 2;
         }
 
         .container-title::before {
-            left: calc(50% - min(100px, 20vw));
+            left: calc(50% - min(120px, 25vw)); /* LEBIH JAUH */
         }
 
         .container-title::after {
-            right: calc(50% - min(100px, 20vw));
+            right: calc(50% - min(120px, 25vw)); /* LEBIH JAUH */
         }
 
         .container-title::after {
@@ -881,24 +909,28 @@
             bottom: -5px;
             left: 50%;
             transform: translateX(-50%);
-            width: min(150px, 40vw);
+            width: min(130px, 35vw); /* LEBIH KECIL */
             height: 5px;
             background-color: var(--accent-color);
             opacity: 0.7;
+            z-index: 1;
         }
 
         /* Badge untuk hari yang dipilih */
         #selectedDayBadge {
             position: relative;
             padding: clamp(0.3rem, 1vw, 0.4rem) clamp(0.8rem, 2vw, 1rem);
-            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            font-size: clamp(0.7rem, 1.3vw, 0.8rem);
             font-weight: bold;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             border: 1px dashed var(--ink-color);
             transform: rotate(-2deg);
             box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
             display: inline-block;
             margin-top: 5px;
+            margin-left: 5px;
+            line-height: 1;
+            white-space: nowrap;
         }
 
         /* Container untuk kelompok waktu */
@@ -1371,7 +1403,7 @@
             line-height: 1.3;
         }
 
-        /* EMPTY STATE LEBIH MENARIK */
+        /* Empty State */
         .no-results {
             text-align: center;
             padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 3vw, 2rem);
@@ -1409,16 +1441,15 @@
             z-index: 0;
         }
 
-        /* Efek stempel "TIDAK DITEMUKAN" yang lebih vintage */
         .no-results::after {
-            content: "TIDAK DITEMUKAN";
+            content: "";
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-10deg);
             font-size: clamp(2rem, 6vw, 3.5rem);
             font-weight: 900;
-            color: rgba(139, 115, 85, 0.08);
+            color: rgba(139, 115, 85, 0.04);
             letter-spacing: clamp(3px, 1.5vw, 8px);
             white-space: nowrap;
             z-index: 0;
@@ -1613,7 +1644,184 @@
             overflow: hidden;
         }
 
-        /* ==================== MEDIA QUERIES ==================== */
+        /* ==================== MEDIA QUERIES UNTUK REALME C3 & MOBILE ==================== */
+
+        /* Untuk Realme C3 (720x1600) dan hp kecil */
+        @media (max-width: 768px) {
+            /* HIDE ORNAMEN DI MOBILE AGAR TIDAK TERTINDIH */
+            .newspaper-header::before,
+            .newspaper-header::after,
+            .newspaper-header .ornament-left,
+            .newspaper-header .ornament-right {
+                display: none;
+            }
+            
+            /* SUBTITLE LEBIH RAPI */
+            .newspaper-subtitle {
+                font-size: clamp(0.7rem, 2.5vw, 0.8rem);
+                letter-spacing: 1px;
+                padding: 0.4rem 0;
+                margin: 0 15px 0.8rem 15px;
+                line-height: 1.3;
+            }
+            
+            .newspaper-subtitle::before,
+            .newspaper-subtitle::after {
+                font-size: 0.8rem;
+                padding: 0 2px;
+            }
+            
+            /* LOGO LEBIH KECIL */
+            .logo-real {
+                width: clamp(80px, 20vw, 100px);
+                height: clamp(80px, 20vw, 100px);
+            }
+            
+            /* DATE-TIME LEBIH KOMPAK */
+            .date-time {
+                min-width: min(260px, 80vw);
+                padding: 10px 15px;
+            }
+            
+            .current-date {
+                font-size: 0.85rem;
+            }
+            
+            .current-time {
+                font-size: 1.2rem;
+            }
+            
+            /* JUDUL UTAMA LEBIH KECIL */
+            .institution-name {
+                font-size: clamp(1.6rem, 5vw, 2rem);
+                padding: 0 10px;
+            }
+            
+            /* PITA "PILIH HARI" LEBIH JELAS */
+            .filter-section::before {
+                width: min(180px, 70vw);
+                height: 18px;
+                top: -9px;
+            }
+            
+            .filter-section::after {
+                font-size: 0.65rem;
+                top: -7px;
+            }
+            
+            /* TOMBOL HARI LEBIH RESPONSIF */
+            .day-btn {
+                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+                min-width: 90px;
+                max-width: 120px;
+            }
+            
+            /* JUDUL JADWAL LEBIH RAPI */
+            .container-title {
+                font-size: clamp(1.2rem, 4vw, 1.5rem);
+                padding: 0 5px;
+            }
+            
+            .container-title::before {
+                left: calc(50% - min(90px, 30vw));
+            }
+            
+            .container-title::after {
+                right: calc(50% - min(90px, 30vw));
+            }
+            
+            /* TRAPESIUM LEBIH KECIL */
+            .container-title::after {
+                width: min(100px, 40vw);
+            }
+            
+            /* BADGE HARI LEBIH KECIL */
+            #selectedDayBadge {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+                margin-left: 3px;
+            }
+        }
+
+        /* Untuk hp sangat kecil (Realme C3 dan sejenis) */
+        @media (max-width: 375px) {
+            .institution-name {
+                font-size: 1.4rem;
+                letter-spacing: 0;
+            }
+            
+            .newspaper-subtitle {
+                font-size: 0.65rem;
+                letter-spacing: 0.5px;
+                margin: 0 10px 0.6rem 10px;
+            }
+            
+            .logo-real {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .date-time {
+                min-width: 85vw;
+            }
+            
+            .day-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .day-btn {
+                width: 90%;
+                max-width: 200px;
+                margin-bottom: 5px;
+            }
+            
+            .container {
+                padding: 12px;
+                margin: 10px auto;
+                width: calc(100% - 10px);
+            }
+            
+            .time-group-schedule {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .search-bar {
+                padding: 0.7rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Landscape mode untuk mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .header-info {
+                flex-direction: row;
+                justify-content: space-around;
+                gap: 1rem;
+            }
+            
+            .logo-real {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .date-time {
+                min-width: 200px;
+            }
+            
+            .time-group-schedule {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .newspaper-subtitle {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 90vw;
+            }
+        }
 
         /* Tablet Landscape */
         @media (max-width: 1024px) {
@@ -1632,18 +1840,9 @@
         }
 
         /* Tablet Portrait */
-        @media (max-width: 768px) {
+        @media (max-width: 768px) and (orientation: portrait) {
             .institution-name {
                 font-size: clamp(1.8rem, 5vw, 2.5rem);
-            }
-            
-            .newspaper-header::before,
-            .newspaper-header::after {
-                display: none;
-            }
-            
-            .header-info {
-                gap: clamp(1rem, 3vw, 1.5rem);
             }
             
             .filter-controls {
@@ -1664,10 +1863,6 @@
             
             .schedule-container {
                 padding: clamp(1rem, 3vw, 1.5rem);
-            }
-            
-            .container-title {
-                font-size: clamp(1.5rem, 4vw, 1.8rem);
             }
             
             .watermark {
@@ -1768,7 +1963,7 @@
         }
 
         /* Mobile Portrait */
-        @media (max-width: 576px) {
+        @media (max-width: 576px) and (orientation: portrait) {
             .day-btn {
                 padding: clamp(0.5rem, 1.2vw, 0.6rem) clamp(0.8rem, 1.8vw, 1rem);
                 font-size: clamp(0.85rem, 1.5vw, 0.9rem);
@@ -1812,11 +2007,6 @@
             
             .header-info {
                 gap: clamp(0.8rem, 2vw, 1.2rem);
-            }
-            
-            .logo-real {
-                width: clamp(80px, 20vw, 100px);
-                height: clamp(80px, 20vw, 100px);
             }
             
             .date-time {
@@ -1899,78 +2089,10 @@
             }
         }
 
-        /* Small Mobile */
-        @media (max-width: 380px) {
-            .institution-name {
-                font-size: clamp(1.5rem, 5vw, 1.8rem);
-            }
-            
-            .logo-real {
-                width: clamp(70px, 18vw, 80px);
-                height: clamp(70px, 18vw, 80px);
-            }
-            
-            .schedule-header {
-                display: block;
-            }
-            
-            /* Responsive untuk nama dosen dan gelar */
-            .lecturer-name-container {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 2px;
-            }
-            
-            .lecturer-name {
-                font-size: clamp(0.95rem, 2.5vw, 1rem);
-            }
-            
-            .lecturer-title {
-                font-size: clamp(0.7rem, 1.8vw, 0.75rem);
-            }
-            
-            .course-title {
-                font-size: clamp(0.9rem, 2.2vw, 0.95rem);
-            }
-            
-            .schedule-meta span {
-                padding: clamp(0.1rem, 0.5vw, 0.15rem) clamp(0.3rem, 1vw, 0.4rem);
-                font-size: clamp(0.7rem, 1.5vw, 0.75rem);
-            }
-            
-            .container {
-                padding: clamp(8px, 1.5vw, 10px);
-                margin: 5px auto;
-                width: calc(100% - 10px);
-            }
-            
-            .newspaper-subtitle {
-                font-size: clamp(0.75rem, 2vw, 0.85rem);
-                letter-spacing: clamp(1px, 0.8vw, 2px);
-                margin: 0 10px;
-            }
-            
-            .search-container::before {
-                right: clamp(10px, 2vw, 15px);
-                top: 12px;
-                font-size: clamp(1rem, 2vw, 1.2rem);
-            }
-            
-            .search-bar {
-                padding: 0.7rem 1rem;
-                font-size: 0.95rem;
-            }
-            
-            .day-btn {
-                min-height: 40px;
-                padding: 0.5rem 0.8rem;
-            }
-        }
-
         /* Very Small Mobile */
         @media (max-width: 320px) {
             .institution-name {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
             
             .newspaper-subtitle::before,
@@ -1983,12 +2105,12 @@
             }
             
             .day-btn {
-                font-size: 0.8rem;
+                font-size: 0.75rem;
                 padding: 0.4rem 0.6rem;
             }
             
             .container-title {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
             
             .time-group-title {
@@ -2001,6 +2123,15 @@
             
             .lecturer-title {
                 font-size: 0.65rem;
+            }
+            
+            /* Hide some decorative elements on very small screens */
+            .search-container::before {
+                display: none;
+            }
+            
+            .schedule-container::before {
+                display: none;
             }
         }
 
@@ -2016,36 +2147,6 @@
             
             #instant-loader.hidden {
                 transition: none;
-            }
-        }
-
-        /* Landscape Orientation */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .newspaper-header {
-                padding: 1rem 0;
-            }
-            
-            .header-info {
-                flex-direction: row;
-                justify-content: space-around;
-                margin-top: 0.5rem;
-            }
-            
-            .logo-real {
-                width: 70px;
-                height: 70px;
-            }
-            
-            .hero-section {
-                padding: 1rem 0;
-            }
-            
-            .schedule-container {
-                min-height: 300px;
-            }
-            
-            .time-group-schedule {
-                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -2196,7 +2297,10 @@
         <!-- Hero Section dengan Search Bar -->
         <section class="hero-section">
             <div class="search-container">
-                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Dosen, Mata Kuliah, atau Kelompok...">
+                <!-- ================================================================
+                   REVISI #2: PLACEHOLDER SEARCH BAR DIUBAH
+                   ================================================================ -->
+                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Jadwal Anda...">
             </div>
         </section>
 
@@ -2780,7 +2884,7 @@
                 scheduleResults.innerHTML = scheduleHTML;
                 
             } else {
-                // Empty state
+                // Empty state - TANPA TULISAN BACKGROUND "TIDAK DITEMUKAN"
                 scheduleResults.innerHTML = `
                     <div class="no-results">
                         <div class="empty-icon-container">
