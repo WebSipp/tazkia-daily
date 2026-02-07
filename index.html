@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>STMIK TAZKIA DAILY - Jadwal Harian</title>
     
     <!-- LOADING ANIMATION INLINE STYLE - HARUS PERTAMA! -->
@@ -22,17 +22,17 @@
             z-index: 9999;
             opacity: 1;
             visibility: visible;
-            transition: opacity 0.3s ease, visibility 0.3s;
         }
         
         #instant-loader.hidden {
             opacity: 0;
             visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s;
         }
         
         .instant-spinner {
-            width: min(100px, 15vw);
-            height: min(100px, 15vw);
+            width: 100px;
+            height: 100px;
             position: relative;
             margin-bottom: 20px;
         }
@@ -75,7 +75,7 @@
         .letter-line {
             position: absolute;
             width: 80%;
-            height: 2px;
+            height: 3px;
             background-color: rgba(139, 115, 85, 0.3);
             border-radius: 2px;
         }
@@ -98,14 +98,24 @@
         
         .instant-loading-text {
             font-family: Arial, sans-serif;
-            font-size: clamp(1rem, 4vw, 1.3rem);
+            font-size: 1.3rem;
             color: #0a2472;
             text-align: center;
             letter-spacing: 1px;
             font-weight: bold;
-            padding: 0 15px;
         }
-
+    </style>
+    
+    <!-- Resource eksternal SETELAH loading style -->
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- STYLE UTAMA WEBSITE dengan IMPROVEMENTS -->
+    <style>
         /* ==================== VARIABEL DAN STYLE DASAR ==================== */
         :root {
             --primary-color: #0a2472; /* Biru Navy */
@@ -121,7 +131,7 @@
             --morning-color: #4a8cff;
             --afternoon-color: #ff9800;
             --evening-color: #9c27b0;
-            --night-color: #2c387e;
+            --night-color: #2c387e; /* Warna baru untuk malam */
             
             /* Warna untuk jadwal berlangsung */
             --current-session-color: #fff9c4;
@@ -138,11 +148,11 @@
         html {
             overflow-x: hidden;
             width: 100%;
-            scroll-behavior: smooth;
+            position: relative;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #e8e3d6;
             color: var(--ink-color);
             line-height: 1.6;
@@ -152,6 +162,7 @@
             min-height: 100vh;
             opacity: 1;
             width: 100%;
+            max-width: 100%;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -199,16 +210,16 @@
         }
 
         .ink-stain-1 {
-            width: min(300px, 80vw);
-            height: min(300px, 80vw);
+            width: 300px;
+            height: 300px;
             top: 5%;
             right: -50px;
             background: radial-gradient(circle, rgba(10,36,114,0.05) 0%, transparent 70%);
         }
 
         .ink-stain-2 {
-            width: min(200px, 60vw);
-            height: min(200px, 60vw);
+            width: 200px;
+            height: 200px;
             bottom: 10%;
             left: -30px;
             background: radial-gradient(circle, rgba(139,115,85,0.07) 0%, transparent 70%);
@@ -218,18 +229,18 @@
         .container {
             position: relative;
             background-color: var(--paper-color);
-            padding: clamp(15px, 3vw, 30px);
+            padding: 30px;
             box-shadow: 
                 0 10px 30px rgba(0, 0, 0, 0.2),
                 0 1px 8px rgba(0, 0, 0, 0.1),
                 inset 0 0 0 1px rgba(255, 255, 255, 0.5),
                 inset 0 0 40px rgba(139, 115, 85, 0.1);
             border: 1px solid #d4c9b8;
-            margin: 20px auto 40px auto;
-            max-width: min(1200px, 95vw);
+            margin: 20px auto 40px;
+            max-width: 1200px;
             opacity: 0;
             animation: slideUp 0.7s ease 0.5s forwards;
-            width: calc(100% - 20px);
+            width: calc(100% - 30px);
             overflow: hidden;
             border-radius: 2px;
         }
@@ -298,49 +309,44 @@
             position: relative;
             background-color: var(--paper-color);
             border-bottom: 8px double var(--border-color);
-            padding: clamp(1rem, 3vw, 2rem) 0 clamp(1rem, 2vw, 1.5rem) 0;
-            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: 2rem 0 1.5rem 0;
+            margin-bottom: 2rem;
             box-shadow: 
                 0 5px 15px rgba(0, 0, 0, 0.1),
                 inset 0 0 30px rgba(139, 115, 85, 0.05);
             overflow: hidden;
-            max-width: 100%;
+            width: 100%;
         }
 
-        /* ================================================================
-           FIX #1: ORNAMEN DEKORATIF DI HEADER - POSISI LEBIH BAIK
-           ================================================================ */
-        /* Ornamen dekoratif di header - HANYA TAMPIL DI DESKTOP */
+        /* Ornamen dekoratif di header */
         .newspaper-header::before,
         .newspaper-header::after {
             content: "❖";
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-size: clamp(2rem, 4vw, 3rem);
+            font-size: 3rem;
             color: var(--border-color);
             opacity: 0.5;
-            z-index: 1; /* Pastikan di atas background */
         }
 
         .newspaper-header::before {
-            left: max(10px, 2vw);
+            left: 20px;
         }
 
         .newspaper-header::after {
-            right: max(10px, 2vw);
+            right: 20px;
         }
 
-        /* Ornamen tambahan di header - HANYA TAMPIL DI DESKTOP */
+        /* Ornamen tambahan di header */
         .newspaper-header .ornament-left,
         .newspaper-header .ornament-right {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: min(100px, 20vw);
+            width: 100px;
             height: 2px;
             background-color: var(--border-color);
-            z-index: 1; /* Pastikan di atas background */
         }
 
         .newspaper-header .ornament-left::before,
@@ -349,14 +355,13 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-size: 1.5rem;
             background-color: var(--paper-color);
             padding: 0 10px;
-            z-index: 2; /* Lebih tinggi dari garis */
         }
 
         .newspaper-header .ornament-left {
-            left: clamp(80px, 20vw, 150px); /* POSISI LEBIH JAUH DARI LOGO */
+            left: 120px;
         }
 
         .newspaper-header .ornament-left::before {
@@ -364,7 +369,7 @@
         }
 
         .newspaper-header .ornament-right {
-            right: clamp(80px, 20vw, 150px); /* POSISI LEBIH JAUH DARI LOGO */
+            right: 120px;
         }
 
         .newspaper-header .ornament-right::before {
@@ -372,21 +377,20 @@
         }
 
         .institution-name {
-            font-family: 'Playfair Display', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             font-weight: 900;
-            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-size: 3.5rem;
             color: var(--primary-color);
             text-align: center;
-            letter-spacing: clamp(1px, 1vw, 2px);
+            letter-spacing: 2px;
             text-transform: uppercase;
-            margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
+            margin-bottom: 0.5rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
             position: relative;
-            padding: 0 clamp(10px, 3vw, 30px);
+            padding: 0 30px;
             word-wrap: break-word;
             overflow-wrap: break-word;
             hyphens: auto;
-            line-height: 1.2;
         }
 
         /* Efek stempel untuk judul utama */
@@ -404,52 +408,47 @@
             pointer-events: none;
         }
 
-        /* ================================================================
-           FIX #2: SUBTITLE TIDAK KEPOTONG DI MOBILE
-           ================================================================ */
         .newspaper-subtitle {
             text-align: center;
-            font-size: clamp(0.75rem, 2vw, 0.9rem); /* LEBIH KECIL DI MOBILE */
+            font-size: 1rem;
             color: var(--ink-color);
-            letter-spacing: clamp(1px, 1vw, 3px);
+            letter-spacing: 4px;
             text-transform: uppercase;
             border-top: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
-            padding: clamp(0.4rem, 1.2vw, 0.6rem) 0;
-            margin: 0 auto clamp(0.5rem, 2vw, 1rem) auto;
+            padding: 0.7rem 0;
+            margin-bottom: 1rem;
             position: relative;
             background: linear-gradient(to right, transparent, rgba(139, 115, 85, 0.1), transparent);
             font-weight: 600;
-            overflow: visible;
-            text-overflow: clip;
-            white-space: normal; /* DIUBAH DARI nowrap KE normal */
-            max-width: min(600px, 85vw); /* BATASI LEBAR MAKSIMAL */
-            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         /* Efek gunting untuk pemisah subtitle */
         .newspaper-subtitle::before {
             content: "✂";
             position: absolute;
-            left: max(5px, 1vw);
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--border-color);
-            font-size: clamp(0.8rem, 1.8vw, 1.1rem);
+            font-size: 1.2rem;
             background-color: var(--paper-color);
-            padding: 0 3px;
+            padding: 0 5px;
         }
 
         .newspaper-subtitle::after {
             content: "✂";
             position: absolute;
-            right: max(5px, 1vw);
+            right: 20px;
             top: 50%;
             transform: translateY(-50%) rotate(180deg);
             color: var(--border-color);
-            font-size: clamp(0.8rem, 1.8vw, 1.1rem);
+            font-size: 1.2rem;
             background-color: var(--paper-color);
-            padding: 0 3px;
+            padding: 0 5px;
         }
 
         /* HEADER INFO */
@@ -458,11 +457,11 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 0 clamp(0.5rem, 2vw, 1rem);
+            padding: 0 1rem;
             position: relative;
-            margin-top: clamp(1rem, 2vw, 1.5rem);
-            gap: clamp(1rem, 2vw, 1.5rem);
-            z-index: 2; /* DI ATAS ORNAMEN */
+            margin-top: 1.5rem;
+            gap: 1.5rem;
+            width: 100%;
         }
 
         /* Efek paper clip di header */
@@ -472,17 +471,15 @@
             left: 50%;
             top: -15px;
             transform: translateX(-50%) rotate(-15deg);
-            font-size: clamp(1rem, 2vw, 1.5rem);
+            font-size: 1.5rem;
             opacity: 0.6;
-            z-index: 3; /* DI ATAS SEMUA */
+            z-index: 2;
         }
 
-        /* LOGO dengan bingkai bulat */
+        /* LOGO NYATU DENGAN BINGKAI BULAT */
         .logo-real {
-            width: clamp(90px, 22vw, 150px);
-            height: clamp(90px, 22vw, 150px);
-            min-width: 80px;
-            min-height: 80px;
+            width: 140px;
+            height: 140px;
             border-radius: 50%;
             overflow: hidden;
             border: 3px solid var(--border-color);
@@ -495,7 +492,6 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            z-index: 3; /* DI ATAS ORNAMEN */
         }
 
         .logo-real img {
@@ -506,7 +502,7 @@
             display: block;
         }
 
-        /* Efek stempel pada logo */
+        /* Efek stempel pada logo - MENGIKUTI BENTUK BULAT */
         .logo-real::after {
             content: "";
             position: absolute;
@@ -537,16 +533,14 @@
         .date-time {
             text-align: center;
             position: relative;
-            padding: clamp(10px, 2vw, 15px) clamp(15px, 3vw, 25px);
+            padding: 12px 20px;
             background-color: rgba(248, 245, 240, 0.9);
             border: 1px solid var(--border-color);
             border-radius: 3px;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            min-width: min(280px, 75vw);
-            max-width: 85vw;
+            min-width: 300px;
+            max-width: 100%;
             box-sizing: border-box;
-            width: auto;
-            z-index: 3; /* DI ATAS ORNAMEN */
         }
 
         /* Efek stempel "HARI INI" */
@@ -557,34 +551,32 @@
             right: 10px;
             background-color: var(--accent-color);
             color: var(--ink-color);
-            font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+            font-size: 0.7rem;
             font-weight: bold;
             padding: 2px 8px;
             border-radius: 3px;
             border: 1px dashed var(--ink-color);
             transform: rotate(5deg);
             box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            z-index: 4;
+            z-index: 2;
         }
 
         .current-date {
-            font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--primary-color);
-            font-family: 'Playfair Display', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            line-height: 1.3;
         }
 
         .current-time {
-            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            font-size: 1.8rem;
             font-weight: 700;
             color: var(--ink-color);
-            font-family: 'Courier New', monospace;
+            font-family: monospace;
             letter-spacing: 1px;
             position: relative;
-            margin-top: 5px;
         }
 
         /* Efek noda tinta di waktu */
@@ -601,10 +593,11 @@
 
         /* Hero section dengan search bar */
         .hero-section {
-            padding: clamp(1rem, 3vw, 2rem) 0;
-            margin-bottom: clamp(0.5rem, 2vw, 1rem);
+            padding: 2rem 0;
+            margin-bottom: 1rem;
             border-bottom: 2px dotted var(--border-color);
             position: relative;
+            width: 100%;
         }
 
         /* Ornamen pemisah di hero section */
@@ -617,27 +610,26 @@
             color: var(--border-color);
             background-color: var(--paper-color);
             padding: 0 15px;
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
-            letter-spacing: clamp(3px, 1vw, 5px);
-            z-index: 2;
+            font-size: 1.2rem;
+            letter-spacing: 5px;
         }
 
         .search-container {
-            max-width: min(800px, 90vw);
+            max-width: 800px;
             margin: 0 auto;
             position: relative;
             width: 100%;
-            padding: 0 clamp(10px, 2vw, 15px);
+            padding: 0 15px;
             box-sizing: border-box;
         }
 
         .search-bar {
             width: 100%;
-            padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1rem, 2vw, 1.5rem);
-            font-size: clamp(1rem, 2vw, 1.2rem);
+            padding: 1.2rem 1.5rem;
+            font-size: 1.2rem;
             border: 2px solid var(--border-color);
             border-radius: 0;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             background-color: white;
             transition: all 0.3s;
             box-shadow: 
@@ -655,8 +647,8 @@
             content: "📎";
             position: absolute;
             top: 15px;
-            right: clamp(15px, 3vw, 25px);
-            font-size: clamp(1rem, 2vw, 1.5rem);
+            right: 25px;
+            font-size: 1.5rem;
             opacity: 0.5;
             transform: rotate(45deg);
             z-index: 2;
@@ -671,29 +663,28 @@
                 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* ================================================================
-           FIX #3: PITA "PILIH HARI" TIDAK TERTINDIH
-           ================================================================ */
+        /* Filter section */
         .filter-section {
-            padding: clamp(0.5rem, 1.5vw, 1rem) 0 clamp(0.3rem, 1vw, 0.5rem) 0;
-            margin-bottom: clamp(1rem, 3vw, 2rem);
+            padding: 1rem 0 0.5rem 0;
+            margin-bottom: 2rem;
             border-bottom: 1px solid var(--border-color);
             position: relative;
+            width: 100%;
         }
 
-        /* Efek pita di filter section - POSISI Z-INDEX DIPERBAIKI */
+        /* Efek pita di filter section */
         .filter-section::before {
             content: "";
             position: absolute;
             top: -10px;
             left: 50%;
             transform: translateX(-50%);
-            width: min(200px, 60vw);
+            width: 200px;
             height: 20px;
             background: linear-gradient(to right, var(--primary-color), var(--accent-color), var(--primary-color));
             clip-path: polygon(0% 0%, 5% 100%, 95% 100%, 100% 0%);
             opacity: 0.8;
-            z-index: 1; /* DI BAWAH TEXT */
+            z-index: 1;
         }
 
         .filter-section::after {
@@ -703,12 +694,10 @@
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            font-size: clamp(0.7rem, 1.5vw, 0.8rem);
+            font-size: 0.8rem;
             font-weight: bold;
             letter-spacing: 1px;
-            z-index: 2; /* DI ATAS PITA */
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            white-space: nowrap;
+            z-index: 2;
         }
 
         .filter-controls {
@@ -716,43 +705,40 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: clamp(10px, 2vw, 15px);
-            margin-bottom: clamp(1rem, 2vw, 1.5rem);
-            position: relative;
-            z-index: 3; /* DI ATAS SEMUA */
+            gap: 15px;
+            margin-bottom: 1.5rem;
+            width: 100%;
         }
 
         .day-selector {
             display: flex;
             flex-wrap: wrap;
-            gap: clamp(8px, 1.5vw, 15px);
+            gap: 15px;
             align-items: center;
             justify-content: center;
             width: 100%;
-            position: relative;
-            z-index: 3;
         }
 
         .day-btn {
-            padding: clamp(0.5rem, 1.5vw, 0.7rem) clamp(1rem, 2vw, 1.5rem);
+            padding: 0.7rem 1.5rem;
             background-color: var(--paper-color);
             border: 2px solid var(--border-color);
             color: var(--ink-color);
             font-weight: 600;
             border-radius: 0;
             transition: all 0.3s;
-            font-size: clamp(0.9rem, 1.5vw, 1rem);
+            font-size: 1rem;
             position: relative;
             overflow: visible;
-            z-index: 4; /* DI ATAS SEMUA */
+            z-index: 1;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            min-width: min(120px, 25vw);
+            min-width: 120px;
             text-align: center;
             flex: 1;
-            max-width: min(200px, 40vw);
+            max-width: 200px;
             cursor: pointer;
-            touch-action: manipulation;
-            min-height: 44px;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         /* Efek kertas melengkung di tombol */
@@ -790,11 +776,17 @@
             position: absolute;
             top: -10px;
             right: -5px;
-            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            font-size: 1rem;
             transform: rotate(30deg);
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
             animation: pinWobble 3s infinite ease-in-out;
-            z-index: 5;
+            z-index: 2;
+        }
+
+        /* Hapus efek stempel untuk tombol kemarin dan besok */
+        .day-btn.yesterday::after,
+        .day-btn.tomorrow::after {
+            display: none;
         }
 
         @keyframes pinWobble {
@@ -809,7 +801,7 @@
 
         /* Main content area */
         .main-content {
-            margin-bottom: clamp(1rem, 3vw, 2rem);
+            margin-bottom: 2rem;
             position: relative;
             width: 100%;
             overflow: hidden;
@@ -820,10 +812,9 @@
         .main-content::after {
             content: "❧";
             position: absolute;
-            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-size: 2rem;
             color: var(--border-color);
             opacity: 0.3;
-            z-index: 1;
         }
 
         .main-content::before {
@@ -838,7 +829,7 @@
 
         .schedule-container {
             background-color: var(--paper-color);
-            padding: clamp(1rem, 3vw, 2rem);
+            padding: 2rem;
             border: 1px solid var(--border-color);
             box-shadow: 
                 inset 0 0 20px rgba(139, 115, 85, 0.1),
@@ -864,15 +855,12 @@
             z-index: 1;
         }
 
-        /* ================================================================
-           FIX #4: TRAPESIUM DI JUDUL "JADWAL HARI INI" TIDAK NABRAK
-           ================================================================ */
         .container-title {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(1.4rem, 3.5vw, 2rem); /* LEBIH KECIL */
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
             color: var(--primary-color);
-            margin-bottom: clamp(1rem, 3vw, 2rem);
-            padding-bottom: clamp(0.5rem, 2vw, 1rem);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
             border-bottom: 5px double var(--border-color);
             position: relative;
             text-align: center;
@@ -880,27 +868,24 @@
             word-wrap: break-word;
             overflow-wrap: break-word;
             hyphens: auto;
-            line-height: 1.3;
-            padding: 0 10px; /* TAMBAH PADDING SAMPING */
         }
 
-        /* Ornamen dekoratif di judul - POSISI LEBIH JAUH */
+        /* Ornamen dekoratif di judul */
         .container-title::before,
         .container-title::after {
             content: "✦";
             position: absolute;
             bottom: -12px;
-            font-size: clamp(0.9rem, 2vw, 1.3rem);
+            font-size: 1.5rem;
             color: var(--accent-color);
-            z-index: 2;
         }
 
         .container-title::before {
-            left: calc(50% - min(120px, 25vw)); /* LEBIH JAUH */
+            left: calc(50% - 100px);
         }
 
         .container-title::after {
-            right: calc(50% - min(120px, 25vw)); /* LEBIH JAUH */
+            right: calc(50% - 100px);
         }
 
         .container-title::after {
@@ -909,33 +894,29 @@
             bottom: -5px;
             left: 50%;
             transform: translateX(-50%);
-            width: min(130px, 35vw); /* LEBIH KECIL */
+            width: 150px;
             height: 5px;
             background-color: var(--accent-color);
             opacity: 0.7;
-            z-index: 1;
         }
 
         /* Badge untuk hari yang dipilih */
         #selectedDayBadge {
             position: relative;
-            padding: clamp(0.3rem, 1vw, 0.4rem) clamp(0.8rem, 2vw, 1rem);
-            font-size: clamp(0.7rem, 1.3vw, 0.8rem);
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
             font-weight: bold;
-            letter-spacing: 0.5px;
+            letter-spacing: 1px;
             border: 1px dashed var(--ink-color);
             transform: rotate(-2deg);
             box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
             display: inline-block;
-            margin-top: 5px;
-            margin-left: 5px;
-            line-height: 1;
-            white-space: nowrap;
+            margin-top: 10px;
         }
 
         /* Container untuk kelompok waktu */
         .time-group-container {
-            margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+            margin-bottom: 2.5rem;
             position: relative;
             width: 100%;
             overflow: hidden;
@@ -943,8 +924,8 @@
 
         /* Header kelompok waktu */
         .time-group-header {
-            padding: clamp(0.8rem, 2vw, 1rem) clamp(1rem, 2vw, 1.5rem);
-            margin-bottom: clamp(1rem, 2vw, 1.5rem);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
             border-radius: 5px;
             position: relative;
             overflow: hidden;
@@ -997,12 +978,10 @@
         }
 
         .time-group-icon {
-            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
-            margin-right: clamp(0.8rem, 2vw, 1rem);
-            width: clamp(45px, 10vw, 60px);
-            height: clamp(45px, 10vw, 60px);
-            min-width: 45px;
-            min-height: 45px;
+            font-size: 1.8rem;
+            margin-right: 1rem;
+            width: 60px;
+            height: 60px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1044,8 +1023,8 @@
         }
 
         .time-group-title {
-            font-family: 'Playfair Display', Georgia, serif;
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
             font-weight: 700;
             margin: 0;
             color: var(--ink-color);
@@ -1055,27 +1034,38 @@
         }
 
         .time-group-period {
-            font-size: clamp(0.8rem, 1.5vw, 1rem);
+            font-size: 1rem;
             color: #666;
             margin-left: 0.5rem;
             font-weight: 400;
             font-style: italic;
             position: relative;
             z-index: 1;
-            display: inline-block;
         }
 
         /* Grid untuk schedule items dalam kelompok waktu */
         .time-group-schedule {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: clamp(1rem, 2vw, 1.5rem);
+            gap: 1.5rem;
             width: 100%;
         }
 
-        /* Jadwal items dengan efek vintage */
+        /* Random rotation untuk setiap schedule-item */
+        .schedule-item:nth-child(1) { transform: rotate(-0.8deg); }
+        .schedule-item:nth-child(2) { transform: rotate(1.2deg); }
+        .schedule-item:nth-child(3) { transform: rotate(-1.5deg); }
+        .schedule-item:nth-child(4) { transform: rotate(0.7deg); }
+        .schedule-item:nth-child(5) { transform: rotate(-1.1deg); }
+        .schedule-item:nth-child(6) { transform: rotate(1.8deg); }
+        .schedule-item:nth-child(7) { transform: rotate(-0.5deg); }
+        .schedule-item:nth-child(8) { transform: rotate(1.4deg); }
+        .schedule-item:nth-child(9) { transform: rotate(-1.9deg); }
+        .schedule-item:nth-child(10) { transform: rotate(0.9deg); }
+        
+        /* Jadwal items dengan efek vintage yang ditingkatkan */
         .schedule-item {
-            padding: clamp(1rem, 2vw, 1.5rem);
+            padding: 1.5rem;
             margin-bottom: 0;
             border-left: 5px solid var(--primary-color);
             background-color: rgba(248, 245, 240, 0.9);
@@ -1101,6 +1091,7 @@
             animation: fadeInUp 0.6s ease-out forwards;
             transform-origin: center;
             box-sizing: border-box;
+            width: 100%;
         }
 
         /* Efek noda tinta di jadwal item */
@@ -1199,7 +1190,7 @@
             right: 10px;
             background: linear-gradient(135deg, #ff5722, #ff8a65);
             color: white;
-            font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+            font-size: 0.7rem;
             font-weight: bold;
             padding: 4px 10px;
             border-radius: 12px;
@@ -1209,10 +1200,6 @@
             animation: badgePulse 1.5s infinite alternate;
             border: 1px dashed rgba(255, 255, 255, 0.5);
             letter-spacing: 0.5px;
-            max-width: 80%;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
         
         .current-session-badge::before {
@@ -1267,11 +1254,15 @@
         /* Waktu dan foto dosen */
         .schedule-header {
             display: block;
-            margin-bottom: clamp(0.8rem, 2vw, 1rem);
-            padding-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
+            margin-bottom: 1rem;
+            padding-bottom: 0.8rem;
             border-bottom: 2px dotted var(--border-color);
             position: relative;
             z-index: 2;
+        }
+
+        .lecturer-photo {
+            display: none;
         }
 
         .lecturer-info {
@@ -1286,28 +1277,28 @@
             display: flex;
             flex-wrap: wrap;
             align-items: baseline;
-            margin-bottom: clamp(0.5rem, 1.5vw, 0.8rem);
-            gap: clamp(4px, 1vw, 8px);
+            margin-bottom: 0.8rem;
+            gap: 8px;
         }
 
-        /* Headline dosen */
+        /* Headline dosen - DIPINDAH KE ATAS */
         .lecturer-name {
             font-weight: 700;
-            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            font-size: 1.4rem;
             color: var(--ink-color);
-            font-family: 'Playfair Display', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             line-height: 1.3;
             position: relative;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            hyphens: auto;
             overflow: hidden;
             flex-shrink: 0;
+            hyphens: auto;
         }
 
         /* Gelar dosen di samping kanan nama */
         .lecturer-title {
-            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            font-size: 0.9rem;
             color: #666;
             font-style: italic;
             word-wrap: break-word;
@@ -1315,36 +1306,35 @@
             overflow: hidden;
             padding-left: 0;
             margin-bottom: 0;
-            line-height: 1.4;
+            line-height: 1.3;
         }
 
         /* Drop cap untuk nama dosen */
         .lecturer-name::first-letter {
-            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            font-size: 2.2rem;
             float: left;
             line-height: 1;
-            margin-right: clamp(4px, 1vw, 6px);
-            margin-top: clamp(2px, 0.5vw, 3px);
+            margin-right: 6px;
+            margin-top: 3px;
             color: var(--primary-color);
-            font-family: 'Playfair Display', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             font-weight: 900;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* Jadwal waktu */
+        /* Jadwal waktu - DIPINDAH KE BAWAH NAMA DOSEN */
         .schedule-time {
             font-weight: 600;
             color: var(--primary-color);
-            font-size: clamp(1rem, 2vw, 1.1rem);
-            margin-bottom: clamp(0.3rem, 1vw, 0.5rem);
-            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Playfair Display', serif;
             position: relative;
             display: inline-block;
             padding-left: 22px;
             word-wrap: break-word;
             overflow-wrap: break-word;
             max-width: 100%;
-            line-height: 1.3;
         }
 
         /* Ikon jam dengan efek vintage */
@@ -1354,24 +1344,23 @@
             top: 50%;
             transform: translateY(-50%);
             color: var(--border-color);
-            font-size: clamp(1rem, 1.5vw, 1.1rem);
+            font-size: 1.1rem;
         }
 
         /* Mata kuliah */
         .course-title {
             font-weight: 600;
-            font-size: clamp(1rem, 2vw, 1.1rem);
-            margin: clamp(0.5rem, 1.5vw, 0.8rem) 0 clamp(0.3rem, 1vw, 0.5rem) 0;
+            font-size: 1.1rem;
+            margin: 0.8rem 0 0.5rem 0;
             color: var(--primary-color);
             border-left: 3px solid var(--accent-color);
-            padding-left: clamp(0.5rem, 1.5vw, 0.8rem);
-            font-family: inherit;
+            padding-left: 0.8rem;
+            font-family: 'Inter', sans-serif;
             position: relative;
             z-index: 2;
             word-wrap: break-word;
             overflow-wrap: break-word;
             hyphens: auto;
-            line-height: 1.4;
         }
 
         .course-title i {
@@ -1382,9 +1371,9 @@
         .schedule-meta {
             display: flex;
             flex-direction: column;
-            gap: clamp(5px, 1vw, 8px);
-            margin-top: clamp(0.5rem, 1.5vw, 0.8rem);
-            font-size: clamp(0.75rem, 1.5vw, 0.85rem);
+            gap: 8px;
+            margin-top: 0.8rem;
+            font-size: 0.85rem;
             color: #666;
             position: relative;
             z-index: 2;
@@ -1395,18 +1384,18 @@
             align-items: center;
             gap: 5px;
             background-color: rgba(139, 115, 85, 0.1);
-            padding: clamp(0.15rem, 0.5vw, 0.2rem) clamp(0.4rem, 1vw, 0.6rem);
+            padding: 0.2rem 0.6rem;
             border-radius: 2px;
             border: 1px solid rgba(139, 115, 85, 0.2);
             flex-wrap: wrap;
             word-wrap: break-word;
-            line-height: 1.3;
+            overflow-wrap: break-word;
         }
 
-        /* Empty State */
+        /* EMPTY STATE LEBIH MENARIK */
         .no-results {
             text-align: center;
-            padding: clamp(2rem, 6vw, 4rem) clamp(1rem, 3vw, 2rem);
+            padding: 4rem 2rem;
             color: #777;
             font-style: italic;
             position: relative;
@@ -1415,7 +1404,7 @@
             background: linear-gradient(135deg, rgba(248, 245, 240, 0.9), rgba(232, 227, 214, 0.9));
             border-radius: 10px;
             border: 2px dashed var(--border-color);
-            margin: clamp(1rem, 3vw, 2rem) 0;
+            margin: 2rem 0;
             overflow: hidden;
             width: 100%;
             box-sizing: border-box;
@@ -1441,32 +1430,43 @@
             z-index: 0;
         }
 
+        /* Efek stempel "TIDAK DITEMUKAN" yang lebih vintage */
         .no-results::after {
-            content: "";
+            content: "TIDAK DITEMUKAN";
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-10deg);
-            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-size: 3.5rem;
             font-weight: 900;
-            color: rgba(139, 115, 85, 0.04);
-            letter-spacing: clamp(3px, 1.5vw, 8px);
+            color: rgba(139, 115, 85, 0.08);
+            letter-spacing: 8px;
             white-space: nowrap;
             z-index: 0;
-            font-family: 'Playfair Display', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
         }
 
+        .no-results i {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            color: var(--border-color);
+            position: relative;
+            z-index: 1;
+            animation: bounceIcon 2s infinite ease-in-out;
+            filter: sepia(0.5) brightness(0.9);
+        }
+        
         .no-results .empty-icon-container {
-            width: clamp(80px, 25vw, 120px);
-            height: clamp(80px, 25vw, 120px);
-            margin: 0 auto clamp(1rem, 3vw, 2rem);
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 2rem;
             position: relative;
             z-index: 1;
         }
         
         .no-results .empty-icon {
-            font-size: clamp(3rem, 8vw, 5rem);
+            font-size: 5rem;
             color: var(--border-color);
             animation: floatIcon 3s infinite ease-in-out;
             filter: sepia(0.6);
@@ -1478,7 +1478,7 @@
             position: absolute;
             top: -15px;
             left: -15px;
-            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-size: 2rem;
             opacity: 0.7;
             transform: rotate(-20deg);
             animation: floatSubIcon 3s infinite ease-in-out alternate;
@@ -1487,22 +1487,21 @@
         .no-results h3 {
             position: relative;
             z-index: 1;
-            font-family: 'Playfair Display', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             color: var(--primary-color);
-            font-size: clamp(1.3rem, 3vw, 1.8rem);
-            margin-bottom: clamp(0.5rem, 2vw, 1rem);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
             word-wrap: break-word;
             overflow-wrap: break-word;
-            line-height: 1.3;
         }
 
         .no-results p {
             position: relative;
             z-index: 1;
-            max-width: min(500px, 90vw);
+            max-width: 500px;
             margin: 0 auto;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
+            font-size: 1.1rem;
             line-height: 1.6;
             color: #5a5347;
             word-wrap: break-word;
@@ -1513,14 +1512,13 @@
             background: rgba(139, 115, 85, 0.1);
             border: 1px solid rgba(139, 115, 85, 0.3);
             border-radius: 5px;
-            padding: clamp(0.8rem, 2vw, 1rem);
-            margin-top: clamp(1rem, 2vw, 1.5rem);
+            padding: 1rem;
+            margin-top: 1.5rem;
             font-style: normal;
             position: relative;
             z-index: 1;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            font-size: clamp(0.85rem, 1.8vw, 1rem);
         }
         
         .no-results .vintage-note::before {
@@ -1530,7 +1528,7 @@
             top: -10px;
             background: var(--paper-color);
             padding: 0 5px;
-            font-size: clamp(1rem, 1.8vw, 1.2rem);
+            font-size: 1.2rem;
         }
         
         @keyframes bounceIcon {
@@ -1557,11 +1555,11 @@
         /* ==================== FOOTER ==================== */
         .newspaper-footer {
             text-align: center;
-            padding: clamp(1.5rem, 4vw, 2.5rem) 0 clamp(1rem, 2vw, 1.5rem) 0;
+            padding: 2.5rem 0 1.5rem 0;
             border-top: 8px double var(--border-color);
-            margin-top: clamp(1rem, 3vw, 2rem);
+            margin-top: 2rem;
             color: #666;
-            font-size: clamp(0.8rem, 1.5vw, 0.9rem);
+            font-size: 0.9rem;
             position: relative;
             background-color: var(--paper-color);
             box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
@@ -1604,7 +1602,7 @@
             border: none;
             padding: 0;
             margin: 0;
-            gap: clamp(0.5rem, 1.5vw, 1rem);
+            gap: 1rem;
         }
 
         .newspaper-footer .container::before,
@@ -1612,18 +1610,22 @@
             display: none;
         }
 
+        /* Hapus footer credit */
+        .footer-credit {
+            display: none;
+        }
+
         .footer-note {
             line-height: 1.6;
             text-align: center;
-            max-width: min(600px, 90vw);
+            max-width: 600px;
             margin: 0 auto;
-            padding: clamp(0.8rem, 2vw, 1rem);
+            padding: 1rem;
             background-color: rgba(255, 255, 255, 0.5);
             border-radius: 3px;
             border: 1px dashed var(--border-color);
             word-wrap: break-word;
             overflow-wrap: break-word;
-            font-size: clamp(0.85rem, 1.8vw, 1rem);
         }
 
         /* Efek watermark di latar belakang */
@@ -1632,292 +1634,78 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: clamp(5rem, 20vw, 15rem);
+            font-size: 15rem;
             color: rgba(139, 115, 85, 0.03);
-            font-family: 'Playfair Display', Georgia, serif;
+            font-family: 'Playfair Display', serif;
             font-weight: 900;
             white-space: nowrap;
             pointer-events: none;
             z-index: 0;
-            width: 100%;
-            text-align: center;
-            overflow: hidden;
         }
 
-        /* ==================== MEDIA QUERIES UNTUK REALME C3 & MOBILE ==================== */
-
-        /* Untuk Realme C3 (720x1600) dan hp kecil */
-        @media (max-width: 768px) {
-            /* HIDE ORNAMEN DI MOBILE AGAR TIDAK TERTINDIH */
-            .newspaper-header::before,
-            .newspaper-header::after,
-            .newspaper-header .ornament-left,
-            .newspaper-header .ornament-right {
-                display: none;
+        /* ==================== RESPONSIVE BREAKPOINTS ==================== */
+        
+        /* Tablet (768px - 991px) */
+        @media (min-width: 768px) and (max-width: 991px) {
+            .container {
+                padding: 25px;
+                width: calc(100% - 40px);
+                margin: 20px auto 30px;
             }
             
-            /* SUBTITLE LEBIH RAPI */
-            .newspaper-subtitle {
-                font-size: clamp(0.7rem, 2.5vw, 0.8rem);
-                letter-spacing: 1px;
-                padding: 0.4rem 0;
-                margin: 0 15px 0.8rem 15px;
-                line-height: 1.3;
+            .institution-name {
+                font-size: 2.8rem;
             }
             
-            .newspaper-subtitle::before,
-            .newspaper-subtitle::after {
-                font-size: 0.8rem;
-                padding: 0 2px;
+            .time-group-schedule {
+                grid-template-columns: 1fr;
             }
             
-            /* LOGO LEBIH KECIL */
+            .header-info {
+                gap: 1.8rem;
+            }
+            
             .logo-real {
-                width: clamp(80px, 20vw, 100px);
-                height: clamp(80px, 20vw, 100px);
+                width: 130px;
+                height: 130px;
             }
             
-            /* DATE-TIME LEBIH KOMPAK */
             .date-time {
-                min-width: min(260px, 80vw);
-                padding: 10px 15px;
+                padding: 15px 20px;
+                min-width: 320px;
             }
             
             .current-date {
-                font-size: 0.85rem;
+                font-size: 1.1rem;
             }
             
             .current-time {
-                font-size: 1.2rem;
-            }
-            
-            /* JUDUL UTAMA LEBIH KECIL */
-            .institution-name {
-                font-size: clamp(1.6rem, 5vw, 2rem);
-                padding: 0 10px;
-            }
-            
-            /* PITA "PILIH HARI" LEBIH JELAS */
-            .filter-section::before {
-                width: min(180px, 70vw);
-                height: 18px;
-                top: -9px;
-            }
-            
-            .filter-section::after {
-                font-size: 0.65rem;
-                top: -7px;
-            }
-            
-            /* TOMBOL HARI LEBIH RESPONSIF */
-            .day-btn {
-                font-size: 0.8rem;
-                padding: 0.5rem 0.8rem;
-                min-width: 90px;
-                max-width: 120px;
-            }
-            
-            /* JUDUL JADWAL LEBIH RAPI */
-            .container-title {
-                font-size: clamp(1.2rem, 4vw, 1.5rem);
-                padding: 0 5px;
-            }
-            
-            .container-title::before {
-                left: calc(50% - min(90px, 30vw));
-            }
-            
-            .container-title::after {
-                right: calc(50% - min(90px, 30vw));
-            }
-            
-            /* TRAPESIUM LEBIH KECIL */
-            .container-title::after {
-                width: min(100px, 40vw);
-            }
-            
-            /* BADGE HARI LEBIH KECIL */
-            #selectedDayBadge {
-                font-size: 0.7rem;
-                padding: 0.2rem 0.6rem;
-                margin-left: 3px;
-            }
-        }
-
-        /* Untuk hp sangat kecil (Realme C3 dan sejenis) */
-        @media (max-width: 375px) {
-            .institution-name {
-                font-size: 1.4rem;
-                letter-spacing: 0;
-            }
-            
-            .newspaper-subtitle {
-                font-size: 0.65rem;
-                letter-spacing: 0.5px;
-                margin: 0 10px 0.6rem 10px;
-            }
-            
-            .logo-real {
-                width: 70px;
-                height: 70px;
-            }
-            
-            .date-time {
-                min-width: 85vw;
-            }
-            
-            .day-selector {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .day-btn {
-                width: 90%;
-                max-width: 200px;
-                margin-bottom: 5px;
-            }
-            
-            .container {
-                padding: 12px;
-                margin: 10px auto;
-                width: calc(100% - 10px);
-            }
-            
-            .time-group-schedule {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .search-bar {
-                padding: 0.7rem 1rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        /* Landscape mode untuk mobile */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .header-info {
-                flex-direction: row;
-                justify-content: space-around;
-                gap: 1rem;
-            }
-            
-            .logo-real {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .date-time {
-                min-width: 200px;
-            }
-            
-            .time-group-schedule {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .newspaper-subtitle {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 90vw;
-            }
-        }
-
-        /* Tablet Landscape */
-        @media (max-width: 1024px) {
-            .time-group-schedule {
-                grid-template-columns: 1fr;
-            }
-            
-            .day-selector {
-                justify-content: space-around;
-            }
-            
-            .day-btn {
-                flex: 0 1 calc(33.333% - 10px);
-                max-width: calc(33.333% - 10px);
-            }
-        }
-
-        /* Tablet Portrait */
-        @media (max-width: 768px) and (orientation: portrait) {
-            .institution-name {
-                font-size: clamp(1.8rem, 5vw, 2.5rem);
-            }
-            
-            .filter-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .day-selector {
-                flex-direction: row;
-                justify-content: center;
-            }
-            
-            .day-btn {
-                flex: 1;
-                max-width: min(150px, 30vw);
-                min-width: 100px;
-            }
-            
-            .schedule-container {
-                padding: clamp(1rem, 3vw, 1.5rem);
-            }
-            
-            .watermark {
-                font-size: clamp(4rem, 15vw, 8rem);
+                font-size: 1.9rem;
             }
             
             .time-group-header {
-                padding: clamp(0.8rem, 2vw, 1rem);
-                flex-direction: row;
-            }
-            
-            .time-group-title {
-                font-size: clamp(1.2rem, 3vw, 1.5rem);
+                padding: 0.9rem 1.2rem;
             }
             
             .time-group-icon {
-                width: clamp(45px, 10vw, 50px);
-                height: clamp(45px, 10vw, 50px);
-                font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-                margin-right: clamp(0.5rem, 1.5vw, 0.8rem);
+                width: 55px;
+                height: 55px;
+                font-size: 1.6rem;
             }
             
-            .time-group-period {
-                display: block;
-                margin-left: 0;
-                margin-top: 0.2rem;
+            .time-group-title {
+                font-size: 1.6rem;
             }
             
-            /* Responsive untuk nama dosen dan gelar */
-            .lecturer-name-container {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: clamp(3px, 1vw, 4px);
-                margin-bottom: clamp(0.5rem, 1.5vw, 0.6rem);
+            .container-title {
+                font-size: 2rem;
             }
             
-            .lecturer-name {
-                font-size: clamp(1.1rem, 2.5vw, 1.2rem);
+            .watermark {
+                font-size: 10rem;
             }
             
-            .lecturer-title {
-                font-size: clamp(0.8rem, 1.8vw, 0.85rem);
-            }
-            
-            .schedule-time {
-                font-size: clamp(1rem, 2vw, 1rem);
-                margin-bottom: clamp(0.3rem, 1vw, 0.3rem);
-            }
-            
-            .course-title {
-                font-size: clamp(1rem, 2vw, 1rem);
-                margin: clamp(0.5rem, 1.5vw, 0.6rem) 0 clamp(0.3rem, 1vw, 0.4rem) 0;
-            }
-            
-            /* Nonaktifkan rotasi untuk mobile */
+            /* Tablet: Sederhanakan efek rotasi */
             .schedule-item:nth-child(n) {
                 transform: none !important;
             }
@@ -1925,174 +1713,74 @@
             .schedule-item:hover {
                 transform: translateY(-5px) scale(1.01) !important;
             }
-            
-            /* Responsive untuk empty state */
-            .no-results::after {
-                font-size: clamp(1.5rem, 4vw, 2rem);
-                letter-spacing: clamp(2px, 1vw, 3px);
-            }
-            
-            .no-results .empty-icon {
-                font-size: clamp(2.5rem, 6vw, 3.5rem);
-            }
         }
 
-        /* Mobile Landscape */
-        @media (max-width: 576px) and (orientation: landscape) {
-            .header-info {
-                flex-direction: row;
-                justify-content: space-around;
+        /* Mobile (576px - 767px) */
+        @media (max-width: 767px) {
+            /* FIX: Atur viewport dan root */
+            html, body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                position: relative !important;
             }
             
-            .logo-real {
-                width: 80px;
-                height: 80px;
+            body {
+                padding: 0;
+                margin: 0;
             }
             
-            .date-time {
-                min-width: 200px;
-            }
-            
-            .day-selector {
-                flex-direction: row;
-            }
-            
-            .time-group-schedule {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Mobile Portrait */
-        @media (max-width: 576px) and (orientation: portrait) {
-            .day-btn {
-                padding: clamp(0.5rem, 1.2vw, 0.6rem) clamp(0.8rem, 1.8vw, 1rem);
-                font-size: clamp(0.85rem, 1.5vw, 0.9rem);
-                min-width: min(100px, 25vw);
-            }
-            
-            .day-selector {
-                flex-direction: column;
-                width: 100%;
-                align-items: center;
-            }
-            
-            .day-btn {
-                width: min(250px, 80%);
-                max-width: 250px;
-                margin-bottom: 8px;
-            }
-            
+            /* FIX: Container utama */
             .container {
-                padding: clamp(10px, 2vw, 15px);
-                margin: 10px auto;
-                width: calc(100% - 10px);
+                padding: 15px !important;
+                margin: 10px auto !important;
+                width: calc(100% - 20px) !important;
+                box-shadow: 
+                    0 5px 15px rgba(0, 0, 0, 0.15),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
             }
             
-            .schedule-item {
-                padding: clamp(1rem, 2vw, 1.2rem);
+            /* FIX: Sembunyikan efek robek di mobile */
+            .container::before,
+            .container::after {
+                display: none;
             }
             
-            .course-title {
-                font-size: clamp(0.95rem, 2vw, 1rem);
+            /* FIX: Header koran */
+            .newspaper-header {
+                padding: 1.5rem 0 1rem 0;
+                margin-bottom: 1.5rem;
             }
             
-            .schedule-time {
-                font-size: clamp(0.95rem, 2vw, 1rem);
+            /* FIX: Sembunyikan ornamen di mobile */
+            .newspaper-header::before,
+            .newspaper-header::after,
+            .newspaper-header .ornament-left,
+            .newspaper-header .ornament-right {
+                display: none;
             }
             
-            .schedule-meta {
-                font-size: clamp(0.75rem, 1.5vw, 0.8rem);
-                gap: clamp(4px, 1vw, 6px);
+            .main-content::before,
+            .main-content::after {
+                display: none;
             }
             
-            .header-info {
-                gap: clamp(0.8rem, 2vw, 1.2rem);
-            }
-            
-            .date-time {
-                padding: clamp(8px, 1.5vw, 10px) clamp(12px, 2vw, 15px);
-                min-width: min(250px, 85vw);
-                max-width: 300px;
-            }
-            
-            .current-date {
-                font-size: clamp(0.9rem, 2vw, 1rem);
-            }
-            
-            .current-time {
-                font-size: clamp(1.3rem, 3vw, 1.6rem);
-            }
-            
-            .time-group-schedule {
-                grid-template-columns: 1fr;
-                gap: clamp(1rem, 2vw, 1.2rem);
-            }
-            
-            .time-group-header {
-                flex-direction: row;
-                align-items: center;
-                padding: clamp(0.7rem, 1.5vw, 0.8rem);
-            }
-            
-            .time-group-icon {
-                margin-right: clamp(0.6rem, 1.5vw, 0.8rem);
-                margin-bottom: 0;
-                width: clamp(40px, 9vw, 45px);
-                height: clamp(40px, 9vw, 45px);
-                font-size: clamp(1.1rem, 2.2vw, 1.3rem);
-            }
-            
-            .time-group-title {
-                font-size: clamp(1.1rem, 2.5vw, 1.2rem);
-            }
-            
-            .time-group-period {
-                font-size: clamp(0.75rem, 1.5vw, 0.85rem);
-                display: block;
-                margin-left: 0;
-                margin-top: 0.2rem;
-            }
-            
-            /* Responsive untuk nama dosen dan gelar */
-            .lecturer-name-container {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: clamp(2px, 0.8vw, 3px);
-            }
-            
-            .lecturer-name {
-                font-size: clamp(1rem, 2.2vw, 1.1rem);
-                line-height: 1.2;
-            }
-            
-            .lecturer-title {
-                font-size: clamp(0.75rem, 1.5vw, 0.8rem);
-                padding-left: 0;
-                line-height: 1.3;
-            }
-            
-            .schedule-header {
-                gap: clamp(0.5rem, 1.5vw, 0.6rem);
-                margin-bottom: clamp(0.6rem, 1.5vw, 0.8rem);
-                padding-bottom: clamp(0.4rem, 1.2vw, 0.6rem);
-            }
-            
-            /* Untuk nama yang sangat panjang di mobile */
-            .lecturer-name::first-letter {
-                font-size: clamp(1.5rem, 3vw, 1.8rem);
-                margin-right: clamp(3px, 0.8vw, 4px);
-                margin-top: clamp(1px, 0.5vw, 2px);
-            }
-            
-            .search-container::before {
-                right: clamp(12px, 2.5vw, 20px);
-            }
-        }
-
-        /* Very Small Mobile */
-        @media (max-width: 320px) {
+            /* FIX: Judul utama */
             .institution-name {
-                font-size: 1.3rem;
+                font-size: 1.8rem !important;
+                letter-spacing: 1px;
+                padding: 0 15px;
+                line-height: 1.2;
+                margin-bottom: 0.3rem;
+            }
+            
+            /* FIX: Subtitle */
+            .newspaper-subtitle {
+                font-size: 0.8rem;
+                letter-spacing: 2px;
+                padding: 0.5rem 0;
+                margin-bottom: 0.5rem;
+                white-space: normal;
+                line-height: 1.3;
             }
             
             .newspaper-subtitle::before,
@@ -2100,147 +1788,589 @@
                 display: none;
             }
             
+            /* FIX: Header info */
+            .header-info {
+                gap: 1rem !important;
+                margin-top: 1rem;
+                padding: 0 10px;
+            }
+            
+            .header-info::before {
+                display: none;
+            }
+            
+            /* FIX: Logo */
+            .logo-real {
+                width: 100px !important;
+                height: 100px !important;
+                margin-bottom: 0;
+            }
+            
+            /* FIX: Tanggal dan waktu */
             .date-time {
-                min-width: 90vw;
+                min-width: 100% !important;
+                padding: 10px 15px;
+                width: 100%;
+                max-width: 300px;
             }
             
-            .day-btn {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.6rem;
+            .date-time::before {
+                font-size: 0.6rem;
+                padding: 2px 6px;
+                top: -10px;
+                right: 5px;
             }
             
-            .container-title {
+            .current-date {
+                font-size: 0.95rem !important;
+            }
+            
+            .current-time {
+                font-size: 1.5rem !important;
+            }
+            
+            /* FIX: Hero section */
+            .hero-section {
+                padding: 1.5rem 0 1rem 0;
+                margin-bottom: 0.5rem;
+            }
+            
+            .hero-section::before {
+                font-size: 1rem;
+                padding: 0 10px;
+                letter-spacing: 3px;
+            }
+            
+            /* FIX: Search bar */
+            .search-container {
+                padding: 0 10px;
+            }
+            
+            .search-bar {
+                padding: 0.9rem 1rem !important;
+                font-size: 1rem !important;
+            }
+            
+            .search-container::before {
+                right: 15px !important;
+                top: 12px;
                 font-size: 1.2rem;
             }
             
-            .time-group-title {
-                font-size: 1rem;
+            /* FIX: Filter section */
+            .filter-section {
+                padding: 0.5rem 0;
+                margin-bottom: 1.5rem;
             }
             
-            .lecturer-name {
-                font-size: 0.9rem;
+            .filter-section::before {
+                width: 150px;
+                height: 18px;
+                top: -9px;
             }
             
-            .lecturer-title {
-                font-size: 0.65rem;
+            .filter-section::after {
+                font-size: 0.7rem;
+                top: -7px;
             }
             
-            /* Hide some decorative elements on very small screens */
-            .search-container::before {
-                display: none;
+            .filter-controls {
+                margin-bottom: 1rem;
+            }
+            
+            /* FIX: Tombol hari - vertikal di mobile */
+            .day-selector {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                align-items: center;
+            }
+            
+            .day-btn {
+                width: 100% !important;
+                max-width: 280px !important;
+                min-width: unset !important;
+                padding: 0.7rem !important;
+                font-size: 0.95rem;
+                margin: 0 auto;
+            }
+            
+            /* FIX: Schedule container */
+            .schedule-container {
+                padding: 1.5rem !important;
+                min-height: 300px;
             }
             
             .schedule-container::before {
                 display: none;
             }
-        }
-
-        /* Accessibility: Reduced motion */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+            
+            /* FIX: Container title */
+            .container-title {
+                font-size: 1.5rem !important;
+                padding-bottom: 0.8rem;
+                margin-bottom: 1.2rem;
             }
             
-            #instant-loader.hidden {
-                transition: none;
+            .container-title::before,
+            .container-title::after,
+            .container-title::after {
+                display: none;
+            }
+            
+            /* FIX: Badge hari */
+            #selectedDayBadge {
+                font-size: 0.8rem;
+                padding: 0.3rem 0.8rem;
+                margin-top: 5px;
+                display: block;
+                transform: none;
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            
+            /* FIX: Grid jadwal - 1 kolom di mobile */
+            .time-group-schedule {
+                grid-template-columns: 1fr !important;
+                gap: 1rem !important;
+            }
+            
+            /* FIX: Header kelompok waktu */
+            .time-group-header {
+                padding: 0.8rem !important;
+                margin-bottom: 1rem;
+                flex-direction: row;
+                align-items: center;
+            }
+            
+            .time-group-icon {
+                width: 45px !important;
+                height: 45px !important;
+                font-size: 1.3rem !important;
+                margin-right: 0.8rem !important;
+            }
+            
+            .time-group-title {
+                font-size: 1.2rem !important;
+            }
+            
+            .time-group-period {
+                font-size: 0.8rem !important;
+                display: block;
+                margin-left: 0 !important;
+                margin-top: 3px;
+            }
+            
+            /* FIX: Item jadwal untuk mobile */
+            .schedule-item {
+                padding: 1.2rem !important;
+                margin-bottom: 0;
+                transform: none !important;
+                clip-path: none !important;
+                border-radius: 5px;
+                box-shadow: 
+                    0 4px 10px rgba(0, 0, 0, 0.1),
+                    0 6px 20px rgba(0, 0, 0, 0.05),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+                animation: fadeInUpMobile 0.5s ease-out forwards;
+            }
+            
+            @keyframes fadeInUpMobile {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .schedule-item:hover {
+                transform: translateY(-3px) !important;
+                scale: 1.01;
+                box-shadow: 
+                    0 6px 15px rgba(0, 0, 0, 0.15),
+                    0 10px 25px rgba(0, 0, 0, 0.08),
+                    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
+            }
+            
+            .schedule-item .torn-corner {
+                display: none;
+            }
+            
+            .schedule-item .paper-clip {
+                display: none;
+            }
+            
+            .schedule-item::after {
+                display: none;
+            }
+            
+            /* FIX: Nama dosen dan gelar untuk mobile */
+            .lecturer-name-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2px;
+                margin-bottom: 0.5rem;
+            }
+            
+            .lecturer-name {
+                font-size: 1.1rem !important;
+                line-height: 1.2;
+            }
+            
+            .lecturer-name::first-letter {
+                font-size: 1.5rem !important;
+                margin-right: 4px;
+                margin-top: 1px;
+            }
+            
+            .lecturer-title {
+                font-size: 0.8rem !important;
+                line-height: 1.3;
+                padding-left: 0 !important;
+            }
+            
+            /* FIX: Waktu dan mata kuliah */
+            .schedule-time {
+                font-size: 0.95rem !important;
+                margin-bottom: 0.5rem;
+                padding-left: 20px;
+            }
+            
+            .schedule-time i {
+                font-size: 1rem;
+            }
+            
+            .course-title {
+                font-size: 1rem !important;
+                margin: 0.6rem 0 0.4rem 0;
+                padding-left: 0.7rem;
+            }
+            
+            .course-title i {
+                font-size: 0.9rem;
+            }
+            
+            /* FIX: Meta info */
+            .schedule-meta {
+                gap: 5px !important;
+                font-size: 0.8rem !important;
+                margin-top: 0.6rem;
+            }
+            
+            .schedule-meta span {
+                padding: 0.15rem 0.5rem !important;
+                font-size: 0.8rem;
+            }
+            
+            /* FIX: Efek current session untuk mobile */
+            .current-session-badge {
+                font-size: 0.6rem !important;
+                padding: 3px 8px !important;
+                top: 5px !important;
+                right: 5px !important;
+            }
+            
+            /* FIX: Empty state untuk mobile */
+            .no-results {
+                padding: 2.5rem 1.5rem;
+                margin: 1.5rem 0;
+            }
+            
+            .no-results::after {
+                font-size: 1.8rem;
+                letter-spacing: 4px;
+            }
+            
+            .no-results .empty-icon-container {
+                width: 80px;
+                height: 80px;
+                margin: 0 auto 1.5rem;
+            }
+            
+            .no-results .empty-icon {
+                font-size: 3.5rem;
+            }
+            
+            .no-results .empty-icon::before {
+                font-size: 1.5rem;
+                top: -10px;
+                left: -10px;
+            }
+            
+            .no-results h3 {
+                font-size: 1.3rem;
+                margin-bottom: 0.8rem;
+            }
+            
+            .no-results p {
+                font-size: 0.95rem;
+                max-width: 100%;
+            }
+            
+            .no-results .vintage-note {
+                padding: 0.8rem;
+                margin-top: 1rem;
+                font-size: 0.85rem;
+            }
+            
+            /* FIX: Footer */
+            .newspaper-footer {
+                padding: 1.5rem 0 1rem 0;
+                margin-top: 1.5rem;
+            }
+            
+            .newspaper-footer::before {
+                display: none;
+            }
+            
+            .footer-note {
+                font-size: 0.8rem;
+                padding: 0.8rem;
+                margin: 0 10px;
+            }
+            
+            /* FIX: Watermark */
+            .watermark {
+                font-size: 5rem !important;
+                opacity: 0.05;
+            }
+            
+            /* FIX: Efek tinta */
+            .ink-stain-1,
+            .ink-stain-2 {
+                display: none;
             }
         }
 
-        /* High Resolution Screens */
-        @media (min-width: 1400px) {
+        /* Small Mobile (375px - 575px) */
+        @media (max-width: 575px) {
+            .institution-name {
+                font-size: 1.6rem !important;
+            }
+            
+            .logo-real {
+                width: 90px !important;
+                height: 90px !important;
+            }
+            
+            .current-date {
+                font-size: 0.9rem !important;
+            }
+            
+            .current-time {
+                font-size: 1.4rem !important;
+            }
+            
+            .day-btn {
+                max-width: 250px !important;
+            }
+            
+            .schedule-item {
+                padding: 1rem !important;
+            }
+            
+            .lecturer-name {
+                font-size: 1rem !important;
+            }
+            
+            .lecturer-name::first-letter {
+                font-size: 1.3rem !important;
+                margin-right: 3px;
+            }
+            
+            .lecturer-title {
+                font-size: 0.75rem !important;
+            }
+            
+            .course-title {
+                font-size: 0.95rem !important;
+            }
+            
+            .schedule-meta {
+                font-size: 0.75rem !important;
+            }
+        }
+
+        /* Extra Small Mobile (< 375px) */
+        @media (max-width: 374px) {
             .container {
-                max-width: 1300px;
+                padding: 12px !important;
+                width: calc(100% - 10px) !important;
+                margin: 8px auto !important;
+            }
+            
+            .institution-name {
+                font-size: 1.4rem !important;
+                padding: 0 10px;
+            }
+            
+            .logo-real {
+                width: 80px !important;
+                height: 80px !important;
+            }
+            
+            .date-time {
+                padding: 8px 12px;
+            }
+            
+            .current-date {
+                font-size: 0.85rem !important;
+            }
+            
+            .current-time {
+                font-size: 1.3rem !important;
+            }
+            
+            .search-bar {
+                padding: 0.8rem !important;
+                font-size: 0.95rem !important;
+            }
+            
+            .search-container::before {
+                right: 12px;
+                top: 10px;
+                font-size: 1rem;
+            }
+            
+            .day-btn {
+                font-size: 0.9rem;
+                padding: 0.6rem !important;
+                max-width: 220px !important;
+            }
+            
+            .container-title {
+                font-size: 1.3rem !important;
+            }
+            
+            .time-group-title {
+                font-size: 1.1rem !important;
+            }
+            
+            .time-group-icon {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 1.1rem !important;
+                margin-right: 0.6rem !important;
+            }
+            
+            .lecturer-name-container {
+                gap: 1px;
+            }
+            
+            .lecturer-name {
+                font-size: 0.95rem !important;
+            }
+            
+            .lecturer-title {
+                font-size: 0.7rem !important;
+            }
+            
+            .watermark {
+                font-size: 4rem !important;
+            }
+        }
+
+        /* Desktop Large (> 1200px) */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1200px;
+                margin: 20px auto 40px;
+            }
+        }
+
+        /* Landscape Mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .header-info {
+                flex-direction: row;
+                gap: 2rem;
+            }
+            
+            .logo-real {
+                width: 80px !important;
+                height: 80px !important;
+            }
+            
+            .date-time {
+                min-width: 250px !important;
+            }
+            
+            .time-group-schedule {
+                grid-template-columns: repeat(2, 1fr) !important;
             }
         }
 
         /* Print Styles */
         @media print {
-            .ink-stain,
-            .watermark,
-            #instant-loader,
-            .search-container::before,
-            .schedule-container::before,
-            .paper-clip,
-            .torn-corner,
-            .current-session-badge,
-            .day-btn.today::after,
-            .date-time::before {
-                display: none !important;
-            }
-            
             body {
                 background-color: white;
             }
             
             .container {
                 box-shadow: none;
-                border: 1px solid #ccc;
-                margin: 0;
-                padding: 20px;
-                width: 100%;
-                max-width: 100%;
-            }
-            
-            .schedule-item {
-                break-inside: avoid;
-                box-shadow: none;
                 border: 1px solid #ddd;
             }
             
-            .newspaper-header {
-                border-bottom: 2px solid #000;
+            .day-btn:hover,
+            .schedule-item:hover {
+                transform: none !important;
+                box-shadow: none !important;
             }
             
-            .footer-note {
-                border: 1px solid #ddd;
+            .watermark,
+            .ink-stain,
+            .search-container::before,
+            .schedule-container::before {
+                display: none;
+            }
+            
+            .newspaper-header::before,
+            .newspaper-header::after {
+                color: #ccc;
             }
         }
 
         /* Touch Device Optimizations */
         @media (hover: none) and (pointer: coarse) {
-            .day-btn:hover,
+            .day-btn:hover {
+                transform: none;
+            }
+            
             .schedule-item:hover {
                 transform: none !important;
             }
             
-            .day-btn:active,
-            .day-btn.active {
-                background-color: var(--primary-color);
-                color: white;
-                transform: scale(0.98) !important;
+            /* Increase tap target sizes for touch */
+            .day-btn {
+                min-height: 44px;
             }
             
-            .schedule-item:active {
-                transform: scale(0.99) !important;
+            .search-bar {
+                min-height: 44px;
             }
         }
-    </style>
-    
-    <!-- Font Awesome Icons (fallback jika tidak ada internet) -->
-    <style>
-        /* Font Awesome fallback icons */
-        .fas, .far, .fab {
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
+
+        /* High DPI Screens */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            body::before {
+                background-size: 40px 40px, 40px 40px, auto;
+            }
+            
+            body::after {
+                background-size: 40px 40px;
+            }
         }
-        
-        .far {
-            font-weight: 400;
+
+        /* Animation Performance Optimizations */
+        .schedule-item,
+        .day-btn,
+        .search-bar {
+            will-change: transform;
+            backface-visibility: hidden;
         }
-        
-        .fa-sun:before { content: "☀"; }
-        .fa-cloud-sun:before { content: "⛅"; }
-        .fa-moon:before { content: "🌙"; }
-        .fa-star:before { content: "⭐"; }
-        .fa-clock:before { content: "🕒"; }
-        .fa-book:before { content: "📚"; }
-        .fa-users:before { content: "👥"; }
-        .fa-map-marker-alt:before { content: "📍"; }
-        .fa-envelope:before { content: "✉"; }
     </style>
 </head>
 <body>
@@ -2280,7 +2410,7 @@
             <div class="newspaper-subtitle">Jadwal Harian Civitas Akademika</div>
             
             <div class="header-info">
-                <!-- LOGO STMIK TAZKIA -->
+                <!-- LOGO STMIK TAZKIA YANG BENAR - SUDAH NYATU DENGAN BINGKAI BULAT -->
                 <div class="logo-real">
                     <img src="https://drive.google.com/thumbnail?id=1kzJP2K__VXOKMtxLOTXKrldKsbk0375T&sz=w1000" 
                          alt="Logo STMIK Tazkia"
@@ -2297,10 +2427,7 @@
         <!-- Hero Section dengan Search Bar -->
         <section class="hero-section">
             <div class="search-container">
-                <!-- ================================================================
-                   REVISI #2: PLACEHOLDER SEARCH BAR DIUBAH
-                   ================================================================ -->
-                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Jadwal Anda...">
+                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Dosen, Mata Kuliah, atau Kelompok...">
             </div>
         </section>
 
@@ -2346,7 +2473,6 @@
         (function() {
             console.log("Loading animation langsung muncul!");
             
-            // Sembunyikan loader setelah 1.5 detik
             setTimeout(function() {
                 const loader = document.getElementById('instant-loader');
                 if (loader) {
@@ -2360,311 +2486,43 @@
         // Data jadwal perkuliahan
         const scheduleData = [
             // =================== SISTEM INFORMASI 2025 ===================
-            // Senin
-            {
-                id: 1,
-                day: "Senin",
-                time: "07:50 - 09:30",
-                course: "Ketazkiaan",
-                lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd",
-                class: "SI 2025",
-                room: "Ibnu Khaldun 1"
-            },
-            {
-                id: 2,
-                day: "Senin",
-                time: "13:00 - 15:30",
-                course: "Kewirausahaan",
-                lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)",
-                class: "SI 2025",
-                room: "Abu Yusuf 1"
-            },
-            // Selasa
-            {
-                id: 3,
-                day: "Selasa",
-                time: "09:31 - 12:00",
-                course: "Algoritma dan Pemrograman Dasar",
-                lecturer: "Arif Surachman, S.Si., M.Si",
-                class: "SI 2025",
-                room: "Laboratorium 2"
-            },
-            // Kamis
-            {
-                id: 4,
-                day: "Kamis",
-                time: "09:31 - 12:00",
-                course: "Matematika Diskrit",
-                lecturer: "Hairul Umam, S.Si., M.Si",
-                class: "SI 2025",
-                room: "Ibnu Khaldun 1"
-            },
-            {
-                id: 5,
-                day: "Kamis",
-                time: "15:31 - 17:10",
-                course: "Matematika Dasar Teknik",
-                lecturer: "Hairul Umam, S.Si., M.Si",
-                class: "SI 2025",
-                room: "Abu Yusuf 1"
-            },
-            // Jumat
-            {
-                id: 6,
-                day: "Jumat",
-                time: "13:00 - 14:40",
-                course: "Pengantar Teknologi Informasi",
-                lecturer: "Galih Kurniawan Sidik, M.Kom",
-                class: "SI 2025",
-                room: "Laboratorium 1"
-            },
-            // Sabtu
-            {
-                id: 7,
-                day: "Sabtu",
-                time: "07:00 - 09:30",
-                course: "Arsitektur dan Organisasi Komputer",
-                lecturer: "Q Fadlan, M.Kom., S.ST",
-                class: "SI 2025",
-                room: "Laboratorium 1"
-            },
-            {
-                id: 8,
-                day: "Sabtu",
-                time: "13:00 - 14:40",
-                course: "Bahasa Indonesia",
-                lecturer: "Muhammad Ichsan, M.Pd.",
-                class: "SI 2025",
-                room: "Ibnu Khaldun 2 & 3 (Aula)"
-            },
+            { id: 1, day: "Senin", time: "07:50 - 09:30", course: "Ketazkiaan", lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd", class: "SI 2025", room: "Ibnu Khaldun 1" },
+            { id: 2, day: "Senin", time: "13:00 - 15:30", course: "Kewirausahaan", lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)", class: "SI 2025", room: "Abu Yusuf 1" },
+            { id: 3, day: "Selasa", time: "09:31 - 12:00", course: "Algoritma dan Pemrograman Dasar", lecturer: "Arif Surachman, S.Si., M.Si", class: "SI 2025", room: "Laboratorium 2" },
+            { id: 4, day: "Kamis", time: "09:31 - 12:00", course: "Matematika Diskrit", lecturer: "Hairul Umam, S.Si., M.Si", class: "SI 2025", room: "Ibnu Khaldun 1" },
+            { id: 5, day: "Kamis", time: "15:31 - 17:10", course: "Matematika Dasar Teknik", lecturer: "Hairul Umam, S.Si., M.Si", class: "SI 2025", room: "Abu Yusuf 1" },
+            { id: 6, day: "Jumat", time: "13:00 - 14:40", course: "Pengantar Teknologi Informasi", lecturer: "Galih Kurniawan Sidik, M.Kom", class: "SI 2025", room: "Laboratorium 1" },
+            { id: 7, day: "Sabtu", time: "07:00 - 09:30", course: "Arsitektur dan Organisasi Komputer", lecturer: "Q Fadlan, M.Kom., S.ST", class: "SI 2025", room: "Laboratorium 1" },
+            { id: 8, day: "Sabtu", time: "13:00 - 14:40", course: "Bahasa Indonesia", lecturer: "Muhammad Ichsan, M.Pd.", class: "SI 2025", room: "Ibnu Khaldun 2 & 3 (Aula)" },
 
             // =================== SISTEM INFORMASI 2024 ===================
-            // Senin - Pagi
-            {
-                id: 9,
-                day: "Senin",
-                time: "07:00 - 09:30",
-                course: "Machine Learning",
-                lecturer: "Hendri Karisma, S.Kom., M.T",
-                class: "SI 2024",
-                room: "Laboratorium 1"
-            },
-            {
-                id: 10,
-                day: "Senin",
-                time: "07:00 - 09:30",
-                course: "Fundamental Ekonomi Islam",
-                lecturer: "Ayu Solihah Sadariyah, S.E.I., M.E",
-                class: "SI 2024",
-                room: "Abu Yusuf 1"
-            },
-            // Senin - Siang
-            {
-                id: 11,
-                day: "Senin",
-                time: "13:00 - 16:20",
-                course: "Manajemen Proyek",
-                lecturer: "Muhammad Singgih Zulfikar Ansori, S.Pd., M.T.I",
-                class: "SI 2024",
-                room: "Laboratorium 1"
-            },
-            // Selasa - Pagi
-            {
-                id: 12,
-                day: "Selasa",
-                time: "07:00 - 09:30",
-                course: "Jaringan Komputer dan Komputasi Awan",
-                lecturer: "Arif Surachman, S.Si., M.Si",
-                class: "SI 2024",
-                room: "Laboratorium 2"
-            },
-            // Rabu - Pagi
-            {
-                id: 13,
-                day: "Rabu",
-                time: "07:00 - 10:20",
-                course: "Analisis dan Perancangan Sistem",
-                lecturer: "Endy Muhardin, S.T., M.E.",
-                class: "SI 2024",
-                room: "Ibnu Khaldun 1"
-            },
-            // Rabu - Siang
-            {
-                id: 14,
-                day: "Rabu",
-                time: "09:31 - 12:00",
-                course: "Pengembangan Aplikasi Web",
-                lecturer: "Kus Andriadi, S.Kom., M.T.I.",
-                class: "SI 2024",
-                room: "Ibnu Khaldun 2"
-            },
-            {
-                id: 15,
-                day: "Rabu",
-                time: "13:00 - 15:30",
-                course: "Sistem Basis Data",
-                lecturer: "Galih Kurniawan Sidik, M.Kom",
-                class: "SI 2024",
-                room: "Laboratorium 1"
-            },
+            { id: 9, day: "Senin", time: "07:00 - 09:30", course: "Machine Learning", lecturer: "Hendri Karisma, S.Kom., M.T", class: "SI 2024", room: "Laboratorium 1" },
+            { id: 10, day: "Senin", time: "07:00 - 09:30", course: "Fundamental Ekonomi Islam", lecturer: "Ayu Solihah Sadariyah, S.E.I., M.E", class: "SI 2024", room: "Abu Yusuf 1" },
+            { id: 11, day: "Senin", time: "13:00 - 16:20", course: "Manajemen Proyek", lecturer: "Muhammad Singgih Zulfikar Ansori, S.Pd., M.T.I", class: "SI 2024", room: "Laboratorium 1" },
+            { id: 12, day: "Selasa", time: "07:00 - 09:30", course: "Jaringan Komputer dan Komputasi Awan", lecturer: "Arif Surachman, S.Si., M.Si", class: "SI 2024", room: "Laboratorium 2" },
+            { id: 13, day: "Rabu", time: "07:00 - 10:20", course: "Analisis dan Perancangan Sistem", lecturer: "Endy Muhardin, S.T., M.E.", class: "SI 2024", room: "Ibnu Khaldun 1" },
+            { id: 14, day: "Rabu", time: "09:31 - 12:00", course: "Pengembangan Aplikasi Web", lecturer: "Kus Andriadi, S.Kom., M.T.I.", class: "SI 2024", room: "Ibnu Khaldun 2" },
+            { id: 15, day: "Rabu", time: "13:00 - 15:30", course: "Sistem Basis Data", lecturer: "Galih Kurniawan Sidik, M.Kom", class: "SI 2024", room: "Laboratorium 1" },
 
             // =================== TEKNIK INFORMATIKA 2024 ===================
-            // Senin - Pagi
-            {
-                id: 16,
-                day: "Senin",
-                time: "07:00 - 09:30",
-                course: "Machine Learning",
-                lecturer: "Hendri Karisma, S.Kom., M.T",
-                class: "TI 2024",
-                room: "Laboratorium 1"
-            },
-            {
-                id: 17,
-                day: "Senin",
-                time: "09:31 - 12:00",
-                course: "Fundamental Ekonomi Islam",
-                lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)",
-                class: "TI 2024",
-                room: "Ibnu Khaldun 4"
-            },
-            // Senin - Siang
-            {
-                id: 18,
-                day: "Senin",
-                time: "13:00 - 15:30",
-                course: "Kewirausahaan",
-                lecturer: "Ir. Teti Haryati, M.Si",
-                class: "TI 2024",
-                room: "Ibnu Khaldun 1"
-            },
-            // Selasa - Pagi
-            {
-                id: 19,
-                day: "Selasa",
-                time: "07:00 - 09:30",
-                course: "Konstruksi dan Rekayasa Perangkat Lunak",
-                lecturer: "Agus Sulaiman, S.Kom., M.T",
-                class: "TI 2024",
-                room: "Laboratorium 1"
-            },
-            // Rabu - Pagi
-            {
-                id: 20,
-                day: "Rabu",
-                time: "09:31 - 12:00",
-                course: "Analisis dan Perancangan Sistem",
-                lecturer: "Endy Setiadi, S.Kom., M.Kom",
-                class: "TI 2024",
-                room: "Laboratorium 1"
-            },
-            // Rabu - Siang
-            {
-                id: 21,
-                day: "Rabu",
-                time: "13:00 - 15:30",
-                course: "Pengantar Kriptografi dan Teori Bilangan",
-                lecturer: "Hairul Umam, S.S., M.Si",
-                class: "TI 2024",
-                room: "Abu Yusuf 1"
-            },
-            {
-                id: 22,
-                day: "Rabu",
-                time: "13:00 - 15:30",
-                course: "Sistem Basis Data",
-                lecturer: "Hairul Umam, S.S., M.Si",
-                class: "TI 2024",
-                room: "Laboratorium 2"
-            },
-            // Jumat - Malam
-            {
-                id: 23,
-                day: "Jumat",
-                time: "20:15 - 21:45",
-                course: "Keamanan Sistem Informasi",
-                lecturer: "D Fadlan, M.Kom., S.ST",
-                class: "TI 2024",
-                room: "Abu Yusuf 1"
-            },
+            { id: 16, day: "Senin", time: "07:00 - 09:30", course: "Machine Learning", lecturer: "Hendri Karisma, S.Kom., M.T", class: "TI 2024", room: "Laboratorium 1" },
+            { id: 17, day: "Senin", time: "09:31 - 12:00", course: "Fundamental Ekonomi Islam", lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)", class: "TI 2024", room: "Ibnu Khaldun 4" },
+            { id: 18, day: "Senin", time: "13:00 - 15:30", course: "Kewirausahaan", lecturer: "Ir. Teti Haryati, M.Si", class: "TI 2024", room: "Ibnu Khaldun 1" },
+            { id: 19, day: "Selasa", time: "07:00 - 09:30", course: "Konstruksi dan Rekayasa Perangkat Lunak", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "TI 2024", room: "Laboratorium 1" },
+            { id: 20, day: "Rabu", time: "09:31 - 12:00", course: "Analisis dan Perancangan Sistem", lecturer: "Endy Setiadi, S.Kom., M.Kom", class: "TI 2024", room: "Laboratorium 1" },
+            { id: 21, day: "Rabu", time: "13:00 - 15:30", course: "Pengantar Kriptografi dan Teori Bilangan", lecturer: "Hairul Umam, S.S., M.Si", class: "TI 2024", room: "Abu Yusuf 1" },
+            { id: 22, day: "Rabu", time: "13:00 - 15:30", course: "Sistem Basis Data", lecturer: "Hairul Umam, S.S., M.Si", class: "TI 2024", room: "Laboratorium 2" },
+            { id: 23, day: "Jumat", time: "20:15 - 21:45", course: "Keamanan Sistem Informasi", lecturer: "D Fadlan, M.Kom., S.ST", class: "TI 2024", room: "Abu Yusuf 1" },
 
             // =================== TEKNIK INFORMATIKA 2025 ===================
-            // Senin
-            {
-                id: 24,
-                day: "Senin",
-                time: "09:31 - 11:10",
-                course: "Ketazkiaan",
-                lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd",
-                class: "TI 2025",
-                room: "Ibnu Khaldun 1"
-            },
-            // Sabtu
-            {
-                id: 25,
-                day: "Sabtu",
-                time: "13:00 - 15:30",
-                course: "Kewirausahaan",
-                lecturer: "Dr. Sugiyarti Fatma Laela, M.Buss, Acc, CMA, CIBA",
-                class: "TI 2025",
-                room: "Ibnu Khaldun 1"
-            },
-            {
-                id: 26,
-                day: "Sabtu",
-                time: "15:31 - 17:10",
-                course: "Matematika Dasar Teknik",
-                lecturer: "Hairul Umam, S.Si., M.Si",
-                class: "TI 2025",
-                room: "Abu Yusuf 1"
-            },
-            // Kamis
-            {
-                id: 27,
-                day: "Kamis",
-                time: "07:00 - 09:30",
-                course: "Matematika Diskrit",
-                lecturer: "Hendri Karisma, S.Kom., M.T",
-                class: "TI 2025",
-                room: "Laboratorium 1"
-            },
-            {
-                id: 28,
-                day: "Kamis",
-                time: "13:00 - 15:30",
-                course: "Algoritma dan Pemrograman Dasar",
-                lecturer: "Ricky Setiadi, S.Kom., M.Kom",
-                class: "TI 2025",
-                room: "Laboratorium 1"
-            },
-            // Sabtu
-            {
-                id: 29,
-                day: "Sabtu",
-                time: "07:00 - 09:30",
-                course: "Arsitektur dan Organisasi Komputer",
-                lecturer: "Q Fadlan, M.Kom., S.ST",
-                class: "TI 2025",
-                room: "Laboratorium 1"
-            },
-            {
-                id: 30,
-                day: "Sabtu",
-                time: "10:30 - 12:00",
-                course: "Pengantar Teknologi Informasi",
-                lecturer: "Agus Sulaiman, S.Kom., M.T",
-                class: "TI 2025",
-                room: "Laboratorium 1"
-            },
-            {
-                id: 31,
-                day: "Sabtu",
-                time: "13:00 - 14:40",
-                course: "Bahasa Indonesia",
-                lecturer: "Muhammad Ichsan, M.Pd.",
-                class: "TI 2025",
-                room: "Ibnu Khaldun 2 & 3 (Aula)"
-            }
+            { id: 24, day: "Senin", time: "09:31 - 11:10", course: "Ketazkiaan", lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd", class: "TI 2025", room: "Ibnu Khaldun 1" },
+            { id: 25, day: "Sabtu", time: "13:00 - 15:30", course: "Kewirausahaan", lecturer: "Dr. Sugiyarti Fatma Laela, M.Buss, Acc, CMA, CIBA", class: "TI 2025", room: "Ibnu Khaldun 1" },
+            { id: 26, day: "Sabtu", time: "15:31 - 17:10", course: "Matematika Dasar Teknik", lecturer: "Hairul Umam, S.Si., M.Si", class: "TI 2025", room: "Abu Yusuf 1" },
+            { id: 27, day: "Kamis", time: "07:00 - 09:30", course: "Matematika Diskrit", lecturer: "Hendri Karisma, S.Kom., M.T", class: "TI 2025", room: "Laboratorium 1" },
+            { id: 28, day: "Kamis", time: "13:00 - 15:30", course: "Algoritma dan Pemrograman Dasar", lecturer: "Ricky Setiadi, S.Kom., M.Kom", class: "TI 2025", room: "Laboratorium 1" },
+            { id: 29, day: "Sabtu", time: "07:00 - 09:30", course: "Arsitektur dan Organisasi Komputer", lecturer: "Q Fadlan, M.Kom., S.ST", class: "TI 2025", room: "Laboratorium 1" },
+            { id: 30, day: "Sabtu", time: "10:30 - 12:00", course: "Pengantar Teknologi Informasi", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "TI 2025", room: "Laboratorium 1" },
+            { id: 31, day: "Sabtu", time: "13:00 - 14:40", course: "Bahasa Indonesia", lecturer: "Muhammad Ichsan, M.Pd.", class: "TI 2025", room: "Ibnu Khaldun 2 & 3 (Aula)" }
         ];
 
         // Daftar hari dalam bahasa Indonesia
@@ -2680,7 +2538,6 @@
         function updateDateTime() {
             const now = new Date();
             
-            // Format tanggal
             const dayName = days[now.getDay()];
             const date = now.getDate();
             const monthName = months[now.getMonth()];
@@ -2688,7 +2545,6 @@
             
             document.getElementById('currentDate').textContent = `${dayName}, ${date} ${monthName} ${year}`;
             
-            // Format waktu
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const seconds = now.getSeconds().toString().padStart(2, '0');
@@ -2765,7 +2621,6 @@
             const now = new Date();
             const currentTime = now.getHours() * 60 + now.getMinutes();
             
-            // Parse waktu dari string format "HH:MM - HH:MM"
             const [startStr, endStr] = scheduleItem.time.split(' - ');
             const [startHour, startMinute] = startStr.split(':').map(Number);
             const [endHour, endMinute] = endStr.split(':').map(Number);
@@ -2773,7 +2628,6 @@
             const startTime = startHour * 60 + startMinute;
             const endTime = endHour * 60 + endMinute;
             
-            // Periksa apakah waktu sekarang berada dalam rentang jadwal
             return currentTime >= startTime && currentTime <= endTime;
         }
 
@@ -2782,16 +2636,12 @@
             const now = new Date();
             const today = days[now.getDay()];
             
-            // Hanya cek jadwal berlangsung jika melihat jadwal hari ini
             if (targetDay !== today) {
                 return [];
             }
             
             return scheduleData.filter(item => {
-                // Cek apakah hari sama dengan hari ini
                 if (item.day !== today) return false;
-                
-                // Cek apakah jadwal sedang berlangsung
                 return isSessionCurrent(item);
             });
         }
@@ -2802,7 +2652,6 @@
             const scheduleTitle = document.getElementById('scheduleTitle');
             const dayBadge = document.getElementById('selectedDayBadge');
             
-            // Tentukan hari yang akan ditampilkan
             let targetDayName;
             let dayLabel;
             
@@ -2823,15 +2672,10 @@
                 dayBadge.className = "badge bg-info text-dark ms-2";
             }
             
-            // Update judul
             scheduleTitle.textContent = `JADWAL ${dayLabel}`;
             
-            // Filter data berdasarkan kriteria
             let filteredData = scheduleData.filter(item => {
-                // Filter berdasarkan hari
                 let passesDay = item.day === targetDayName;
-                
-                // Filter berdasarkan pencarian
                 let passesSearch = true;
                 if (currentSearch) {
                     const term = currentSearch.toLowerCase();
@@ -2841,21 +2685,14 @@
                         item.class.toLowerCase().includes(term) ||
                         item.room.toLowerCase().includes(term);
                 }
-                
                 return passesDay && passesSearch;
             });
             
-            // Deteksi jadwal yang sedang berlangsung
             currentSessions = detectCurrentSessions(filteredData, targetDayName);
             
-            // Render jadwal
             if (filteredData.length > 0) {
-                // Urutkan berdasarkan waktu
-                filteredData.sort((a, b) => {
-                    return a.time.localeCompare(b.time);
-                });
+                filteredData.sort((a, b) => a.time.localeCompare(b.time));
                 
-                // Kelompokkan berdasarkan waktu
                 const groupedData = {
                     morning: [],
                     afternoon: [],
@@ -2869,10 +2706,7 @@
                     groupedData[group].push(item);
                 });
                 
-                // Buat HTML untuk setiap kelompok waktu
                 let scheduleHTML = '';
-                
-                // Urutan tampilan: Pagi → Siang → Sore → Malam
                 const displayOrder = ['morning', 'afternoon', 'evening', 'night'];
                 
                 displayOrder.forEach(group => {
@@ -2884,7 +2718,6 @@
                 scheduleResults.innerHTML = scheduleHTML;
                 
             } else {
-                // Empty state - TANPA TULISAN BACKGROUND "TIDAK DITEMUKAN"
                 scheduleResults.innerHTML = `
                     <div class="no-results">
                         <div class="empty-icon-container">
@@ -2925,11 +2758,8 @@
         // Fungsi untuk membuat HTML item jadwal
         function createScheduleItemHTML(item) {
             const isCurrentSession = currentSessions.some(session => session.id === item.id);
-            
-            // Tentukan class tambahan berdasarkan apakah jadwal sedang berlangsung
             const additionalClass = isCurrentSession ? 'current-session' : '';
             
-            // Pisahkan nama dan gelar
             const lecturerParts = item.lecturer.split(',');
             const lecturerName = lecturerParts[0];
             const lecturerTitle = lecturerParts.slice(1).join(',').trim() || 'Dosen STMIK Tazkia';
@@ -2966,7 +2796,6 @@
             const now = new Date();
             const today = days[now.getDay()];
             
-            // Hanya update jika melihat jadwal hari ini
             if (currentDay === "today") {
                 const scheduleItems = document.querySelectorAll('.schedule-item');
                 
@@ -2979,13 +2808,11 @@
                         
                         if (isCurrent && !item.classList.contains('current-session')) {
                             item.classList.add('current-session');
-                            // Tambahkan badge jika belum ada
                             if (!item.querySelector('.current-session-badge')) {
                                 item.innerHTML += '<div class="current-session-badge">SEDANG BERLANGSUNG</div>';
                             }
                         } else if (!isCurrent && item.classList.contains('current-session')) {
                             item.classList.remove('current-session');
-                            // Hapus badge
                             const badge = item.querySelector('.current-session-badge');
                             if (badge) {
                                 badge.remove();
@@ -2998,50 +2825,34 @@
 
         // Inisialisasi saat halaman dimuat
         document.addEventListener('DOMContentLoaded', function() {
-            // Update waktu real-time
             updateDateTime();
             setInterval(updateDateTime, 1000);
             
-            // Update jadwal berlangsung setiap menit
             setInterval(updateCurrentSessions, 60000);
             
-            // Render jadwal awal (hari ini)
             renderSchedule();
             
-            // Setup day buttons
             const dayButtons = document.querySelectorAll('.day-btn');
             dayButtons.forEach(button => {
                 button.addEventListener('click', function() {
-                    // Hapus class active dari semua day button
                     dayButtons.forEach(btn => btn.classList.remove('active'));
-                    
-                    // Tambah class active ke button yang diklik
                     this.classList.add('active');
-                    
-                    // Dapatkan day value
                     currentDay = this.getAttribute('data-day');
-                    
-                    // Render jadwal dengan filter baru
                     renderSchedule();
                 });
             });
             
-            // Setup search input
             const searchInput = document.getElementById('searchInput');
             let searchTimeout;
             
             searchInput.addEventListener('input', function() {
-                // Clear timeout sebelumnya
                 clearTimeout(searchTimeout);
-                
-                // Set timeout baru untuk menghindari terlalu banyak render
                 searchTimeout = setTimeout(() => {
                     currentSearch = this.value;
                     renderSchedule();
                 }, 300);
             });
             
-            // Tambahkan placeholder animation untuk search bar
             searchInput.addEventListener('focus', function() {
                 this.style.borderColor = 'var(--primary-color)';
             });
@@ -3049,22 +2860,6 @@
             searchInput.addEventListener('blur', function() {
                 this.style.borderColor = 'var(--border-color)';
             });
-            
-            // Touch device optimizations
-            if ('ontouchstart' in window) {
-                // Tambahkan class untuk touch devices
-                document.body.classList.add('touch-device');
-                
-                // Prevent double tap zoom
-                let lastTouchEnd = 0;
-                document.addEventListener('touchend', function(event) {
-                    const now = (new Date()).getTime();
-                    if (now - lastTouchEnd <= 300) {
-                        event.preventDefault();
-                    }
-                    lastTouchEnd = now;
-                }, false);
-            }
         });
     </script>
 </body>
