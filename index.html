@@ -3,141 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>STMIK TAZKIA DAILY - Jadwal Harian</title>
+    <title>STMIK TAZKIA - TV Display System</title>
     
-    <!-- LOADING ANIMATION INLINE STYLE - HARUS PERTAMA! -->
-    <style>
-        /* ==================== LOADING ANIMATION - INSTANT ==================== */
-        #instant-loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: #e8e3d6;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        #instant-loader.hidden {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s;
-        }
-        
-        .instant-spinner {
-            width: 100px;
-            height: 100px;
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        .instant-letter {
-            width: 100%;
-            height: 100%;
-            background-color: #f8f5f0;
-            border-radius: 10px;
-            position: relative;
-            border: 3px solid #8b7355;
-            box-shadow: 
-                0 10px 20px rgba(0,0,0,0.2),
-                inset 0 0 0 2px #8b7355,
-                inset 0 0 20px rgba(139, 115, 85, 0.1);
-            animation: instant-spin 1.2s ease-in-out infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .instant-stamp {
-            width: 50px;
-            height: 50px;
-            background: radial-gradient(circle at 30% 30%, #0a2472, #2a6bff);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-            border: 2px dashed rgba(255, 255, 255, 0.5);
-            box-shadow: 
-                inset 0 0 10px rgba(255, 255, 255, 0.3),
-                0 3px 8px rgba(0, 0, 0, 0.3);
-            animation: pulseStamp 1.5s ease-in-out infinite;
-        }
-        
-        .letter-line {
-            position: absolute;
-            width: 80%;
-            height: 3px;
-            background-color: rgba(139, 115, 85, 0.3);
-            border-radius: 2px;
-        }
-        
-        .letter-line:nth-child(1) { top: 20px; left: 10%; width: 70%; }
-        .letter-line:nth-child(2) { top: 40px; left: 15%; width: 75%; }
-        .letter-line:nth-child(3) { bottom: 40px; left: 10%; width: 80%; }
-        .letter-line:nth-child(4) { bottom: 20px; left: 15%; width: 70%; }
-        
-        @keyframes instant-spin {
-            0% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.05); }
-            100% { transform: rotate(360deg) scale(1); }
-        }
-        
-        @keyframes pulseStamp {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-        
-        .instant-loading-text {
-            font-family: Arial, sans-serif;
-            font-size: 1.3rem;
-            color: #0a2472;
-            text-align: center;
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-    </style>
-    
-    <!-- Resource eksternal SETELAH loading style -->
-    <!-- Bootstrap 5 CDN -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <!-- EXTERNAL RESOURCES -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- STYLE UTAMA WEBSITE - CLEAN & MINIMALIS -->
     <style>
-        /* ==================== VARIABEL DAN STYLE DASAR ==================== */
-        :root {
-            --primary-color: #0a2472; /* Biru Navy */
-            --accent-color: #FFD700; /* Kuning */
-            --paper-color: #f8f5f0; /* Warna kertas koran tua */
-            --paper-color-dark: #e8e3d6; /* Warna kertas lebih gelap */
-            --ink-color: #1a1a1a; /* Hitam untuk teks */
-            --border-color: #8b7355; /* Abu-abu kecoklatan untuk garis */
-            --aged-stain: rgba(139, 115, 85, 0.15); /* Efek noda tua */
-            --aged-stain-dark: rgba(101, 67, 33, 0.2); /* Efek noda tua gelap */
-            
-            /* Warna untuk kelompok waktu */
-            --morning-color: #4a8cff;
-            --afternoon-color: #ff9800;
-            --evening-color: #9c27b0;
-            --night-color: #2c387e;
-            
-            /* Warna untuk jadwal berlangsung */
-            --current-session-color: #fff9c4;
-            --current-session-glow: rgba(255, 235, 59, 0.5);
-        }
-
+        /* ==================== CSS RESET & BASE ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -145,249 +18,385 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html {
-            overflow-x: hidden;
-            width: 100%;
-            position: relative;
-        }
-
-        body {
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden !important;
+            position: fixed;
             font-family: 'Inter', sans-serif;
             background-color: #e8e3d6;
-            color: var(--ink-color);
-            line-height: 1.6;
-            padding-bottom: 20px;
-            position: relative;
-            overflow-x: hidden;
-            min-height: 100vh;
-            opacity: 1;
-            width: 100%;
-            max-width: 100%;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+            color: #1a1a1a;
         }
 
-        /* Efek tekstur kertas vintage */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(var(--aged-stain) 1px, transparent 1px),
-                linear-gradient(90deg, var(--aged-stain) 1px, transparent 1px),
-                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
-            background-size: 20px 20px, 20px 20px, auto;
-            pointer-events: none;
-            z-index: -2;
-            opacity: 0.7;
+        /* ==================== VARIABLES - ALL BLUE FAMILY ==================== */
+        :root {
+            --primary-color: #0a2472;
+            --accent-color: #FFD700;
+            --paper-color: #f8f5f0;
+            --paper-dark: #e8e3d6;
+            --ink-color: #1a1a1a;
+            --border-color: #8b7355;
+            
+            /* ALL BLUE FAMILY - KONSISTEN 1 WARNA */
+            --ti24-color: #041442;      /* BIRU SANGAT TUA */
+            --ti25-color: #3a6ea5;      /* BIRU MUDA */
+            --si24-color: #1e4a6b;      /* BIRU LAUT */
+            --si25-color: #5a7a9a;      /* BIRU ABU */
+            
+            --header-height: 18vh;
+            --content-height: 70vh;
+            --footer-height: 12vh;
+            
+            --space-xs: 0.4rem;
+            --space-sm: 0.6rem;
+            --space-md: 0.8rem;
+            --space-lg: 1.2rem;
+            --space-xl: 1.6rem;
+            --space-xxl: 2rem;
+            
+            --font-xs: 0.8rem;
+            --font-sm: 0.9rem;
+            --font-md: 1rem;
+            --font-lg: 1.2rem;
+            --font-xl: 1.5rem;
+            --font-xxl: 2rem;
+            --font-xxxl: 2.5rem;
+            --font-huge: 3rem;
         }
 
-        /* Efek halftone printing koran */
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(circle at 10px 10px, rgba(0,0,0,0.05) 1px, transparent 1px);
-            background-size: 20px 20px;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        /* Container utama dengan efek kertas */
-        .container {
-            position: relative;
-            background-color: var(--paper-color);
-            padding: 30px;
-            box-shadow: 
-                0 10px 30px rgba(0, 0, 0, 0.2),
-                0 1px 8px rgba(0, 0, 0, 0.1),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.5),
-                inset 0 0 40px rgba(139, 115, 85, 0.1);
-            border: 1px solid #d4c9b8;
-            margin: 20px auto 40px;
-            max-width: 1200px;
+        /* ==================== TRANSISI TV DISPLAY - SNAPPY & PROFESSIONAL ==================== */
+        .slide {
+            transition: opacity 0.5s ease-in-out;
             opacity: 0;
-            animation: slideUp 0.7s ease 0.5s forwards;
-            width: calc(100% - 30px);
-            overflow: hidden;
-            border-radius: 2px;
+            visibility: hidden;
+            display: grid;
+            grid-template-rows: var(--header-height) var(--content-height) var(--footer-height);
+            overflow: hidden !important;
         }
 
-        @keyframes slideUp {
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* HEADER & FOOTER - TETAP STABIL (JANGAN DIANIMASI) */
+        .slide-header-simple,
+        .slide-header-brand,
+        .slide-footer {
+            transition: none;
+        }
+
+        /* ==================== SLIDE SYSTEM ==================== */
+        .slides-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: var(--paper-color);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* ==================== HEADER STYLES ==================== */
+        
+        /* HEADER VERSION 1 - SLIDE 1 (Hari kiri, Jam kanan) */
+        .slide-header-simple {
+            height: var(--header-height);
+            min-height: var(--header-height);
+            max-height: var(--header-height);
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: center;
+            padding: 0 var(--space-xl);
+            background: linear-gradient(to bottom, 
+                rgba(248, 245, 240, 0.98) 0%,
+                rgba(248, 245, 240, 0.95) 100%);
+            border-bottom: 5px double var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-date-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            grid-column: 1;
+        }
+
+        .current-date-large {
+            font-size: clamp(1rem, 1.5vw, 1.2rem);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .header-spacer {
+            grid-column: 2;
+        }
+
+        .header-time-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            grid-column: 3;
+        }
+
+        .current-time-large {
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            font-weight: 700;
+            color: var(--ink-color);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+
+        /* HEADER VERSION 2 - SLIDE 2,3,4... (Logo + Title + Subtitle + Jam kanan) */
+        .slide-header-brand {
+            height: var(--header-height);
+            min-height: var(--header-height);
+            max-height: var(--header-height);
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            padding: 0 var(--space-xl);
+            background: linear-gradient(to bottom, 
+                rgba(248, 245, 240, 0.98) 0%,
+                rgba(248, 245, 240, 0.95) 100%);
+            border-bottom: 5px double var(--border-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--border-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            background-color: white;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .header-title {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-main-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: clamp(1.8rem, 3vw, 2.2rem);
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+        }
+
+        .header-subtitle {
+            color: var(--ink-color);
+            font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-top: var(--space-xs);
+        }
+
+        .header-time {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .current-date {
+            font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+            color: var(--primary-color);
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .current-time {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            font-weight: 700;
+            color: var(--ink-color);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            margin-top: var(--space-xs);
+        }
+
+        /* ==================== FOOTER - ICON HITAM, TEKS RATA TENGAH ==================== */
+        .slide-footer {
+            height: var(--footer-height);
+            min-height: var(--footer-height);
+            max-height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-xl);
+            border-top: 5px double var(--border-color);
+            background: linear-gradient(to top, 
+                rgba(248, 245, 240, 0.98) 0%,
+                rgba(248, 245, 240, 0.95) 100%);
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 1.4vw, 1.1rem);
+            color: var(--ink-color);
+            line-height: 1;
+        }
+
+        .footer-left i {
+            color: var(--ink-color);
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .footer-spacer {
+            flex: 1;
+        }
+
+        .footer-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1rem, 1.4vw, 1.1rem);
+            color: var(--ink-color);
+            line-height: 1;
+        }
+
+        .footer-right i {
+            color: var(--ink-color);
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        /* ==================== ZONE 2: CONTENT ==================== */
+        .slide-content {
+            height: var(--content-height);
+            min-height: var(--content-height);
+            max-height: var(--content-height);
+            padding: var(--space-xl);
+            overflow: hidden !important;
+            position: relative;
+        }
+
+        /* ==================== ANIMATIONS - QUICK CASCADE (0.5s) ==================== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* Efek robek di bagian atas container */
-        .container::before {
-            content: "";
-            position: absolute;
-            top: -15px;
-            left: 20px;
-            right: 20px;
-            height: 30px;
-            background: var(--paper-color);
-            clip-path: polygon(
-                0% 100%, 2% 90%, 4% 95%, 6% 85%, 8% 92%, 
-                10% 80%, 12% 88%, 14% 75%, 16% 85%, 18% 70%, 
-                20% 82%, 22% 68%, 24% 80%, 26% 65%, 28% 78%, 
-                30% 60%, 32% 75%, 34% 58%, 36% 72%, 38% 55%, 
-                40% 70%, 42% 52%, 44% 68%, 46% 50%, 48% 65%, 
-                50% 48%, 52% 63%, 54% 45%, 56% 60%, 58% 43%, 
-                60% 58%, 62% 40%, 64% 55%, 66% 38%, 68% 52%, 
-                70% 35%, 72% 50%, 74% 33%, 76% 48%, 78% 30%, 
-                80% 45%, 82% 28%, 84% 42%, 86% 25%, 88% 40%, 
-                90% 22%, 92% 38%, 94% 20%, 96% 35%, 98% 18%, 
-                100% 100%
-            );
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1;
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
-        /* Efek robek di bagian bawah container */
-        .container::after {
-            content: "";
-            position: absolute;
-            bottom: -15px;
-            left: 20px;
-            right: 20px;
-            height: 30px;
-            background: var(--paper-color);
-            clip-path: polygon(
-                0% 0%, 2% 10%, 4% 5%, 6% 15%, 8% 8%, 
-                10% 20%, 12% 12%, 14% 25%, 16% 15%, 18% 30%, 
-                20% 18%, 22% 32%, 24% 20%, 26% 35%, 28% 22%, 
-                30% 40%, 32% 25%, 34% 42%, 36% 28%, 38% 45%, 
-                40% 30%, 42% 48%, 44% 32%, 46% 50%, 48% 35%, 
-                50% 52%, 52% 37%, 54% 55%, 56% 40%, 58% 57%, 
-                60% 42%, 62% 60%, 64% 55%, 66% 62%, 68% 52%, 
-                70% 65%, 72% 50%, 74% 67%, 76% 52%, 78% 70%, 
-                80% 55%, 82% 72%, 84% 58%, 86% 75%, 88% 60%, 
-                90% 78%, 92% 62%, 94% 80%, 96% 65%, 98% 82%, 
-                100% 0%
-            );
-            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.1);
-            z-index: 1;
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
-        /* ==================== HEADER KORAN - CLEAN ==================== */
-        .newspaper-header {
-            position: relative;
-            background-color: var(--paper-color);
-            border-bottom: 8px double var(--border-color);
-            padding: 2rem 0 1.5rem 0;
-            margin-bottom: 2rem;
-            box-shadow: 
-                0 5px 15px rgba(0, 0, 0, 0.1),
-                inset 0 0 30px rgba(139, 115, 85, 0.05);
-            overflow: hidden;
+        
+        /* ==================== SLIDE 1: OPENING - SNAPPY ANIMATIONS ==================== */
+        .opening-content {
+            height: 100%;
             width: 100%;
-        }
-
-        .institution-name {
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
-            font-size: 3.5rem;
-            color: var(--primary-color);
-            text-align: center;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-            position: relative;
-            padding: 0 30px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
-        }
-
-        .newspaper-subtitle {
-            text-align: center;
-            font-size: 1rem;
-            color: var(--ink-color);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-            padding: 0.7rem 0;
-            margin-bottom: 1rem;
-            position: relative;
-            background: linear-gradient(to right, transparent, rgba(139, 115, 85, 0.1), transparent);
-            font-weight: 600;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        /* Efek gunting untuk pemisah subtitle */
-        .newspaper-subtitle::before {
-            content: "✂";
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--border-color);
-            font-size: 1.2rem;
-            background-color: var(--paper-color);
-            padding: 0 5px;
-        }
-
-        .newspaper-subtitle::after {
-            content: "✂";
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%) rotate(180deg);
-            color: var(--border-color);
-            font-size: 1.2rem;
-            background-color: var(--paper-color);
-            padding: 0 5px;
-        }
-
-        /* HEADER INFO dengan layout VERTIKAL - CLEAN */
-        .header-info {
             display: flex;
-            flex-direction: column !important;
-            justify-content: center;
             align-items: center;
-            padding: 0 1rem;
-            position: relative;
-            margin-top: 1.5rem;
-            gap: 1.5rem;
-            width: 100%;
+            justify-content: center;
+            overflow: hidden !important;
         }
 
-        /* LOGO - CLEAN */
-        .logo-real {
-            order: 1;
-            width: 140px;
-            height: 140px;
+        .opening-columns {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xxl);
+            padding: 0 var(--space-lg);
+        }
+
+        .opening-logo-column {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 45%;
+            max-width: 400px;
+        }
+
+        .logo-hero {
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
+            border: 5px solid var(--accent-color);
             overflow: hidden;
-            border: 3px solid var(--border-color);
-            box-shadow: 
-                0 4px 8px rgba(0, 0, 0, 0.2),
-                inset 0 0 10px rgba(255, 255, 255, 0.3);
-            position: relative;
-            background-color: white;
+            box-shadow: 0 10px 30px rgba(10,36,114,0.15);
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-shrink: 0;
-            margin-bottom: 0 !important;
-            z-index: 2;
+            animation: scaleIn 0.5s ease-out 0.05s both;
         }
 
-        .logo-real img {
+        .logo-hero img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -395,1963 +404,1207 @@
             display: block;
         }
 
-        /* Efek stempel pada logo - MENGIKUTI BENTUK BULAT */
-        .logo-real::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border: 2px dashed rgba(139, 115, 85, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* Efek vintage overlay di atas logo */
-        .logo-real::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent 40%, rgba(139, 115, 85, 0.1) 100%);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        /* DATE-TIME - CLEAN */
-        .date-time {
-            order: 2;
-            text-align: center;
-            position: relative;
-            padding: 12px 20px;
-            background-color: rgba(248, 245, 240, 0.9);
-            border: 1px solid var(--border-color);
-            border-radius: 3px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
-            min-width: 300px;
-            max-width: 100%;
-            box-sizing: border-box;
-            margin-top: 0 !important;
-            z-index: 2;
-        }
-
-        /* Efek stempel "HARI INI" */
-        .date-time::before {
-            content: "HARI INI";
-            position: absolute;
-            top: -12px;
-            right: 10px;
-            background-color: var(--accent-color);
-            color: var(--ink-color);
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 3px;
-            border: 1px dashed var(--ink-color);
-            transform: rotate(5deg);
-            box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            z-index: 2;
-        }
-
-        .current-date {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-family: 'Playfair Display', serif;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .current-time {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--ink-color);
-            font-family: monospace;
-            letter-spacing: 1px;
-            position: relative;
-        }
-
-        /* Efek noda tinta di waktu */
-        .current-time::after {
-            content: "";
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--aged-stain-dark);
-            border-radius: 2px;
-        }
-
-        /* ==================== DESKTOP LAYOUT ==================== */
-        @media (min-width: 768px) {
-            .header-info {
-                flex-direction: column !important;
-                gap: 1.5rem;
-            }
-            
-            .logo-real {
-                order: 1;
-                width: 160px !important;
-                height: 160px !important;
-                margin-bottom: 0;
-            }
-            
-            .date-time {
-                order: 2;
-                min-width: 350px !important;
-                padding: 15px 25px !important;
-            }
-            
-            .current-date {
-                font-size: 1.3rem !important;
-            }
-            
-            .current-time {
-                font-size: 2rem !important;
-            }
-            
-            /* Subtitle untuk desktop */
-            .newspaper-subtitle {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 800px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-        }
-
-        /* Desktop besar */
-        @media (min-width: 992px) {
-            .logo-real {
-                width: 180px !important;
-                height: 180px !important;
-            }
-            
-            .date-time {
-                min-width: 380px !important;
-                padding: 18px 28px !important;
-            }
-            
-            .current-date {
-                font-size: 1.4rem !important;
-            }
-            
-            .current-time {
-                font-size: 2.3rem !important;
-            }
-        }
-
-        /* Hero section dengan search bar */
-        .hero-section {
-            padding: 2rem 0;
-            margin-bottom: 1rem;
-            border-bottom: 2px dotted var(--border-color);
-            position: relative;
-            width: 100%;
-        }
-
-        /* Ornamen pemisah di hero section */
-        .hero-section::before {
-            content: "~ • ~ • ~ • ~";
-            position: absolute;
-            bottom: -11px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: var(--border-color);
-            background-color: var(--paper-color);
-            padding: 0 15px;
-            font-size: 1.2rem;
-            letter-spacing: 5px;
-        }
-
-        .search-container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            width: 100%;
-            padding: 0 15px;
-            box-sizing: border-box;
-        }
-
-        /* REVISI: Teks placeholder pencarian */
-        .search-bar {
-            width: 100%;
-            padding: 1.2rem 1.5rem;
-            font-size: 1.2rem;
-            border: 2px solid var(--border-color);
-            border-radius: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: white;
-            transition: all 0.3s;
-            box-shadow: 
-                0 4px 8px rgba(0, 0, 0, 0.1),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-            position: relative;
-            z-index: 1;
-            box-sizing: border-box;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        /* Efek paper clip di search bar */
-        .search-container::before {
-            content: "📎";
-            position: absolute;
-            top: 15px;
-            right: 25px;
-            font-size: 1.5rem;
-            opacity: 0.5;
-            transform: rotate(45deg);
-            z-index: 2;
-            pointer-events: none;
-        }
-
-        .search-bar:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 
-                0 0 0 3px rgba(10, 36, 114, 0.1),
-                0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Filter section */
-        .filter-section {
-            padding: 1rem 0 0.5rem 0;
-            margin-bottom: 2rem;
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
-            width: 100%;
-        }
-
-        /* Efek pita di filter section */
-        .filter-section::before {
-            content: "";
-            position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 20px;
-            background: linear-gradient(to right, var(--primary-color), var(--accent-color), var(--primary-color));
-            clip-path: polygon(0% 0%, 5% 100%, 95% 100%, 100% 0%);
-            opacity: 0.8;
-            z-index: 1;
-        }
-
-        .filter-section::after {
-            content: "PILIH HARI";
-            position: absolute;
-            top: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            z-index: 2;
-        }
-
-        .filter-controls {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 1.5rem;
-            width: 100%;
-        }
-
-        .day-selector {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-
-        .day-btn {
-            padding: 0.7rem 1.5rem;
-            background-color: var(--paper-color);
-            border: 2px solid var(--border-color);
-            color: var(--ink-color);
-            font-weight: 600;
-            border-radius: 0;
-            transition: all 0.3s;
-            font-size: 1rem;
-            position: relative;
-            overflow: visible;
-            z-index: 1;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            min-width: 120px;
-            text-align: center;
+        .opening-text-column {
             flex: 1;
-            max-width: 200px;
-            cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        /* Efek kertas melengkung di tombol */
-        .day-btn::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, transparent 30%, rgba(255,255,255,0.3) 100%);
-            z-index: -1;
-            transition: all 0.3s;
-        }
-
-        .day-btn:hover, .day-btn.active {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .day-btn.today {
-            background-color: var(--accent-color);
-            color: var(--ink-color);
-            border-color: var(--accent-color);
-            position: relative;
-            overflow: visible;
-        }
-
-        /* Efek pushpin untuk tombol hari ini */
-        .day-btn.today::after {
-            content: "📌";
-            position: absolute;
-            top: -10px;
-            right: -5px;
-            font-size: 1rem;
-            transform: rotate(30deg);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            animation: pinWobble 3s infinite ease-in-out;
-            z-index: 2;
-        }
-
-        @keyframes pinWobble {
-            0%, 100% { transform: rotate(30deg); }
-            50% { transform: rotate(35deg); }
-        }
-
-        .day-btn.today:hover {
-            background-color: #e6c200;
-            border-color: #e6c200;
-        }
-
-        /* Main content area */
-        .main-content {
-            margin-bottom: 2rem;
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .schedule-container {
-            background-color: var(--paper-color);
-            padding: 2rem;
-            border: 1px solid var(--border-color);
-            box-shadow: 
-                inset 0 0 20px rgba(139, 115, 85, 0.1),
-                0 5px 15px rgba(0, 0, 0, 0.1);
-            min-height: 400px;
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .container-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            color: var(--primary-color);
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 5px double var(--border-color);
-            position: relative;
-            text-align: center;
-            letter-spacing: 1px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
-        }
-
-        /* Badge untuk hari yang dipilih */
-        #selectedDayBadge {
-            position: relative;
-            padding: 0.4rem 1rem;
-            font-size: 0.9rem;
-            font-weight: bold;
-            letter-spacing: 1px;
-            border: 1px dashed var(--ink-color);
-            transform: rotate(-2deg);
-            box-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        /* Container untuk kelompok waktu */
-        .time-group-container {
-            margin-bottom: 2.5rem;
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        /* Header kelompok waktu */
-        .time-group-header {
-            padding: 1rem 1.5rem;
-            margin-bottom: 1.5rem;
-            border-radius: 5px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid;
-            border-top: 1px solid rgba(0,0,0,0.1);
-            border-right: 1px solid rgba(0,0,0,0.1);
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.8) 100%);
-            width: 100%;
-            box-sizing: border-box;
             display: flex;
-            align-items: center;
-        }
-
-        .time-group-header.morning {
-            border-left-color: var(--morning-color);
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%), 
-                        linear-gradient(90deg, var(--morning-color) 5px, transparent 5px);
-        }
-
-        .time-group-header.afternoon {
-            border-left-color: var(--afternoon-color);
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%), 
-                        linear-gradient(90deg, var(--afternoon-color) 5px, transparent 5px);
-        }
-
-        .time-group-header.evening {
-            border-left-color: var(--evening-color);
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%), 
-                        linear-gradient(90deg, var(--evening-color) 5px, transparent 5px);
-        }
-        
-        .time-group-header.night {
-            border-left-color: var(--night-color);
-            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.85) 100%), 
-                        linear-gradient(90deg, var(--night-color) 5px, transparent 5px);
-        }
-
-        .time-group-icon {
-            font-size: 1.8rem;
-            margin-right: 1rem;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            border-radius: 50%;
-            color: white;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
+            height: 100%;
+            max-width: 600px;
+            gap: var(--space-md);
         }
 
-        .time-group-icon.morning {
-            background: linear-gradient(135deg, var(--morning-color), #2a6bff);
+        .opening-main-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6em;
+            animation: fadeInUp 0.5s ease-out;
         }
 
-        .time-group-icon.afternoon {
-            background: linear-gradient(135deg, var(--afternoon-color), #ff7b00);
-        }
-
-        .time-group-icon.evening {
-            background: linear-gradient(135deg, var(--evening-color), #7b1fa2);
-        }
-        
-        .time-group-icon.night {
-            background: linear-gradient(135deg, var(--night-color), #1a237e);
-        }
-
-        .time-group-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 0;
-            color: var(--ink-color);
-            position: relative;
-            z-index: 1;
+        .opening-welcome {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: clamp(var(--font-lg), 2vw, var(--font-xl));
+            color: var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
             line-height: 1.2;
         }
 
-        .time-group-period {
-            font-size: 1rem;
-            color: #666;
-            margin-left: 0.5rem;
-            font-weight: 400;
+        .campus-title-main {
+            font-family: 'Playfair Display', serif;
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: clamp(2.8rem, 5vw, 4rem);
+            line-height: 1;
+            letter-spacing: -0.5px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .campus-tagline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(var(--font-lg), 1.8vw, var(--font-xxl));
+            color: var(--border-color);
             font-style: italic;
-            position: relative;
-            z-index: 1;
+            line-height: 1.2;
+            margin-top: 0.3em;
         }
 
-        /* Grid untuk schedule items dalam kelompok waktu */
-        .time-group-schedule {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            width: 100%;
-        }
-
-        /* Jadwal items dengan efek vintage yang ditingkatkan */
-        .schedule-item {
-            padding: 1.5rem;
-            margin-bottom: 0;
-            border-left: 5px solid var(--primary-color);
-            background-color: rgba(248, 245, 240, 0.9);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            height: 100%;
-            box-shadow: 
-                0 5px 15px rgba(0, 0, 0, 0.15),
-                0 8px 25px rgba(0, 0, 0, 0.1),
-                0 15px 35px rgba(0, 0, 0, 0.05),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.8),
-                inset 0 0 20px rgba(139, 115, 85, 0.05);
-            border-top: 1px solid rgba(139, 115, 85, 0.2);
-            border-right: 1px solid rgba(139, 115, 85, 0.2);
-            border-bottom: 1px solid rgba(139, 115, 85, 0.2);
-            clip-path: polygon(
-                0% 10px, 10px 0%, 
-                calc(100% - 10px) 0%, 100% 10px,
-                100% calc(100% - 10px), calc(100% - 10px) 100%,
-                10px 100%, 0% calc(100% - 10px)
-            );
-            animation: fadeInUp 0.6s ease-out forwards;
-            transform-origin: center;
-            box-sizing: border-box;
-            width: 100%;
-        }
-
-        /* Hover Effect */
-        .schedule-item:hover {
-            transform: translateY(-8px) scale(1.02) !important;
-            z-index: 10;
-            box-shadow: 
-                0 12px 30px rgba(0, 0, 0, 0.2),
-                0 20px 40px rgba(0, 0, 0, 0.1),
-                0 30px 50px rgba(0, 0, 0, 0.05),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.9),
-                0 0 20px rgba(10, 36, 114, 0.1);
-            border-left-color: var(--accent-color);
-            border-left-width: 6px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
-        }
-
-        /* HIGHLIGHT JADWAL YANG SEDANG BERLANGSUNG */
-        .schedule-item.current-session {
-            background: linear-gradient(135deg, var(--current-session-color), #fff8e1);
-            border-left: 6px solid #ff5722;
-            animation: pulseGlow 2s infinite alternate;
-            z-index: 5;
-            position: relative;
-        }
-        
-        .current-session-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: linear-gradient(135deg, #ff5722, #ff8a65);
-            color: white;
-            font-size: 0.7rem;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 12px;
-            box-shadow: 0 3px 6px rgba(255, 87, 34, 0.3);
-            z-index: 3;
-            transform: rotate(5deg);
-            animation: badgePulse 1.5s infinite alternate;
-            border: 1px dashed rgba(255, 255, 255, 0.5);
-            letter-spacing: 0.5px;
-        }
-        
-        .current-session-badge::before {
-            content: "🔴 ";
-            font-size: 0.6rem;
-        }
-        
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 
-                    0 5px 15px rgba(0, 0, 0, 0.15),
-                    0 8px 25px rgba(0, 0, 0, 0.1),
-                    0 15px 35px rgba(0, 0, 0, 0.05),
-                    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
-                    inset 0 0 20px rgba(139, 115, 85, 0.05),
-                    0 0 10px var(--current-session-glow);
-            }
-            100% {
-                box-shadow: 
-                    0 5px 15px rgba(0, 0, 0, 0.15),
-                    0 8px 25px rgba(0, 0, 0, 0.1),
-                    0 15px 35px rgba(0, 0, 0, 0.05),
-                    inset 0 0 0 1px rgba(255, 255, 255, 0.8),
-                    inset 0 0 20px rgba(139, 115, 85, 0.05),
-                    0 0 20px var(--current-session-glow);
-            }
-        }
-        
-        @keyframes badgePulse {
-            0% {
-                transform: rotate(5deg) scale(1);
-                box-shadow: 0 3px 6px rgba(255, 87, 34, 0.3);
-            }
-            100% {
-                transform: rotate(5deg) scale(1.05);
-                box-shadow: 0 5px 12px rgba(255, 87, 34, 0.5);
-            }
-        }
-
-        /* Animasi subtle untuk item jadwal */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Waktu dan foto dosen */
-        .schedule-header {
-            display: block;
-            margin-bottom: 1rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 2px dotted var(--border-color);
-            position: relative;
-            z-index: 2;
-        }
-
-        .lecturer-info {
-            width: 100%;
-            position: relative;
-            z-index: 2;
-            overflow: hidden;
-        }
-
-        /* Container untuk nama dosen dan gelar */
-        .lecturer-name-container {
+        .opening-description-group {
             display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
-            margin-bottom: 0.8rem;
-            gap: 8px;
+            flex-direction: column;
+            gap: 0.8em;
+            margin-top: var(--space-md);
+            animation: fadeInUp 0.5s ease-out 0.1s both;
         }
 
-        /* Headline dosen */
-        .lecturer-name {
+        .campus-description {
+            font-size: clamp(var(--font-md), 1.4vw, var(--font-lg));
+            color: var(--ink-color);
+            line-height: 1.5;
+            text-align: left;
+            max-width: 100%;
+            padding: var(--space-md) 0;
+            border-top: 2px solid rgba(139, 115, 85, 0.2);
+            border-bottom: 2px solid rgba(139, 115, 85, 0.2);
+        }
+
+        /* ==================== SLIDE 2: VISI MISI - SNAPPY ANIMATIONS ==================== */
+        .vision-mission-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-lg);
+            overflow: hidden;
+            justify-content: flex-start;
+        }
+
+        .vision-section {
+            flex: 0 0 auto;
+            text-align: center;
+            padding: var(--space-lg) var(--space-xl);
+            background: linear-gradient(135deg, rgba(10, 36, 114, 0.08) 0%, rgba(10, 36, 114, 0.05) 100%);
+            border-radius: 12px;
+            border: 2px solid rgba(10, 36, 114, 0.2);
+            margin-bottom: var(--space-sm);
+            height: auto;
+            min-height: 130px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            animation: fadeInUp 0.5s ease-out 0.1s both;
+        }
+
+        .vision-label {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            color: var(--primary-color);
+            font-weight: 900;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-xs);
+            border-bottom: 3px solid var(--accent-color);
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+        }
+
+        .vision-text {
+            font-size: clamp(1rem, 1.4vw, 1.2rem);
+            line-height: 1.5;
+            color: var(--ink-color);
+            text-align: justify;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .mission-section {
+            flex: 1;
+            padding: var(--space-lg) var(--space-xl) var(--space-md) var(--space-xl);
+            background: linear-gradient(135deg, rgba(10, 36, 114, 0.08) 0%, rgba(10, 36, 114, 0.05) 100%);
+            border-radius: 12px;
+            border: 2px solid rgba(10, 36, 114, 0.2);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            overflow: hidden !important;
+            margin-top: 15px;
+            animation: fadeInUp 0.5s ease-out 0.15s both;
+        }
+
+        .mission-label {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+            color: var(--primary-color);
+            font-weight: 900;
+            margin-bottom: var(--space-md);
+            padding-bottom: var(--space-xs);
+            border-bottom: 3px solid var(--accent-color);
+            text-align: center;
+            width: 100%;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .mission-columns {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            height: auto;
+            overflow: hidden !important;
+            align-content: flex-start;
+        }
+
+        .mission-column {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            overflow: hidden;
+        }
+
+        .mission-list-1, .mission-list-2 {
+            list-style-position: outside;
+            padding-left: var(--space-xl);
+            margin: 0;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mission-list-1 li, .mission-list-2 li {
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+            position: relative;
+            font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+            line-height: 1.4;
+            color: var(--ink-color);
+            text-align: justify;
+        }
+
+        /* ==================== SLIDE JADWAL - ALL BLUE FAMILY ==================== */
+        .schedule-content {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding: var(--space-lg);
+        }
+
+        .schedule-grid {
+            flex: 1;
+            display: grid;
+            gap: var(--space-lg);
+            align-content: start;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: var(--space-xs);
+        }
+
+        /* BORDER PER KELAS - ALL BLUE */
+        .card-border-ti24 {
+            border-left: 8px solid var(--ti24-color) !important;
+        }
+        .card-border-ti25 {
+            border-left: 8px solid var(--ti25-color) !important;
+        }
+        .card-border-si24 {
+            border-left: 8px solid var(--si24-color) !important;
+        }
+        .card-border-si25 {
+            border-left: 8px solid var(--si25-color) !important;
+        }
+
+        /* CARD DESIGN - DENGAN HOVER ELEGAN DAN ANIMASI CEPAT */
+        .schedule-item-final {
+            background: linear-gradient(135deg, rgba(248, 245, 240, 0.95) 0%, rgba(248, 245, 240, 0.85) 100%);
+            padding: var(--space-lg) var(--space-xl);
+            border-left: 8px solid var(--primary-color);
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+            min-height: 160px;
+            justify-content: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        /* Stagger untuk setiap card - QUICK CASCADE */
+        .schedule-item-final:nth-child(1) { animation-delay: 0s; }
+        .schedule-item-final:nth-child(2) { animation-delay: 0.05s; }
+        .schedule-item-final:nth-child(3) { animation-delay: 0.1s; }
+        .schedule-item-final:nth-child(4) { animation-delay: 0.15s; }
+
+        .schedule-item-final:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(10, 36, 114, 0.18);
+        }
+
+        /* BADGE ALL BLUE - SEMUA PUTIH! */
+        .badge-ti24 {
+            background: var(--ti24-color) !important;
+            color: white !important;
+        }
+        .badge-ti25 {
+            background: var(--ti25-color) !important;
+            color: white !important;
+        }
+        .badge-si24 {
+            background: var(--si24-color) !important;
+            color: white !important;
+        }
+        .badge-si25 {
+            background: var(--si25-color) !important;
+            color: white !important;
+        }
+
+        /* BARIS 1: Badge kiri + Status kanan */
+        .schedule-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .class-badge-final {
+            display: inline-block;
+            font-size: clamp(0.8rem, 1vw, 0.9rem);
             font-weight: 700;
-            font-size: 1.4rem;
+            padding: 0.4rem 1.1rem;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            border: 1px solid var(--accent-color);
+            text-transform: uppercase;
+        }
+
+        .status-upcoming {
+            color: var(--ti24-color);
+            font-weight: 700;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(10, 36, 114, 0.08);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .status-ongoing {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 215, 0, 0.12);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        .status-completed {
+            color: var(--si25-color);
+            font-weight: 700;
+            font-size: clamp(0.85rem, 1.1vw, 0.95rem);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(90, 122, 154, 0.12);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+        }
+
+        /* BARIS 2: Dosen Full Name */
+        .lecturer-name-final {
+            font-weight: 700;
+            font-size: clamp(1.05rem, 1.4vw, 1.15rem);
             color: var(--ink-color);
             font-family: 'Playfair Display', serif;
             line-height: 1.3;
-            position: relative;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            overflow: hidden;
-            flex-shrink: 0;
-            hyphens: auto;
+            margin-top: var(--space-xs);
         }
 
-        /* Gelar dosen di samping kanan nama */
-        .lecturer-title {
-            font-size: 0.9rem;
-            color: #666;
-            font-style: italic;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+        /* BARIS 3: Grid 2 kolom - Waktu kiri, Matkul kanan */
+        .schedule-middle-grid {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: var(--space-md);
+            align-items: center;
+            margin: var(--space-xs) 0;
+        }
+
+        .time-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+        }
+
+        .time-wrapper i {
+            font-size: 1rem;
+            width: 18px;
+        }
+
+        .course-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: clamp(0.95rem, 1.3vw, 1.05rem);
+            justify-content: flex-start;
+        }
+
+        .course-wrapper i {
+            font-size: 1rem;
+            width: 18px;
+        }
+
+        .course-text-final {
+            color: var(--ink-color);
+            font-weight: 500;
+            white-space: nowrap;
             overflow: hidden;
-            padding-left: 0;
-            margin-bottom: 0;
+            text-overflow: ellipsis;
+        }
+
+        /* BARIS 4: Ruangan doang */
+        .room-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color: var(--border-color);
+            font-size: clamp(0.9rem, 1.2vw, 1rem);
+            margin-top: var(--space-xs);
+            font-weight: 500;
+        }
+
+        .room-wrapper i {
+            font-size: 0.95rem;
+            width: 18px;
+            color: var(--primary-color);
+        }
+
+        /* Grid layouts */
+        .grid-1-col {
+            grid-template-columns: 1fr;
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .grid-2-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-odd-last {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .grid-odd-last .schedule-item-final:last-child {
+            grid-column: span 2;
+            max-width: 700px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ==================== SLIDE PENUTUP - SNAPPY ANIMATIONS ==================== */
+        .closing-content-wrapper {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .closing-main-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 3rem;
+            max-width: 1100px;
+            width: 100%;
+            align-items: center;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        .info-box-large {
+            background: rgba(10, 36, 114, 0.05);
+            border: 2px solid rgba(10, 36, 114, 0.15);
+            border-radius: 16px;
+            padding: 2.5rem 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            min-height: 280px;
+            justify-content: center;
+            animation: fadeInUp 0.5s ease-out 0.1s both;
+        }
+
+        .info-item-large {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
+        }
+
+        .info-item-large i {
+            color: var(--primary-color);
+            font-size: 2rem;
+            margin-top: 0.3rem;
+            flex-shrink: 0;
+        }
+
+        .info-content-large {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-label-large {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: clamp(1.1rem, 1.5vw, 1.3rem);
+            color: var(--primary-color);
             line-height: 1.3;
         }
 
-        /* Drop cap untuk nama dosen */
-        .lecturer-name::first-letter {
-            font-size: 2.2rem;
-            float: left;
-            line-height: 1;
-            margin-right: 6px;
-            margin-top: 3px;
-            color: var(--primary-color);
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        /* Jadwal waktu */
-        .schedule-time {
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            font-family: 'Playfair Display', serif;
-            position: relative;
-            display: inline-block;
-            padding-left: 22px;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            max-width: 100%;
-        }
-
-        /* Ikon jam dengan efek vintage */
-        .schedule-time i {
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--border-color);
-            font-size: 1.1rem;
-        }
-
-        /* Mata kuliah */
-        .course-title {
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin: 0.8rem 0 0.5rem 0;
-            color: var(--primary-color);
-            border-left: 3px solid var(--accent-color);
-            padding-left: 0.8rem;
+        .info-value-large {
             font-family: 'Inter', sans-serif;
-            position: relative;
-            z-index: 2;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            hyphens: auto;
+            font-weight: 500;
+            font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+            color: var(--ink-color);
+            line-height: 1.5;
         }
 
-        .course-title i {
-            color: var(--border-color);
-            margin-right: 8px;
-        }
-
-        .schedule-meta {
+        .qr-container-large {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-top: 0.8rem;
-            font-size: 0.85rem;
-            color: #666;
-            position: relative;
-            z-index: 2;
-        }
-
-        .schedule-meta span {
-            display: flex;
             align-items: center;
-            gap: 5px;
-            background-color: rgba(139, 115, 85, 0.1);
-            padding: 0.2rem 0.6rem;
-            border-radius: 2px;
-            border: 1px solid rgba(139, 115, 85, 0.2);
-            flex-wrap: wrap;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
+            gap: 1.2rem;
+            animation: fadeInRight 0.5s ease-out 0.15s both;
         }
 
-        /* EMPTY STATE LEBIH MENARIK */
-        .no-results {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: #777;
-            font-style: italic;
-            position: relative;
-            grid-column: 1 / -1;
-            animation: fadeIn 0.8s ease-out;
-            background: linear-gradient(135deg, rgba(248, 245, 240, 0.9), rgba(232, 227, 214, 0.9));
-            border-radius: 10px;
-            border: 2px dashed var(--border-color);
-            margin: 2rem 0;
-            overflow: hidden;
+        .qr-code-wrapper-large {
+            width: 240px;
+            height: 240px;
+            border: 4px solid var(--border-color);
+            border-radius: 16px;
+            padding: 0.8rem;
+            background: white;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .qr-code-wrapper-large img {
             width: 100%;
-            box-sizing: border-box;
+            height: 100%;
+            object-fit: contain;
+            display: block;
         }
 
-        .no-results h3 {
-            position: relative;
-            z-index: 1;
-            font-family: 'Playfair Display', serif;
-            color: var(--primary-color);
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .no-results p {
-            position: relative;
-            z-index: 1;
-            max-width: 500px;
-            margin: 0 auto;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            color: #5a5347;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        
-        .no-results .vintage-note {
-            background: rgba(139, 115, 85, 0.1);
-            border: 1px solid rgba(139, 115, 85, 0.3);
-            border-radius: 5px;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            font-style: normal;
-            position: relative;
-            z-index: 1;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-        
-        .no-results .vintage-note::before {
-            content: "💡";
-            position: absolute;
-            left: 10px;
-            top: -10px;
-            background: var(--paper-color);
-            padding: 0 5px;
-            font-size: 1.2rem;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ==================== FOOTER ==================== */
-        .newspaper-footer {
+        .qr-label-large {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: clamp(1rem, 1.4vw, 1.2rem);
+            color: var(--ink-color);
             text-align: center;
-            padding: 2.5rem 0 1.5rem 0;
-            border-top: 8px double var(--border-color);
-            margin-top: 2rem;
-            color: #666;
-            font-size: 0.9rem;
-            position: relative;
-            background-color: var(--paper-color);
-            box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            width: 100%;
-            box-sizing: border-box;
         }
 
-        .footer-note {
-            line-height: 1.6;
-            text-align: center;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 1rem;
-            background-color: rgba(255, 255, 255, 0.5);
-            border-radius: 3px;
-            border: 1px dashed var(--border-color);
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        /* Efek watermark di latar belakang */
-        .watermark {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 15rem;
-            color: rgba(139, 115, 85, 0.03);
-            font-family: 'Playfair Display', serif;
-            font-weight: 900;
-            white-space: nowrap;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ==================== RESPONSIVE BREAKPOINTS ==================== */
-        
-        /* Tablet (768px - 991px) */
-        @media (min-width: 768px) and (max-width: 991px) {
-            .container {
-                padding: 25px;
-                width: calc(100% - 40px);
-                margin: 20px auto 30px;
-            }
-            
-            .institution-name {
-                font-size: 2.8rem;
-            }
-            
-            .time-group-schedule {
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .grid-2-col, .grid-odd-last {
                 grid-template-columns: 1fr;
             }
             
-            .header-info {
-                gap: 1.8rem;
-            }
-            
-            .logo-real {
-                width: 130px;
-                height: 130px;
-            }
-            
-            .date-time {
-                padding: 15px 20px;
-                min-width: 320px;
-            }
-            
-            .current-date {
-                font-size: 1.1rem;
-            }
-            
-            .current-time {
-                font-size: 1.9rem;
-            }
-            
-            .time-group-header {
-                padding: 0.9rem 1.2rem;
-            }
-            
-            .time-group-icon {
-                width: 55px;
-                height: 55px;
-                font-size: 1.6rem;
-            }
-            
-            .time-group-title {
-                font-size: 1.6rem;
-            }
-            
-            .container-title {
-                font-size: 2rem;
-            }
-            
-            .watermark {
-                font-size: 10rem;
-            }
-        }
-
-        /* Mobile (576px - 767px) */
-        @media (max-width: 767px) {
-            html, body {
-                overflow-x: hidden !important;
-                width: 100% !important;
-                position: relative !important;
-            }
-            
-            body {
-                padding: 0;
-                margin: 0;
-            }
-            
-            .container {
-                padding: 15px !important;
-                margin: 10px auto !important;
-                width: calc(100% - 20px) !important;
-                box-shadow: 
-                    0 5px 15px rgba(0, 0, 0, 0.15),
-                    inset 0 0 0 1px rgba(255, 255, 255, 0.5);
-            }
-            
-            .container::before,
-            .container::after {
-                display: none;
-            }
-            
-            .newspaper-header {
-                padding: 1.5rem 0 1rem 0;
-                margin-bottom: 1.5rem;
-            }
-            
-            .institution-name {
-                font-size: 1.8rem !important;
-                letter-spacing: 1px;
-                padding: 0 15px;
-                line-height: 1.2;
-                margin-bottom: 0.3rem;
-            }
-            
-            .newspaper-subtitle {
-                font-size: 0.8rem;
-                letter-spacing: 2px;
-                padding: 0.5rem 0;
-                margin-bottom: 0.5rem;
-                white-space: normal;
-                line-height: 1.3;
-            }
-            
-            .newspaper-subtitle::before,
-            .newspaper-subtitle::after {
-                display: none;
-            }
-            
-            .header-info {
-                gap: 1rem !important;
-                margin-top: 1rem;
-                padding: 0 10px;
-            }
-            
-            .logo-real {
-                width: 100px !important;
-                height: 100px !important;
-                margin-bottom: 0;
-            }
-            
-            .date-time {
-                min-width: 100% !important;
-                padding: 10px 15px;
-                width: 100%;
-                max-width: 300px;
-            }
-            
-            .date-time::before {
-                font-size: 0.6rem;
-                padding: 2px 6px;
-                top: -10px;
-                right: 5px;
-            }
-            
-            .current-date {
-                font-size: 0.95rem !important;
-            }
-            
-            .current-time {
-                font-size: 1.5rem !important;
-            }
-            
-            .hero-section {
-                padding: 1.5rem 0 1rem 0;
-                margin-bottom: 0.5rem;
-            }
-            
-            .hero-section::before {
-                font-size: 1rem;
-                padding: 0 10px;
-                letter-spacing: 3px;
-            }
-            
-            .search-container {
-                padding: 0 10px;
-            }
-            
-            .search-bar {
-                padding: 0.9rem 1rem !important;
-                font-size: 1rem !important;
-            }
-            
-            .search-container::before {
-                right: 15px !important;
-                top: 12px;
-                font-size: 1.2rem;
-            }
-            
-            .filter-section {
-                padding: 0.5rem 0;
-                margin-bottom: 1.5rem;
-            }
-            
-            .filter-section::before {
-                width: 150px;
-                height: 18px;
-                top: -9px;
-            }
-            
-            .filter-section::after {
-                font-size: 0.7rem;
-                top: -7px;
-            }
-            
-            .filter-controls {
-                margin-bottom: 1rem;
-            }
-            
-            .day-selector {
-                flex-direction: column;
-                gap: 10px;
-                width: 100%;
-                align-items: center;
-            }
-            
-            .day-btn {
-                width: 100% !important;
-                max-width: 280px !important;
-                min-width: unset !important;
-                padding: 0.7rem !important;
-                font-size: 0.95rem;
-                margin: 0 auto;
-            }
-            
-            .schedule-container {
-                padding: 1.5rem !important;
-                min-height: 300px;
-            }
-            
-            .container-title {
-                font-size: 1.5rem !important;
-                padding-bottom: 0.8rem;
-                margin-bottom: 1.2rem;
-            }
-            
-            #selectedDayBadge {
-                font-size: 0.8rem;
-                padding: 0.3rem 0.8rem;
-                margin-top: 5px;
-                display: block;
-                transform: none;
-                width: fit-content;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .time-group-schedule {
-                grid-template-columns: 1fr !important;
-                gap: 1rem !important;
-            }
-            
-            .time-group-header {
-                padding: 0.8rem !important;
-                margin-bottom: 1rem;
-                flex-direction: row;
-                align-items: center;
-            }
-            
-            .time-group-icon {
-                width: 45px !important;
-                height: 45px !important;
-                font-size: 1.3rem !important;
-                margin-right: 0.8rem !important;
-            }
-            
-            .time-group-title {
-                font-size: 1.2rem !important;
-            }
-            
-            .time-group-period {
-                font-size: 0.8rem !important;
-                display: block;
-                margin-left: 0 !important;
-                margin-top: 3px;
-            }
-            
-            .schedule-item {
-                padding: 1.2rem !important;
-                margin-bottom: 0;
-                transform: none !important;
-                clip-path: none !important;
-                border-radius: 5px;
-                box-shadow: 
-                    0 4px 10px rgba(0, 0, 0, 0.1),
-                    0 6px 20px rgba(0, 0, 0, 0.05),
-                    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-                animation: fadeInUpMobile 0.5s ease-out forwards;
-            }
-            
-            @keyframes fadeInUpMobile {
-                from {
-                    opacity: 0;
-                    transform: translateY(10px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            
-            .schedule-item:hover {
-                transform: translateY(-3px) !important;
-                scale: 1.01;
-                box-shadow: 
-                    0 6px 15px rgba(0, 0, 0, 0.15),
-                    0 10px 25px rgba(0, 0, 0, 0.08),
-                    inset 0 0 0 1px rgba(255, 255, 255, 0.9);
-            }
-            
-            .lecturer-name-container {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 2px;
-                margin-bottom: 0.5rem;
-            }
-            
-            .lecturer-name {
-                font-size: 1.1rem !important;
-                line-height: 1.2;
-            }
-            
-            .lecturer-name::first-letter {
-                font-size: 1.5rem !important;
-                margin-right: 4px;
-                margin-top: 1px;
-            }
-            
-            .lecturer-title {
-                font-size: 0.8rem !important;
-                line-height: 1.3;
-                padding-left: 0 !important;
-            }
-            
-            .schedule-time {
-                font-size: 0.95rem !important;
-                margin-bottom: 0.5rem;
-                padding-left: 20px;
-            }
-            
-            .schedule-time i {
-                font-size: 1rem;
-            }
-            
-            .course-title {
-                font-size: 1rem !important;
-                margin: 0.6rem 0 0.4rem 0;
-                padding-left: 0.7rem;
-            }
-            
-            .course-title i {
-                font-size: 0.9rem;
-            }
-            
-            .schedule-meta {
-                gap: 5px !important;
-                font-size: 0.8rem !important;
-                margin-top: 0.6rem;
-            }
-            
-            .schedule-meta span {
-                padding: 0.15rem 0.5rem !important;
-                font-size: 0.8rem;
-            }
-            
-            .current-session-badge {
-                font-size: 0.6rem !important;
-                padding: 3px 8px !important;
-                top: 5px !important;
-                right: 5px !important;
-            }
-            
-            .no-results {
-                padding: 2.5rem 1.5rem;
-                margin: 1.5rem 0;
-            }
-            
-            .no-results h3 {
-                font-size: 1.3rem;
-                margin-bottom: 0.8rem;
-            }
-            
-            .no-results p {
-                font-size: 0.95rem;
+            .grid-odd-last .schedule-item-final:last-child {
+                grid-column: span 1;
                 max-width: 100%;
             }
             
-            .no-results .vintage-note {
-                padding: 0.8rem;
-                margin-top: 1rem;
-                font-size: 0.85rem;
+            .schedule-middle-grid {
+                grid-template-columns: 1fr 1.2fr;
             }
             
-            .newspaper-footer {
-                padding: 1.5rem 0 1rem 0;
-                margin-top: 1.5rem;
-            }
-            
-            .footer-note {
-                font-size: 0.8rem;
-                padding: 0.8rem;
-                margin: 0 10px;
-            }
-            
-            .watermark {
-                font-size: 5rem !important;
-                opacity: 0.05;
+            .closing-main-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
         }
 
-        /* Small Mobile (375px - 575px) */
-        @media (max-width: 575px) {
-            .institution-name {
-                font-size: 1.6rem !important;
+        @media (max-width: 768px) {
+            .schedule-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
             }
             
-            .logo-real {
-                width: 90px !important;
-                height: 90px !important;
+            .schedule-middle-grid {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
             }
             
-            .current-date {
-                font-size: 0.9rem !important;
+            .opening-columns {
+                flex-direction: column;
+                gap: var(--space-lg);
             }
             
-            .current-time {
-                font-size: 1.4rem !important;
+            .opening-logo-column {
+                width: 100%;
+                max-width: 280px;
             }
             
-            .day-btn {
-                max-width: 250px !important;
+            .logo-hero {
+                width: 200px;
+                height: 200px;
             }
             
-            .schedule-item {
-                padding: 1rem !important;
+            .info-box-large {
+                padding: 1.5rem;
             }
             
-            .lecturer-name {
-                font-size: 1rem !important;
-            }
-            
-            .lecturer-name::first-letter {
-                font-size: 1.3rem !important;
-                margin-right: 3px;
-            }
-            
-            .lecturer-title {
-                font-size: 0.75rem !important;
-            }
-            
-            .course-title {
-                font-size: 0.95rem !important;
-            }
-            
-            .schedule-meta {
-                font-size: 0.75rem !important;
+            .qr-code-wrapper-large {
+                width: 200px;
+                height: 200px;
             }
         }
 
-        /* Extra Small Mobile (< 375px) */
-        @media (max-width: 374px) {
-            .container {
-                padding: 12px !important;
-                width: calc(100% - 10px) !important;
-                margin: 8px auto !important;
+        @media (max-width: 480px) {
+            .schedule-item-final {
+                padding: var(--space-md);
             }
             
-            .institution-name {
-                font-size: 1.4rem !important;
-                padding: 0 10px;
+            .qr-code-wrapper-large {
+                width: 180px;
+                height: 180px;
             }
             
-            .logo-real {
-                width: 80px !important;
-                height: 80px !important;
+            .slide-footer {
+                flex-direction: column;
+                justify-content: center;
+                gap: 0.3rem;
+                padding: var(--space-sm);
             }
             
-            .date-time {
-                padding: 8px 12px;
-            }
-            
-            .current-date {
-                font-size: 0.85rem !important;
-            }
-            
-            .current-time {
-                font-size: 1.3rem !important;
-            }
-            
-            .search-bar {
-                padding: 0.8rem !important;
-                font-size: 0.95rem !important;
-            }
-            
-            .search-container::before {
-                right: 12px;
-                top: 10px;
-                font-size: 1rem;
-            }
-            
-            .day-btn {
-                font-size: 0.9rem;
-                padding: 0.6rem !important;
-                max-width: 220px !important;
-            }
-            
-            .container-title {
-                font-size: 1.3rem !important;
-            }
-            
-            .time-group-title {
-                font-size: 1.1rem !important;
-            }
-            
-            .time-group-icon {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 1.1rem !important;
-                margin-right: 0.6rem !important;
-            }
-            
-            .lecturer-name-container {
-                gap: 1px;
-            }
-            
-            .lecturer-name {
-                font-size: 0.95rem !important;
-            }
-            
-            .lecturer-title {
-                font-size: 0.7rem !important;
-            }
-            
-            .watermark {
-                font-size: 4rem !important;
-            }
-        }
-
-        /* Desktop Large (> 1200px) */
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 1200px;
-                margin: 20px auto 40px;
-            }
-        }
-
-        /* Print Styles */
-        @media print {
-            body {
-                background-color: white;
-            }
-            
-            .container {
-                box-shadow: none;
-                border: 1px solid #ddd;
-            }
-            
-            .day-btn:hover,
-            .schedule-item:hover {
-                transform: none !important;
-                box-shadow: none !important;
-            }
-            
-            .watermark,
-            .search-container::before,
-            .schedule-container::before {
+            .footer-spacer {
                 display: none;
             }
         }
 
-        /* Touch Device Optimizations */
-        @media (hover: none) and (pointer: coarse) {
-            .day-btn:hover {
-                transform: none;
-            }
-            
-            .schedule-item:hover {
-                transform: none !important;
-            }
-            
-            .day-btn {
-                min-height: 44px;
-            }
-            
-            .search-bar {
-                min-height: 44px;
-            }
+        /* ==================== NO SCROLL ==================== */
+        .no-scroll {
+            overflow: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+            overscroll-behavior: none !important;
         }
 
-        /* High DPI Screens */
-        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-            body::before {
-                background-size: 40px 40px, 40px 40px, auto;
-            }
-            
-            body::after {
-                background-size: 40px 40px;
-            }
+        /* ==================== LOADING SCREEN ==================== */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0a2472 0%, #1a1a2e 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-logo {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #FFD700 0%, #ffed4e 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            border: 4px solid white;
+        }
+
+        .loading-logo span {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #0a2472;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .loading-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #FFD700;
+            text-align: center;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
     </style>
 </head>
-<body>
-    <!-- LOADING ANIMATION - INSTANT APPEAR -->
-    <div id="instant-loader">
-        <div class="instant-spinner">
-            <div class="instant-letter">
-                <!-- Stempel di tengah -->
-                <div class="instant-stamp">
-                    <i class="fas fa-envelope"></i>
-                </div>
-                
-                <!-- Garis-garis pada surat -->
-                <div class="letter-line"></div>
-                <div class="letter-line"></div>
-                <div class="letter-line"></div>
-                <div class="letter-line"></div>
-            </div>
-        </div>
-        <div class="instant-loading-text">MEMUAT JADWAL...</div>
+<body class="no-scroll">
+    <div id="loading-screen">
+        <div class="loading-logo"><span>T</span></div>
+        <div class="loading-text">STMIK TAZKIA</div>
     </div>
 
-    <!-- Efek watermark di latar belakang -->
-    <div class="watermark">STMIK TAZKIA</div>
+    <div class="slides-container" id="slidesContainer"></div>
+    <div class="slide-indicators" id="slideIndicators"></div>
 
-    <!-- Container utama -->
-    <div class="container">
-        <!-- Header Koran - CLEAN -->
-        <header class="newspaper-header">
-            <div class="institution-name">STMIK TAZKIA DAILY</div>
-            <div class="newspaper-subtitle">Jadwal Harian Civitas Akademika</div>
-            
-            <div class="header-info">
-                <!-- LOGO STMIK TAZKIA - CLEAN -->
-                <div class="logo-real">
-                    <img src="https://drive.google.com/thumbnail?id=1kzJP2K__VXOKMtxLOTXKrldKsbk0375T&sz=w1000" 
-                         alt="Logo STMIK Tazkia"
-                         onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTQwIiBoZWlnaHQ9IjE0MCIgdmlld0JveD0iMCAwIDE0MCAxNDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNDAiIGhlaWdodD0iMTQwIiBmaWxsPSIjMEExNDcyIiByeD0iNzAiLz4KPHBhdGggZD0iTTcwIDM1TDUwIDcwTDkwIDcwTDcwIDM1WiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTcwIDEwNUw1MCA3MEw5MCA3MEw3MCAxMDVaIiBmaWxsPSJ3aGl0ZSIvPgo8dGV4dCB4PSI3MCIgeT0iODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyMCIgZmlsbD0id2hpdGUiIGZvbnQtd2VpZ2h0PSJib2xkIj5UPC90ZXh0Pgo8L3N2Zz4=';">
-                </div>
-                
-                <div class="date-time">
-                    <div class="current-date" id="currentDate">Senin, 1 Januari 2024</div>
-                    <div class="current-time" id="currentTime">00:00:00</div>
-                </div>
-            </div>
-        </header>
-
-        <!-- Hero Section dengan Search Bar -->
-        <section class="hero-section">
-            <div class="search-container">
-                <input type="text" class="search-bar" id="searchInput" placeholder="Cari Jadwal Anda...">
-            </div>
-        </section>
-
-        <!-- Filter Section -->
-        <section class="filter-section">
-            <div class="container">
-                <div class="filter-controls">
-                    <div class="day-selector">
-                        <button class="day-btn yesterday" data-day="yesterday">KEMARIN</button>
-                        <button class="day-btn today active" data-day="today">HARI INI</button>
-                        <button class="day-btn tomorrow" data-day="tomorrow">BESOK</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Main Content -->
-        <main class="container main-content">
-            <div class="schedule-container">
-                <h2 class="container-title">
-                    <span id="scheduleTitle">JADWAL HARI INI</span>
-                    <span id="selectedDayBadge" class="badge bg-warning text-dark ms-2"></span>
-                </h2>
-                <div id="scheduleResults">
-                    <!-- Jadwal akan dimuat di sini -->
-                </div>
-            </div>
-        </main>
-
-        <!-- Footer Koran -->
-        <footer class="newspaper-footer">
-            <div class="container">
-                <div class="footer-note">
-                    Jadwal dapat berubah sewaktu-waktu. Edisi Cetak: 2026
-                </div>
-            </div>
-        </footer>
-    </div>
-
-    <!-- JavaScript -->
     <script>
-        // ==================== LOADING LOGIC ====================
-        (function() {
-            console.log("Loading animation langsung muncul!");
-            
-            setTimeout(function() {
-                const loader = document.getElementById('instant-loader');
-                if (loader) {
-                    loader.classList.add('hidden');
-                }
-                console.log("Loading selesai, tampilkan konten utama");
-            }, 1500);
-            
-        })();
-        
-        // Data jadwal perkuliahan
-        const scheduleData = [
-            // =================== SISTEM INFORMASI 2025 ===================
-            { id: 1, day: "Senin", time: "07:50 - 09:30", course: "Ketazkiaan", lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd", class: "SI 2025", room: "Ibnu Khaldun 1" },
-            { id: 2, day: "Senin", time: "13:00 - 15:30", course: "Kewirausahaan", lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)", class: "SI 2025", room: "Abu Yusuf 1" },
-            { id: 3, day: "Selasa", time: "09:31 - 12:00", course: "Algoritma dan Pemrograman Dasar", lecturer: "Arif Surachman, S.Si., M.Si", class: "SI 2025", room: "Laboratorium 2" },
-            { id: 4, day: "Kamis", time: "09:31 - 12:00", course: "Matematika Diskrit", lecturer: "Hairul Umam, S.Si., M.Si", class: "SI 2025", room: "Ibnu Khaldun 1" },
-            { id: 5, day: "Kamis", time: "15:31 - 17:10", course: "Matematika Dasar Teknik", lecturer: "Hairul Umam, S.Si., M.Si", class: "SI 2025", room: "Abu Yusuf 1" },
-            { id: 6, day: "Jumat", time: "13:00 - 14:40", course: "Pengantar Teknologi Informasi", lecturer: "Galih Kurniawan Sidik, M.Kom", class: "SI 2025", room: "Laboratorium 1" },
-            { id: 7, day: "Sabtu", time: "07:00 - 09:30", course: "Arsitektur dan Organisasi Komputer", lecturer: "Q Fadlan, M.Kom., S.ST", class: "SI 2025", room: "Laboratorium 1" },
-            { id: 8, day: "Sabtu", time: "13:00 - 14:40", course: "Bahasa Indonesia", lecturer: "Muhammad Ichsan, M.Pd.", class: "SI 2025", room: "Ibnu Khaldun 2 & 3 (Aula)" },
+        const CONFIG = {
+            logoUrl: "https://bit.ly/m/biolink_stmiktazkia",
+            logoFallback: "https://drive.google.com/thumbnail?id=1kzJP2K__VXOKMtxLOTXKrldKsbk0375T&sz=w1000",
+            qrCodeUrl: "https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=https://stmik.tazkia.ac.id/admissions",
+            slideDurations: { opening: 10000, visionMission: 12000, schedule: 15000, closing: 8000 },
+            maxScheduleItemsPerSlide: 4
+        };
 
-            // =================== SISTEM INFORMASI 2024 ===================
-            { id: 9, day: "Senin", time: "07:00 - 09:30", course: "Machine Learning", lecturer: "Hendri Karisma, S.Kom., M.T", class: "SI 2024", room: "Laboratorium 1" },
-            { id: 10, day: "Senin", time: "07:00 - 09:30", course: "Fundamental Ekonomi Islam", lecturer: "Ayu Solihah Sadariyah, S.E.I., M.E", class: "SI 2024", room: "Abu Yusuf 1" },
-            { id: 11, day: "Senin", time: "13:00 - 16:20", course: "Manajemen Proyek", lecturer: "Muhammad Singgih Zulfikar Ansori, S.Pd., M.T.I", class: "SI 2024", room: "Laboratorium 1" },
-            { id: 12, day: "Selasa", time: "07:00 - 09:30", course: "Jaringan Komputer dan Komputasi Awan", lecturer: "Arif Surachman, S.Si., M.Si", class: "SI 2024", room: "Laboratorium 2" },
-            { id: 13, day: "Rabu", time: "07:00 - 10:20", course: "Analisis dan Perancangan Sistem", lecturer: "Endy Muhardin, S.T., M.E.", class: "SI 2024", room: "Ibnu Khaldun 1" },
-            { id: 14, day: "Rabu", time: "09:31 - 12:00", course: "Pengembangan Aplikasi Web", lecturer: "Kus Andriadi, S.Kom., M.T.I.", class: "SI 2024", room: "Ibnu Khaldun 2" },
-            { id: 15, day: "Rabu", time: "13:00 - 15:30", course: "Sistem Basis Data", lecturer: "Galih Kurniawan Sidik, M.Kom", class: "SI 2024", room: "Laboratorium 1" },
-
-            // =================== TEKNIK INFORMATIKA 2024 ===================
-            { id: 16, day: "Senin", time: "07:00 - 09:30", course: "Machine Learning", lecturer: "Hendri Karisma, S.Kom., M.T", class: "TI 2024", room: "Laboratorium 1" },
-            { id: 17, day: "Senin", time: "09:31 - 12:00", course: "Fundamental Ekonomi Islam", lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)", class: "TI 2024", room: "Ibnu Khaldun 4" },
-            { id: 18, day: "Senin", time: "13:00 - 15:30", course: "Kewirausahaan", lecturer: "Ir. Teti Haryati, M.Si", class: "TI 2024", room: "Ibnu Khaldun 1" },
-            { id: 19, day: "Selasa", time: "07:00 - 09:30", course: "Konstruksi dan Rekayasa Perangkat Lunak", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "TI 2024", room: "Laboratorium 1" },
-            { id: 20, day: "Rabu", time: "09:31 - 12:00", course: "Analisis dan Perancangan Sistem", lecturer: "Endy Setiadi, S.Kom., M.Kom", class: "TI 2024", room: "Laboratorium 1" },
-            { id: 21, day: "Rabu", time: "13:00 - 15:30", course: "Pengantar Kriptografi dan Teori Bilangan", lecturer: "Hairul Umam, S.S., M.Si", class: "TI 2024", room: "Abu Yusuf 1" },
-            { id: 22, day: "Rabu", time: "13:00 - 15:30", course: "Sistem Basis Data", lecturer: "Hairul Umam, S.S., M.Si", class: "TI 2024", room: "Laboratorium 2" },
-            { id: 23, day: "Jumat", time: "20:15 - 21:45", course: "Keamanan Sistem Informasi", lecturer: "D Fadlan, M.Kom., S.ST", class: "TI 2024", room: "Abu Yusuf 1" },
-
-            // =================== TEKNIK INFORMATIKA 2025 ===================
-            { id: 24, day: "Senin", time: "09:31 - 11:10", course: "Ketazkiaan", lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd", class: "TI 2025", room: "Ibnu Khaldun 1" },
-            { id: 25, day: "Sabtu", time: "13:00 - 15:30", course: "Kewirausahaan", lecturer: "Dr. Sugiyarti Fatma Laela, M.Buss, Acc, CMA, CIBA", class: "TI 2025", room: "Ibnu Khaldun 1" },
-            { id: 26, day: "Sabtu", time: "15:31 - 17:10", course: "Matematika Dasar Teknik", lecturer: "Hairul Umam, S.Si., M.Si", class: "TI 2025", room: "Abu Yusuf 1" },
-            { id: 27, day: "Kamis", time: "07:00 - 09:30", course: "Matematika Diskrit", lecturer: "Hendri Karisma, S.Kom., M.T", class: "TI 2025", room: "Laboratorium 1" },
-            { id: 28, day: "Kamis", time: "13:00 - 15:30", course: "Algoritma dan Pemrograman Dasar", lecturer: "Ricky Setiadi, S.Kom., M.Kom", class: "TI 2025", room: "Laboratorium 1" },
-            { id: 29, day: "Sabtu", time: "07:00 - 09:30", course: "Arsitektur dan Organisasi Komputer", lecturer: "Q Fadlan, M.Kom., S.ST", class: "TI 2025", room: "Laboratorium 1" },
-            { id: 30, day: "Sabtu", time: "10:30 - 12:00", course: "Pengantar Teknologi Informasi", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "TI 2025", room: "Laboratorium 1" },
-            { id: 31, day: "Sabtu", time: "13:00 - 14:40", course: "Bahasa Indonesia", lecturer: "Muhammad Ichsan, M.Pd.", class: "TI 2025", room: "Ibnu Khaldun 2 & 3 (Aula)" }
-        ];
-
-        // Daftar hari dalam bahasa Indonesia
+        let currentSlide = 0, totalSlides = 0, slideInterval = null, slidesData = [];
         const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
         const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-        // Variabel untuk menyimpan state filter
-        let currentDay = "today";
-        let currentSearch = "";
-        let currentSessions = [];
-
-        // Fungsi untuk mengupdate tanggal dan waktu
         function updateDateTime() {
             const now = new Date();
-            
             const dayName = days[now.getDay()];
             const date = now.getDate();
             const monthName = months[now.getMonth()];
             const year = now.getFullYear();
             
-            document.getElementById('currentDate').textContent = `${dayName}, ${date} ${monthName} ${year}`;
+            document.querySelectorAll('.current-date-large').forEach(el => {
+                el.textContent = `${dayName}, ${date} ${monthName} ${year}`;
+            });
+            
+            document.querySelectorAll('.current-date').forEach(el => {
+                el.textContent = `${dayName}, ${date} ${monthName} ${year}`;
+            });
             
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const seconds = now.getSeconds().toString().padStart(2, '0');
             
-            document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
-        }
-
-        // Fungsi untuk mendapatkan nama hari berdasarkan offset
-        function getDayByOffset(offset) {
-            const now = new Date();
-            const targetDate = new Date(now);
-            targetDate.setDate(now.getDate() + offset);
-            return days[targetDate.getDay()];
-        }
-
-        // Fungsi untuk mendapatkan nama hari ini
-        function getToday() {
-            const now = new Date();
-            return days[now.getDay()];
-        }
-
-        // Fungsi untuk menentukan kelompok waktu berdasarkan jam mulai
-        function getTimeGroup(startTime) {
-            const hour = parseInt(startTime.split(':')[0]);
-            
-            if (hour >= 7 && hour < 12) {
-                return "morning";
-            } else if (hour >= 13 && hour < 15) {
-                return "afternoon";
-            } else if (hour >= 15 && hour < 18) {
-                return "evening";
-            } else if (hour >= 18) {
-                return "night";
-            } else {
-                return "morning";
-            }
-        }
-
-        // Fungsi untuk mendapatkan nama kelompok waktu
-        function getTimeGroupName(group) {
-            switch(group) {
-                case "morning": return "PAGI";
-                case "afternoon": return "SIANG";
-                case "evening": return "SORE";
-                case "night": return "MALAM";
-                default: return "PAGI";
-            }
-        }
-
-        // Fungsi untuk mendapatkan ikon kelompok waktu
-        function getTimeGroupIcon(group) {
-            switch(group) {
-                case "morning": return '<i class="fas fa-sun"></i>';
-                case "afternoon": return '<i class="fas fa-cloud-sun"></i>';
-                case "evening": return '<i class="fas fa-moon"></i>';
-                case "night": return '<i class="fas fa-star"></i>';
-                default: return '<i class="fas fa-clock"></i>';
-            }
-        }
-
-        // Fungsi untuk mendapatkan periode waktu
-        function getTimeGroupPeriod(group) {
-            switch(group) {
-                case "morning": return "(07:00 - 12:00)";
-                case "afternoon": return "(13:00 - 15:00)";
-                case "evening": return "(15:00 - 18:00)";
-                case "night": return "(18:00 - 22:00)";
-                default: return "";
-            }
-        }
-
-        // Fungsi untuk memeriksa apakah suatu jadwal sedang berlangsung
-        function isSessionCurrent(scheduleItem) {
-            const now = new Date();
-            const currentTime = now.getHours() * 60 + now.getMinutes();
-            
-            const [startStr, endStr] = scheduleItem.time.split(' - ');
-            const [startHour, startMinute] = startStr.split(':').map(Number);
-            const [endHour, endMinute] = endStr.split(':').map(Number);
-            
-            const startTime = startHour * 60 + startMinute;
-            const endTime = endHour * 60 + endMinute;
-            
-            return currentTime >= startTime && currentTime <= endTime;
-        }
-
-        // Fungsi untuk mendeteksi jadwal yang sedang berlangsung
-        function detectCurrentSessions(scheduleData, targetDay) {
-            const now = new Date();
-            const today = days[now.getDay()];
-            
-            if (targetDay !== today) {
-                return [];
-            }
-            
-            return scheduleData.filter(item => {
-                if (item.day !== today) return false;
-                return isSessionCurrent(item);
+            document.querySelectorAll('.current-time-large, .current-time').forEach(el => {
+                el.textContent = `${hours}:${minutes}:${seconds}`;
             });
         }
 
-        // Fungsi untuk merender jadwal perkuliahan
-        function renderSchedule() {
-            const scheduleResults = document.getElementById('scheduleResults');
-            const scheduleTitle = document.getElementById('scheduleTitle');
-            const dayBadge = document.getElementById('selectedDayBadge');
-            
-            let targetDayName;
-            let dayLabel;
-            
-            if (currentDay === "today") {
-                targetDayName = getToday();
-                dayLabel = "HARI INI";
-                dayBadge.textContent = targetDayName;
-                dayBadge.className = "badge bg-warning text-dark ms-2";
-            } else if (currentDay === "yesterday") {
-                targetDayName = getDayByOffset(-1);
-                dayLabel = "KEMARIN";
-                dayBadge.textContent = targetDayName;
-                dayBadge.className = "badge bg-secondary text-white ms-2";
-            } else if (currentDay === "tomorrow") {
-                targetDayName = getDayByOffset(1);
-                dayLabel = "BESOK";
-                dayBadge.textContent = targetDayName;
-                dayBadge.className = "badge bg-info text-dark ms-2";
-            }
-            
-            scheduleTitle.textContent = `JADWAL ${dayLabel}`;
-            
-            let filteredData = scheduleData.filter(item => {
-                let passesDay = item.day === targetDayName;
-                let passesSearch = true;
-                if (currentSearch) {
-                    const term = currentSearch.toLowerCase();
-                    passesSearch = 
-                        item.course.toLowerCase().includes(term) ||
-                        item.lecturer.toLowerCase().includes(term) ||
-                        item.class.toLowerCase().includes(term) ||
-                        item.room.toLowerCase().includes(term);
-                }
-                return passesDay && passesSearch;
-            });
-            
-            currentSessions = detectCurrentSessions(filteredData, targetDayName);
-            
-            if (filteredData.length > 0) {
-                filteredData.sort((a, b) => a.time.localeCompare(b.time));
-                
-                const groupedData = {
-                    morning: [],
-                    afternoon: [],
-                    evening: [],
-                    night: []
-                };
-                
-                filteredData.forEach(item => {
-                    const startTime = item.time.split(' - ')[0];
-                    const group = getTimeGroup(startTime);
-                    groupedData[group].push(item);
-                });
-                
-                let scheduleHTML = '';
-                const displayOrder = ['morning', 'afternoon', 'evening', 'night'];
-                
-                displayOrder.forEach(group => {
-                    if (groupedData[group].length > 0) {
-                        scheduleHTML += createTimeGroupHTML(group, groupedData[group]);
-                    }
-                });
-                
-                scheduleResults.innerHTML = scheduleHTML;
-                
-            } else {
-                scheduleResults.innerHTML = `
-                    <div class="no-results">
-                        <h3>Tidak Ada Jadwal Ditemukan</h3>
-                        <p>Sepertinya tidak ada jadwal perkuliahan untuk kriteria yang Anda pilih.</p>
-                        <div class="vintage-note">
-                            <strong>Tips:</strong> Coba gunakan kata kunci lain, pilih hari yang berbeda, atau pastikan filter pencarian tidak terlalu spesifik.
-                        </div>
-                    </div>
-                `;
-            }
+        function getToday() { return days[new Date().getDay()]; }
+        
+        function getLogoHTML(className = '') {
+            const onError = `this.onerror=null; this.src='${CONFIG.logoFallback}';`;
+            return `<img src="${CONFIG.logoUrl}" alt="Logo STMIK Tazkia" class="${className}" onerror="${onError}">`;
         }
 
-        // Fungsi untuk membuat HTML kelompok waktu
-        function createTimeGroupHTML(group, items) {
-            return `
-                <div class="time-group-container">
-                    <div class="time-group-header ${group} d-flex align-items-center">
-                        <div class="time-group-icon ${group}">
-                            ${getTimeGroupIcon(group)}
-                        </div>
-                        <div>
-                            <h3 class="time-group-title">
-                                ${getTimeGroupName(group)}
-                                <span class="time-group-period">${getTimeGroupPeriod(group)}</span>
-                            </h3>
-                        </div>
-                    </div>
-                    <div class="time-group-schedule">
-                        ${items.map(item => createScheduleItemHTML(item)).join('')}
-                    </div>
-                </div>
-            `;
+        function getGridClass(itemCount) {
+            if (itemCount === 1) return 'grid-1-col';
+            if (itemCount % 2 === 0) return 'grid-2-col';
+            return 'grid-odd-last';
         }
 
-        // Fungsi untuk membuat HTML item jadwal
-        function createScheduleItemHTML(item) {
-            const isCurrentSession = currentSessions.some(session => session.id === item.id);
-            const additionalClass = isCurrentSession ? 'current-session' : '';
-            
-            const lecturerParts = item.lecturer.split(',');
-            const lecturerName = lecturerParts[0];
-            const lecturerTitle = lecturerParts.slice(1).join(',').trim() || 'Dosen STMIK Tazkia';
-            
-            return `
-                <div class="schedule-item ${additionalClass}" data-id="${item.id}">
-                    ${isCurrentSession ? '<div class="current-session-badge">SEDANG BERLANGSUNG</div>' : ''}
-                    <div class="schedule-header">
-                        <div class="lecturer-info">
-                            <div class="lecturer-name-container">
-                                <h3 class="lecturer-name">${lecturerName}</h3>
-                                <div class="lecturer-title">${lecturerTitle}</div>
-                            </div>
-                            <div class="schedule-time">
-                                <i class="far fa-clock"></i> ${item.time}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="course-title">
-                        <i class="fas fa-book"></i> ${item.course}
-                    </div>
-                    <div class="schedule-meta">
-                        <span><i class="fas fa-users"></i> ${item.class}</span>
-                        <span><i class="fas fa-map-marker-alt"></i> ${item.room}</span>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Fungsi untuk update jadwal berlangsung secara real-time
-        function updateCurrentSessions() {
+        function getClassStatus(startTime) {
             const now = new Date();
-            const today = days[now.getDay()];
+            const today = new Date();
+            const [startHour, startMinute] = startTime.split(' - ')[0].split(':').map(Number);
+            const [endHour, endMinute] = startTime.split(' - ')[1].split(':').map(Number);
+            const startDateTime = new Date(today.setHours(startHour, startMinute, 0));
+            const endDateTime = new Date(today.setHours(endHour, endMinute, 0));
+            const diffToStart = Math.round((startDateTime - now) / (1000 * 60));
             
-            if (currentDay === "today") {
-                const scheduleItems = document.querySelectorAll('.schedule-item');
-                
-                scheduleItems.forEach(item => {
-                    const itemId = parseInt(item.getAttribute('data-id'));
-                    const scheduleItem = scheduleData.find(s => s.id === itemId);
+            // TANPA ICON - HANYA TEKS
+            if (now >= startDateTime && now <= endDateTime) 
+                return { status: 'ongoing', text: 'Sedang berlangsung', class: 'status-ongoing' };
+            if (now > endDateTime) 
+                return { status: 'completed', text: 'Selesai', class: 'status-completed' };
+            if (diffToStart <= 15) 
+                return { status: 'upcoming', text: `${diffToStart} menit lagi`, class: 'status-upcoming' };
+            if (diffToStart <= 30) 
+                return { status: 'upcoming', text: `${diffToStart} menit lagi`, class: 'status-upcoming' };
+            if (diffToStart <= 60) 
+                return { status: 'upcoming', text: '1 jam lagi', class: 'status-upcoming' };
+            return { status: 'upcoming', text: `${Math.round(diffToStart / 60)} jam lagi`, class: 'status-upcoming' };
+        }
+
+        function getBadgeClass(className) {
+            switch(className) {
+                case 'TI 24': return 'badge-ti24';
+                case 'TI 25': return 'badge-ti25';
+                case 'SI 24': return 'badge-si24';
+                case 'SI 25': return 'badge-si25';
+                default: return '';
+            }
+        }
+
+        function getBorderClass(className) {
+            switch(className) {
+                case 'TI 24': return 'card-border-ti24';
+                case 'TI 25': return 'card-border-ti25';
+                case 'SI 24': return 'card-border-si24';
+                case 'SI 25': return 'card-border-si25';
+                default: return '';
+            }
+        }
+
+        // ==================== SLIDE 1 - OPENING ====================
+        function createSlide1() {
+            return {
+                type: 'opening',
+                duration: CONFIG.slideDurations.opening,
+                content: `
+                    <div class="slide-header-simple">
+                        <div class="header-date-left">
+                            <div class="current-date-large"></div>
+                        </div>
+                        <div class="header-spacer"></div>
+                        <div class="header-time-right">
+                            <div class="current-time-large"></div>
+                        </div>
+                    </div>
                     
-                    if (scheduleItem && scheduleItem.day === today) {
-                        const isCurrent = isSessionCurrent(scheduleItem);
-                        
-                        if (isCurrent && !item.classList.contains('current-session')) {
-                            item.classList.add('current-session');
-                            if (!item.querySelector('.current-session-badge')) {
-                                item.innerHTML += '<div class="current-session-badge">SEDANG BERLANGSUNG</div>';
-                            }
-                        } else if (!isCurrent && item.classList.contains('current-session')) {
-                            item.classList.remove('current-session');
-                            const badge = item.querySelector('.current-session-badge');
-                            if (badge) {
-                                badge.remove();
-                            }
-                        }
-                    }
+                    <div class="slide-content">
+                        <div class="opening-content">
+                            <div class="opening-columns">
+                                <div class="opening-logo-column">
+                                    <div class="logo-hero">${getLogoHTML()}</div>
+                                </div>
+                                <div class="opening-text-column">
+                                    <div class="opening-main-group">
+                                        <div class="opening-welcome">Selamat Datang di</div>
+                                        <h1 class="campus-title-main">STMIK TAZKIA</h1>
+                                        <div class="campus-tagline">Belajar pada ahlinya</div>
+                                    </div>
+                                    <div class="opening-description-group">
+                                        <p class="campus-description">
+                                            Kampus unggulan yang mencetak generasi masa depan Indonesia
+                                            yang kompeten dalam teknologi informasi dan berkarakter mulia,
+                                            siap berkontribusi dalam ekosistem industri halal.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="slide-footer">
+                        <div class="footer-left">
+                            <i class="fab fa-instagram"></i> @stmiktazkia
+                        </div>
+                        <div class="footer-spacer"></div>
+                        <div class="footer-right">
+                            <i class="fas fa-phone-alt"></i> +62 851 2312 3119
+                        </div>
+                    </div>
+                `
+            };
+        }
+
+        // ==================== SLIDE 2 - VISI MISI ====================
+        function createSlide2() {
+            return {
+                type: 'vision-mission',
+                duration: CONFIG.slideDurations.visionMission,
+                content: `
+                    <div class="slide-header-brand">
+                        <div class="header-logo">
+                            <div class="logo-container">${getLogoHTML()}</div>
+                        </div>
+                        <div class="header-title">
+                            <div class="header-main-title">Visi & Misi</div>
+                            <div class="header-subtitle">STMIK TAZKIA</div>
+                        </div>
+                        <div class="header-time">
+                            <div class="current-date"></div>
+                            <div class="current-time"></div>
+                        </div>
+                    </div>
+                    <div class="slide-content">
+                        <div class="vision-mission-content">
+                            <div class="vision-section">
+                                <div class="vision-label">Visi</div>
+                                <p class="vision-text">"Menjadi Perguruan Tinggi yang Unggul Dalam Bidang Teknologi Informasi yang Mencetak Lulusan Berkompeten dan Berkarakter Mulia dalam Membangun Ekosistem Industri Halal."</p>
+                            </div>
+                            <div class="mission-section">
+                                <div class="mission-label">Misi</div>
+                                <div class="mission-columns">
+                                    <div class="mission-column">
+                                        <ol class="mission-list-1">
+                                            <li>Pendidikan: Menghasilkan lulusan unggul, kompeten, dan berkarakter mulia.</li>
+                                            <li>Penelitian: Mengembangkan riset teknologi dan sistem informasi inovatif.</li>
+                                            <li>Pengabdian: Menerapkan teknologi untuk kesejahteraan masyarakat.</li>
+                                        </ol>
+                                    </div>
+                                    <div class="mission-column">
+                                        <ol class="mission-list-2" start="4">
+                                            <li>Tata Kelola: Menyelenggarakan institusi dengan nilai etika dan kepribadian.</li>
+                                            <li>Lingkungan Belajar: Menciptakan ruang belajar kolaboratif dan komunikatif.</li>
+                                            <li>Kerja Sama: Membangun kemitraan nasional dan internasional.</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide-footer">
+                        <div class="footer-left">
+                            <i class="fab fa-instagram"></i> @stmiktazkia
+                        </div>
+                        <div class="footer-spacer"></div>
+                        <div class="footer-right">
+                            <i class="fas fa-phone-alt"></i> +62 851 2312 3119
+                        </div>
+                    </div>
+                `
+            };
+        }
+
+        // ==================== SLIDE JADWAL - ALL BLUE ====================
+        function createScheduleSlides() {
+            const today = getToday();
+            const scheduleData = [
+                // TI 24
+                { day: "Senin", time: "07:00 - 09:30", course: "Artificial Intelligence", lecturer: "Hendri Karisma, S.Kom., M.T", class: "TI 24", room: "Lab 1 (Dramaga)" },
+                { day: "Senin", time: "09:31 - 11:10", course: "Agama", lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd", class: "TI 24", room: "Abu Yusuf 1" },
+                { day: "Selasa", time: "07:00 - 09:30", course: "Applied Cryptography", lecturer: "Ricky Setiadi, S.Kom., M.Kom", class: "TI 24", room: "Lab 1 (Dramaga)" },
+                { day: "Rabu", time: "07:00 - 09:30", course: "Penetration Testing", lecturer: "Ricky Setiadi, S.Kom., M.Kom", class: "TI 24", room: "Lab 1 (Dramaga)" },
+                { day: "Kamis", time: "07:00 - 09:30", course: "Metode Penelitian", lecturer: "Hendri Karisma, S.Kom., M.T", class: "TI 24", room: "Lab 1 (Dramaga)" },
+                { day: "Kamis", time: "13:00 - 15:30", course: "Data Engineering", lecturer: "Hairul Umam, S.Si., M.Si", class: "TI 24", room: "Abu Yusuf 1" },
+                { day: "Jumat", time: "07:00 - 09:30", course: "Pengembangan Aplikasi Web", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "TI 24", room: "Lab 1 (Dramaga)" },
+                { day: "Jumat", time: "18:30 - 20:00", course: "Keamanan Jaringan dan Web", lecturer: "Q Fadlan, M.Kom., S.ST", class: "TI 24", room: "Lab 1 (Dramaga)" },
+                
+                // SI 24
+                { day: "Senin", time: "13:00 - 14:40", course: "Agama", lecturer: "Dr. Andang Heryahya, M.Pd.I., M.Pd", class: "SI 24", room: "Abu Yusuf 1" },
+                { day: "Selasa", time: "07:00 - 09:30", course: "Desain Pengalaman Pengguna", lecturer: "Arif Surachman, S.Si., M.Si", class: "SI 24", room: "Ibnu Khaldun 1" },
+                { day: "Rabu", time: "07:00 - 09:30", course: "Sistem Informasi Web", lecturer: "Endy Muhardin, S.T., M.E", class: "SI 24", room: "Perpustakaan" },
+                { day: "Rabu", time: "09:31 - 12:00", course: "Business Intelligence", lecturer: "Endy Muhardin, S.T., M.E", class: "SI 24", room: "Perpustakaan" },
+                { day: "Rabu", time: "13:00 - 15:30", course: "Arsitektur Data Enterprise", lecturer: "Galih Kurniawan Sidik, M.Kom", class: "SI 24", room: "Lab 1 (Dramaga)" },
+                { day: "Jumat", time: "13:00 - 15:30", course: "Metode Penelitian", lecturer: "Galih Kurniawan Sidik, M.Kom", class: "SI 24", room: "Lab 1 (Dramaga)" },
+                { day: "Sabtu", time: "15:31 - 18:00", course: "Aplikasi Keamanan Informasi", lecturer: "Q Fadlan, M.Kom., S.ST", class: "SI 24", room: "Lab 1 (Dramaga)" },
+                
+                // SI 25
+                { day: "Selasa", time: "09:31 - 12:00", course: "Fiqih Muamalah", lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)", class: "SI 25", room: "Ibnu Khaldun 1" },
+                { day: "Rabu", time: "13:00 - 15:30", course: "Manajemen Infrastruktur IT", lecturer: "Endy Muhardin, S.T., M.E", class: "SI 25", room: "Perpustakaan" },
+                { day: "Kamis", time: "09:31 - 11:10", course: "Bahasa Inggris", lecturer: "Lusiana, S.Pd", class: "SI 25", room: "Ibnu Khaldun 2" },
+                { day: "Kamis", time: "15:31 - 18:00", course: "Aljabar Linier", lecturer: "Hairul Umam, S.Si., M.Si", class: "SI 25", room: "Ibnu Khaldun 1" },
+                { day: "Sabtu", time: "07:00 - 09:30", course: "Infrastruktur Jaringan Terintegrasi", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "SI 25", room: "Lab 1 (Dramaga)" },
+                { day: "Sabtu", time: "09:31 - 12:00", course: "Statistika dan Probabilitas", lecturer: "Arif Surachman, S.Si., M.Si", class: "SI 25", room: "Ibnu Khaldun 1" },
+                { day: "Sabtu", time: "13:00 - 15:30", course: "Manajemen Data dan Informasi", lecturer: "Arif Surachman, S.Si., M.Si", class: "SI 25", room: "Lab 1 (Dramaga)" },
+                
+                // TI 25
+                { day: "Senin", time: "13:00 - 15:30", course: "Fiqih Muamalah", lecturer: "Miftakhus Surur, S.E.I., M.Sc (Fin)", class: "TI 25", room: "Ibnu Khaldun 1" },
+                { day: "Rabu", time: "13:00 - 15:30", course: "Aljabar Linier", lecturer: "Hairul Umam, S.Si., M.Si", class: "TI 25", room: "Ibnu Khaldun 1" },
+                { day: "Kamis", time: "07:50 - 09:30", course: "Bahasa Inggris", lecturer: "Lusiana", class: "TI 25", room: "Ibnu Khaldun 1" },
+                { day: "Kamis", time: "09:31 - 12:00", course: "Statistika dan Probabilitas", lecturer: "Hairul Umam, S.Si., M.Si", class: "TI 25", room: "Ibnu Khaldun 1" },
+                { day: "Jumat", time: "09:31 - 12:00", course: "Struktur Data", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "TI 25", room: "Lab 1 (Dramaga)" },
+                { day: "Sabtu", time: "07:00 - 09:30", course: "Sistem Operasi", lecturer: "Q Fadlan, M.Kom., S.ST", class: "TI 25", room: "Ibnu Khaldun 1" },
+                { day: "Sabtu", time: "09:31 - 12:00", course: "Jaringan Komputer dan Komputasi Awan", lecturer: "Agus Sulaiman, S.Kom., M.T", class: "TI 25", room: "Lab 1 (Dramaga)" },
+            ];
+
+            const todaysSchedule = scheduleData
+                .filter(item => item.day === today)
+                .sort((a, b) => parseInt(a.time.split(' - ')[0].replace(':', '')) - parseInt(b.time.split(' - ')[0].replace(':', '')));
+            
+            const slides = [];
+
+            if (todaysSchedule.length > 0) {
+                for (let i = 0; i < todaysSchedule.length; i += CONFIG.maxScheduleItemsPerSlide) {
+                    const slideItems = todaysSchedule.slice(i, i + CONFIG.maxScheduleItemsPerSlide);
+                    const slideNumber = Math.floor(i / CONFIG.maxScheduleItemsPerSlide) + 1;
+                    const totalSlides = Math.ceil(todaysSchedule.length / CONFIG.maxScheduleItemsPerSlide);
+
+                    slides.push({
+                        type: 'schedule',
+                        duration: CONFIG.slideDurations.schedule,
+                        content: `
+                            <div class="slide-header-brand">
+                                <div class="header-logo">
+                                    <div class="logo-container">${getLogoHTML()}</div>
+                                </div>
+                                <div class="header-title">
+                                    <div class="header-main-title">Jadwal Perkuliahan</div>
+                                    <div class="header-subtitle">Hari Ini - ${today}</div>
+                                </div>
+                                <div class="header-time">
+                                    <div class="current-date"></div>
+                                    <div class="current-time"></div>
+                                </div>
+                            </div>
+                            <div class="slide-content">
+                                <div class="schedule-content">
+                                    <div class="schedule-grid ${getGridClass(slideItems.length)}">
+                                        ${slideItems.map(item => {
+                                            const status = getClassStatus(item.time);
+                                            const badgeClass = getBadgeClass(item.class);
+                                            const borderClass = getBorderClass(item.class);
+                                            return `
+                                            <div class="schedule-item-final ${borderClass}">
+                                                <div class="schedule-header-row">
+                                                    <span class="class-badge-final ${badgeClass}">${item.class}</span>
+                                                    <span class="${status.class}">${status.text}</span>
+                                                </div>
+                                                <div class="lecturer-name-final">${item.lecturer}</div>
+                                                <div class="schedule-middle-grid">
+                                                    <div class="time-wrapper">
+                                                        <i class="far fa-clock"></i>
+                                                        <span>${item.time}</span>
+                                                    </div>
+                                                    <div class="course-wrapper">
+                                                        <i class="fas fa-book"></i>
+                                                        <span class="course-text-final">${item.course}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="room-wrapper">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    <span>${item.room}</span>
+                                                </div>
+                                            </div>
+                                        `}).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide-footer">
+                                <div class="footer-left">
+                                    <i class="fab fa-instagram"></i> @stmiktazkia
+                                </div>
+                                <div class="footer-spacer"></div>
+                                <div class="footer-right">
+                                    <i class="fas fa-phone-alt"></i> +62 851 2312 3119
+                                </div>
+                            </div>
+                        `
+                    });
+                }
+            } else {
+                slides.push({
+                    type: 'schedule',
+                    duration: CONFIG.slideDurations.schedule,
+                    content: `
+                        <div class="slide-header-brand">
+                            <div class="header-logo">
+                                <div class="logo-container">${getLogoHTML()}</div>
+                            </div>
+                            <div class="header-title">
+                                <div class="header-main-title">Informasi Akademik</div>
+                                <div class="header-subtitle">Hari Ini - ${today}</div>
+                            </div>
+                            <div class="header-time">
+                                <div class="current-date"></div>
+                                <div class="current-time"></div>
+                            </div>
+                        </div>
+                        <div class="slide-content">
+                            <div class="opening-content">
+                                <div class="vision-section" style="max-width: 600px;">
+                                    <div class="vision-label">Tidak Ada Jadwal Hari Ini</div>
+                                    <p class="vision-text" style="text-align: center;">
+                                        Tidak ada jadwal perkuliahan yang terjadwal untuk hari ${today}.
+                                        <br><br>Waktu ini dapat dimanfaatkan untuk pengembangan diri dan persiapan perkuliahan berikutnya.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slide-footer">
+                            <div class="footer-left">
+                                <i class="fab fa-instagram"></i> @stmiktazkia
+                            </div>
+                            <div class="footer-spacer"></div>
+                            <div class="footer-right">
+                                <i class="fas fa-phone-alt"></i> +62 851 2312 3119
+                            </div>
+                        </div>
+                    `
                 });
+            }
+            return slides;
+        }
+
+        // ==================== SLIDE PENUTUP ====================
+        function createClosingSlide(slideNumber) {
+            return {
+                type: 'closing',
+                duration: CONFIG.slideDurations.closing,
+                content: `
+                    <div class="slide-header-brand">
+                        <div class="header-logo">
+                            <div class="logo-container">${getLogoHTML()}</div>
+                        </div>
+                        <div class="header-title">
+                            <div class="header-main-title">BERGABUNGLAH BERSAMA KAMI</div>
+                            <div class="header-subtitle">Raih Masa Depan Cemerlang</div>
+                        </div>
+                        <div class="header-time">
+                            <div class="current-date"></div>
+                            <div class="current-time"></div>
+                        </div>
+                    </div>
+                    <div class="slide-content">
+                        <div class="closing-content-wrapper">
+                            <div class="closing-main-grid">
+                                <div class="info-box-large">
+                                    <div class="info-item-large">
+                                        <i class="fas fa-globe"></i>
+                                        <div class="info-content-large">
+                                            <span class="info-label-large">Website:</span>
+                                            <span class="info-value-large">www.stmiktazkia.ac.id</span>
+                                        </div>
+                                    </div>
+                                    <div class="info-item-large">
+                                        <i class="fas fa-user-plus"></i>
+                                        <div class="info-content-large">
+                                            <span class="info-label-large">Pendaftaran Online:</span>
+                                            <span class="info-value-large">stmik.tazkia.ac.id/admissions</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="qr-container-large">
+                                    <div class="qr-code-wrapper-large">
+                                        <img src="${CONFIG.qrCodeUrl}" alt="QR Code Pendaftaran STMIK Tazkia">
+                                    </div>
+                                    <p class="qr-label-large">Scan untuk mendaftar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slide-footer">
+                        <div class="footer-left">
+                            <i class="fab fa-instagram"></i> @stmiktazkia
+                        </div>
+                        <div class="footer-spacer"></div>
+                        <div class="footer-right">
+                            <i class="fas fa-phone-alt"></i> +62 851 2312 3119
+                        </div>
+                    </div>
+                `
+            };
+        }
+
+        // ==================== SLIDE MANAGEMENT ====================
+        function initializeSlides() {
+            const container = document.getElementById('slidesContainer');
+            const indicators = document.getElementById('slideIndicators');
+            
+            container.innerHTML = '';
+            indicators.innerHTML = '';
+            
+            slidesData = [
+                createSlide1(),
+                createSlide2(),
+                ...createScheduleSlides(),
+                createClosingSlide(3 + createScheduleSlides().length + 1)
+            ];
+            
+            totalSlides = slidesData.length;
+            
+            slidesData.forEach((slide, index) => {
+                const slideEl = document.createElement('div');
+                slideEl.className = `slide ${index === 0 ? 'active' : ''}`;
+                slideEl.id = `slide-${index}`;
+                slideEl.innerHTML = slide.content;
+                container.appendChild(slideEl);
+                
+                const indicator = document.createElement('div');
+                indicator.className = `slide-indicator ${index === 0 ? 'active' : ''}`;
+                indicator.dataset.slide = index;
+                indicator.addEventListener('click', () => goToSlide(index));
+                indicators.appendChild(indicator);
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('prev-btn') || e.target.closest('.prev-btn')) prevSlide();
+                else if (e.target.classList.contains('next-btn') || e.target.closest('.next-btn')) nextSlide();
+                else if (e.target.id === 'restartBtn' || e.target.closest('#restartBtn')) goToSlide(0);
+            });
+            
+            updateDateTime();
+        }
+
+        function goToSlide(slideIndex) {
+            if (slideIndex < 0 || slideIndex >= totalSlides) return;
+            document.querySelector('.slide.active')?.classList.remove('active');
+            document.querySelectorAll('.slide-indicator').forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === slideIndex);
+            });
+            const newSlide = document.getElementById(`slide-${slideIndex}`);
+            if (newSlide) {
+                newSlide.classList.add('active');
+                currentSlide = slideIndex;
+            }
+            resetAutoAdvance();
+        }
+
+        function nextSlide() { goToSlide((currentSlide + 1) % totalSlides); }
+        function prevSlide() { goToSlide((currentSlide - 1 + totalSlides) % totalSlides); }
+
+        function resetAutoAdvance() {
+            if (slideInterval) clearInterval(slideInterval);
+            if (slidesData[currentSlide]?.duration) {
+                slideInterval = setInterval(nextSlide, slidesData[currentSlide].duration);
             }
         }
 
-        // Inisialisasi saat halaman dimuat
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => document.getElementById('loading-screen').classList.add('hidden'), 1000);
             updateDateTime();
             setInterval(updateDateTime, 1000);
+            initializeSlides();
+            resetAutoAdvance();
             
-            setInterval(updateCurrentSessions, 60000);
-            
-            renderSchedule();
-            
-            const dayButtons = document.querySelectorAll('.day-btn');
-            dayButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    dayButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
-                    currentDay = this.getAttribute('data-day');
-                    renderSchedule();
-                });
+            document.addEventListener('keydown', (e) => {
+                switch(e.key) {
+                    case 'ArrowRight': case ' ': e.preventDefault(); nextSlide(); break;
+                    case 'ArrowLeft': e.preventDefault(); prevSlide(); break;
+                    case 'Home': e.preventDefault(); goToSlide(0); break;
+                    case 'End': e.preventDefault(); goToSlide(totalSlides - 1); break;
+                    case 'Escape': if (slideInterval) { clearInterval(slideInterval); slideInterval = null; } break;
+                }
+            });
+
+            // ==================== SHORTCUT KEY FULLSCREEN ====================
+            document.addEventListener('keydown', (e) => {
+                // FULLSCREEN - Tekan F atau f
+                if (e.key === 'f' || e.key === 'F') {
+                    e.preventDefault();
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen();
+                    } else {
+                        if (document.exitFullscreen) {
+                            document.exitFullscreen();
+                        }
+                    }
+                }
+                
+                // EXIT FULLSCREEN - Tekan X atau x
+                if (e.key === 'x' || e.key === 'X') {
+                    e.preventDefault();
+                    if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                    }
+                }
             });
             
-            const searchInput = document.getElementById('searchInput');
-            let searchTimeout;
-            
-            searchInput.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    currentSearch = this.value;
-                    renderSchedule();
-                }, 300);
-            });
-            
-            searchInput.addEventListener('focus', function() {
-                this.style.borderColor = 'var(--primary-color)';
-            });
-            
-            searchInput.addEventListener('blur', function() {
-                this.style.borderColor = 'var(--border-color)';
-            });
+            document.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+            document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+        });
+
+        window.addEventListener('resize', () => {
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
         });
     </script>
 </body>
